@@ -277,6 +277,26 @@ function aeg_union_get_aeg_data() {
 	);
 }
 
+// ─── CF7 Request Form Integration ────────────────────────────────────────────
+
+function aeg_union_cf7_integration() {
+	$js = '
+document.addEventListener("DOMContentLoaded", function () {
+  var container = document.getElementById("aeg-cf7-form-container");
+  if (!container) return;
+  var popup = document.getElementById("requestPopup");
+  if (!popup) return;
+  var existingForm = popup.querySelector(".request-form");
+  if (!existingForm) return;
+  var cf7Wrapper = container.querySelector(".wpcf7");
+  if (!cf7Wrapper) return;
+  existingForm.replaceWith(cf7Wrapper);
+});';
+
+	wp_add_inline_script( 'aeg-union-main', $js, 'after' );
+}
+add_action( 'wp_enqueue_scripts', 'aeg_union_cf7_integration', 20 );
+
 // ─── Enqueue Vite Build Assets ────────────────────────────────────────────────
 
 function aeg_union_enqueue_scripts() {
