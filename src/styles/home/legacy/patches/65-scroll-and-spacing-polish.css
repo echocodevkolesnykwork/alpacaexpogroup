@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 65 — Scroll length, orbit spacing, MERCH glow, solar breathing.
+
+   DOES NOT touch 26-planet-engine.js.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. LENGTHEN THE SCROLL — desktop only ───────────────────────────────────
+   Base height in 100-perfect-event-scroll.css is 260vh.
+   Scroll distance = height − 100vh.
+   500vh → 400vh of travel (150 % more than the original 160vh).
+   At this travel the comet window (p 0.40–0.90) covers 200vh of scrolling,
+   giving users ample time to watch the orbit before the section exits.
+   Restricted to ≥992px: patch-39 already overrides to height:auto for
+   769–991px tablets so that breakpoint is unaffected.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 992px) {
+  .pe-pin-wrap {
+    height: 500vh !important;
+  }
+}
+
+/* ── 2. BOTTOM BREATHING ROOM ────────────────────────────────────────────────
+   #peSecond fills the sticky hero via inset:0 and centres content with
+   align-items:center. Adding padding-bottom shifts the visual centre upward,
+   creating visible empty space at the bottom of the viewport while pinned.
+   Desktop only — mobile/tablet layout is vertical and doesn't pin.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 992px) {
+  #peSecond {
+    padding-bottom: 15vh !important;
+  }
+}
+
+/* ── 3. MERCH GLOW GAP — tighter inset ──────────────────────────────────────
+   pe-orb-materials (MERCH) has more padding around its planet silhouette than
+   the other bottom planets. 18% (patch-64) still shows a gap; 22% closes it.
+   Selector specificity (1,1,1) matches patch-64's base rule; later source wins.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-materials::before {
+  inset: 22% !important;
+  border-radius: 50% !important;
+}
+
+/* ── 4. SOLAR BREATHING — redefine solarCoreGlow keyframes ──────────────────
+   The latest @keyframes definition for a given name wins in CSS — this
+   replaces the patch-60 version without touching any animation: declaration.
+
+   Structure requested:
+   · 0%, 100% — wide, dim corona: long dwell, minimal glow radius keeps
+     the "perfect event" text fully legible.
+   · 8%        — gentle ramp-up so the approach to peak isn't abrupt.
+   · 15%       — brief bright peak: tight inner rings + wider outer halo.
+   · 28%       — decay back to base; ~1.7 s of animation covers the spike.
+   · 28%→100%  — browser interpolates smoothly back through base (same values
+     as 0%/100%), so the dim state fills ≈ 9 s of the 13 s cycle.
+
+   NOTE: the animation also sets text-shadow on #peOrbTitle.is-centered-sun
+   (see §4b below) to maintain text legibility at peak brightness.
+   Animating opacity is intentionally omitted — it is controlled by
+   --pe-title-alpha !important (set by the LERP JS each rAF frame) and
+   keyframe opacity would be silently overridden.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes solarCoreGlow {
+  0%,
+  100% {
+    /* Dim corona — capped at 60px to avoid compositor bleed into fixed elements */
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.55))
+      drop-shadow(0 0 28px rgba(0, 212, 255, 0.42)) drop-shadow(0 0 60px rgba(0, 119, 255, 0.28));
+  }
+  8% {
+    filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.75))
+      drop-shadow(0 0 50px rgba(0, 212, 255, 0.65)) drop-shadow(0 0 75px rgba(0, 170, 255, 0.38));
+  }
+  15% {
+    /* Brief bright peak */
+    filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.92))
+      drop-shadow(0 0 70px rgba(0, 228, 255, 0.82)) drop-shadow(0 0 80px rgba(0, 180, 255, 0.5));
+  }
+  28% {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.58))
+      drop-shadow(0 0 34px rgba(0, 212, 255, 0.45)) drop-shadow(0 0 62px rgba(0, 110, 230, 0.28));
+  }
+}
+
+/* ── 4b. TEXT LEGIBILITY during solar animation ──────────────────────────────
+   A dark text-shadow immediately behind each character ensures the glyphs
+   remain readable even at peak glow. Dark shadow listed first = rendered
+   closest to the text (CSS text-shadow stacking order: first = on top).
+   Cyan glows are carried over from .pe-orb-title in patch-112 so the overall
+   style is consistent; the dark component is the new addition.
+   Specificity (1,1,0) beats patch-112's (0,1,0) for .pe-orb-title.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peOrbTitle.is-centered-sun {
+  text-shadow:
+    0 0 20px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(0, 212, 255, 0.7),
+    0 0 34px rgba(0, 212, 255, 0.4) !important;
+}

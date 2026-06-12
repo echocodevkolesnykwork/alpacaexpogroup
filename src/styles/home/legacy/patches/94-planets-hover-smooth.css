@@ -1,0 +1,330 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 94 — Planet hover: flicker-free smooth entry.
+
+   Root causes fixed:
+   1. scale() on wrapper changes bounding box → cursor exits/re-enters at edge.
+      Fix: move scale to .pe-orb-video child; wrapper only lifts (translateY).
+   2. ::after was killed (display:none) — no hit-area cushion around sphere.
+      Fix: re-enable as a 26px transparent ring, extends hover zone beyond edge.
+   3. .pe-sphere-label has pointer-events:none — gap between label and sphere
+      caused rapid hover break when cursor crossed downward.
+      Fix: pointer-events:auto on label so it's part of the hover chain.
+   4. No transition on wrapper transform — scale/lift snapped on instantly.
+      Fix: 0.38s ease on transform.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Sphere wrapper: transition + lift only (no border-radius/box-shadow) */
+#peSecondRight .pe-orb-sphere {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#peSecondRight .pe-orb-sphere:hover,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video {
+  transform: translate3d(-50%, calc(-50% - 5px), 0) !important;
+}
+
+/* ── 2. Scale + color-reveal on the video child ───────────────────────────── */
+#peSecondRight .pe-orb-sphere .pe-orb-video {
+  transition:
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#peSecondRight .pe-orb-sphere:hover .pe-orb-video,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video .pe-orb-video {
+  transform: scale(1.06) !important;
+  filter: grayscale(0) !important;
+}
+
+/* ── 3. ::after — killed ──────────────────────────────────────────────────── */
+/* #peSecondRight .pe-orb-sphere::after {
+  display: none !important;
+  content: none !important;
+} */
+
+#peSecondRight .pe-orb-sphere::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+
+  transform: none !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 6 !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+/* ── 4. Label: enable pointer-events so cursor on label = sphere hovered ──── */
+#peSecondRight .pe-orb-sphere .pe-sphere-label {
+  pointer-events: auto !important;
+}
+/* Children of label: keep non-interactive themselves (label <a> is separate) */
+#peSecondRight .pe-orb-sphere .pe-sphere-label .pe-play-icon {
+  pointer-events: none !important;
+}
+
+/* ── 5. ::before: restore z-index:0 + original hover glow (patch-62/63) ──── */
+#peSecondRight .pe-orb-sphere::before {
+  inset: 9% !important;
+  z-index: 0 !important;
+  mix-blend-mode: normal !important;
+  transform: scale(1) !important;
+  transition:
+    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#peSecondRight .pe-orb-sphere:hover::before,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video::before {
+  opacity: 1 !important;
+  box-shadow:
+    0 0 15px 2px var(--planet-glow),
+    inset 0 0 10px 2px var(--planet-glow) !important;
+  transform: scale(1) !important;
+}
+
+/* ── 6. Per-group inset correction — two groups, not 8 individual rules ───── */
+/* Each planet video has a different silhouette-to-frame ratio, so a single
+   inset% doesn't fit all. Two groups cover all outliers cleanly:
+   · MERCH / CATERING / CONTENT — ::before protruded beyond planet edge → more inset
+   · SCREENS / STAND / STAFF   — ::before too small inside planet     → less inset */
+#peSecondRight .pe-orb-materials::before,
+#peSecondRight .pe-orb-bar::before {
+  inset: 17% !important;
+}
+
+#peSecondRight .pe-orb-motion::before {
+  inset: 12% !important;
+}
+
+#peSecondRight .pe-orb-staff::before {
+  inset: 9% !important;
+}
+
+#peSecondRight .pe-orb-led::before,
+#peSecondRight .pe-orb-ideas::before {
+  inset: 7% !important;
+  transform: translate(3px, 3px) scale(1) !important;
+  z-index: 3 !important;
+}
+
+#peSecondRight .pe-orb-vr::before {
+  transform: translate(1px, 1px) scale(1) !important;
+}
+
+#peSecondRight .pe-orb-motion::before {
+  inset: 13% !important;
+  z-index: 3 !important;
+  transform: translate(1px, -1px) scale(1) !important;
+}
+
+#peSecondRight .pe-orb-bar::before {
+  inset: 17% !important;
+  z-index: 3 !important;
+  transform: translate(0, -2px) scale(1) !important;
+}
+
+#peSecondRight .pe-orb-materials::before {
+  inset: 18% !important;
+  z-index: 3 !important;
+  transform: translate(-1px, -1px) scale(1) !important;
+}
+
+#peSecondRight .pe-orb-led::before {
+  inset: 7% !important;
+  z-index: 3 !important;
+  transform: translate(0px, 0) scale(1) !important;
+}
+
+/* ── ::after — темная тень на самой планете ─────────────────────────────── */
+#peSecondRight .pe-orb-sphere::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+
+  transform: none !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+
+  z-index: 2 !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+
+  box-shadow: none !important;
+  filter: none !important;
+
+  transition: opacity 0.35s ease !important;
+}
+
+/* При hover тень убирается, чтобы планета светилась */
+#peSecondRight .pe-orb-sphere:hover::after,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video::after {
+  opacity: 0 !important;
+}
+
+/* STAND */
+#peSecondRight .pe-orb-ideas::after {
+  top: 7% !important;
+  left: 7% !important;
+  right: 7% !important;
+  bottom: 7% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(3px, 3px) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 50% 82%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* ACTIVATION */
+#peSecondRight .pe-orb-vr::after {
+  top: 8% !important;
+  left: 8% !important;
+  right: 8% !important;
+  bottom: 8% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(1px, 0px) scale(0.96) !important;
+
+  background: radial-gradient(
+    circle at 50% 82%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* STAFF */
+#peSecondRight .pe-orb-staff::after {
+  top: 7% !important;
+  left: 7% !important;
+  right: 7% !important;
+  bottom: 7% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(2px, -2px) scale(0.98) !important;
+
+  background: radial-gradient(
+    circle at 24% 76%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* SCREENS */
+#peSecondRight .pe-orb-led::after {
+  top: 7% !important;
+  left: 7% !important;
+  right: 7% !important;
+  bottom: 7% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(-1px, 0) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 18% 50%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* MERCH */
+#peSecondRight .pe-orb-materials::after {
+  top: 18% !important;
+  left: 18% !important;
+  right: 18% !important;
+  bottom: 18% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(0px, 0px) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 24% 24%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* CONTENT */
+#peSecondRight .pe-orb-motion::after {
+  top: 13% !important;
+  left: 13% !important;
+  right: 13% !important;
+  bottom: 13% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(0px, 0px) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 76% 24%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* CATERING */
+#peSecondRight .pe-orb-bar::after {
+  top: 17% !important;
+  left: 17% !important;
+  right: 17% !important;
+  bottom: 17% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(0px, -2px) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 50% 18%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}
+
+/* SUPPORT */
+#peSecondRight .pe-orb-activation::after {
+  top: 9% !important;
+  left: 9% !important;
+  right: 9% !important;
+  bottom: 9% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(1px, 0) scale(1) !important;
+
+  background: radial-gradient(
+    circle at 82% 50%,
+    transparent 0%,
+    transparent 18%,
+    rgba(0, 0, 0, 0.74) 48%,
+    #000 100%
+  ) !important;
+}

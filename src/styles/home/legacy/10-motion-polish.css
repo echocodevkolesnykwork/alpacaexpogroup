@@ -1,0 +1,361 @@
+/* ════════════════════════════════════════════════════════════════
+   PRO MOTION SYSTEM v2 — refined easings, durations & micro-interactions
+   Industry-grade curves (Material 3 / Apple HIG inspired)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* Easing tokens */
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  /* Duration tokens */
+  --dur-1: 120ms; /* micro */
+  --dur-2: 200ms; /* fast */
+  --dur-3: 320ms; /* base */
+  --dur-4: 480ms; /* medium */
+  --dur-5: 720ms; /* slow reveal */
+  --dur-6: 1100ms; /* hero / cinematic */
+}
+
+/* Universal smoother — only properties that are GPU-cheap */
+a,
+button,
+.btn-p,
+.btn-g,
+.btn-cta,
+.nav-btn,
+.nav-links a,
+.sec-lnk,
+.shw,
+.flnk,
+.gshow-item,
+.gshow-dot,
+.svc-new,
+.btn-watch,
+.btn-flip-back,
+.btn-proc-watch,
+.btn-proc-back,
+.pe-gb-watch,
+.lb-card {
+  transition:
+    transform var(--dur-3) var(--ease-out-quart),
+    background-color var(--dur-3) var(--ease-out-quart),
+    border-color var(--dur-3) var(--ease-out-quart),
+    color var(--dur-2) var(--ease-out-quart),
+    box-shadow var(--dur-4) var(--ease-out-quart),
+    opacity var(--dur-3) var(--ease-out-quart),
+    filter var(--dur-4) var(--ease-out-quart) !important;
+  will-change: transform;
+}
+
+/* Nav links — refined underline reveal */
+.nav-links a {
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--dur-4) var(--ease-out-expo);
+}
+.nav-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+.nav-links a:hover {
+  color: #fff;
+}
+
+/* Primary buttons — premium lift + soft glow halo */
+.btn-p,
+.btn-cta,
+.nav-btn {
+  transform: translateZ(0);
+}
+.btn-p:hover,
+.btn-cta:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  box-shadow:
+    0 12px 40px -8px rgba(0, 212, 255, 0.45),
+    0 0 0 1px rgba(0, 212, 255, 0.25) inset !important;
+}
+.btn-p:active,
+.btn-cta:active,
+.nav-btn:active {
+  transform: translateY(0) scale(0.985) !important;
+  transition-duration: var(--dur-1) !important;
+}
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px rgba(0, 212, 255, 0.4);
+}
+
+/* Ghost / outline buttons */
+.btn-g:hover,
+.btn-flip-back:hover,
+.btn-proc-back:hover {
+  transform: translateY(-1px);
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Watch buttons — subtle accent fill */
+.btn-watch:hover,
+.btn-proc-watch:hover,
+.pe-gb-watch:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 212, 255, 0.18) !important;
+  box-shadow: 0 6px 20px -6px rgba(0, 212, 255, 0.35);
+}
+
+/* Show / event tiles — depth + accent rim on hover */
+.shw:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 50px -20px rgba(0, 212, 255, 0.35);
+}
+.gshow-item:hover {
+  transform: translateX(3px);
+  background: rgba(0, 212, 255, 0.08) !important;
+  border-color: rgba(0, 212, 255, 0.28) !important;
+}
+.gshow-item:hover .gshow-dot {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* Section accent links */
+.sec-lnk:hover {
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateX(2px);
+}
+.flnk:hover {
+  color: var(--accent);
+}
+
+/* Refine pulse — softer breathing rather than blinking */
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.55);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 212, 255, 0);
+    transform: scale(1.08);
+  }
+}
+
+/* Refine fade-up reveal — smoother distance + curve */
+@keyframes fup {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+/* Refine arrow pulse — gentler */
+@keyframes arrowPulse {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+}
+
+/* Splash refinements */
+@keyframes sp-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+@keyframes sp-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+/* Lightbox — gentler pop */
+@keyframes lbCardIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translate3d(0, 12px, 0);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+@keyframes lbCardOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+@keyframes lbFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+@keyframes lbFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Ticker — keep linear (correct for marquees) but smoother edge handling handled in JS where applicable */
+
+/* Cards & service tiles get a quiet hover lift */
+.svc-new {
+  transition:
+    background var(--dur-3) var(--ease-out-quart),
+    transform var(--dur-4) var(--ease-out-quart) !important;
+}
+.svc-new:hover {
+  transform: translateY(-3px);
+}
+
+/* Lift stand cards / glass blocks if present */
+.g,
+.ga {
+  transition:
+    transform var(--dur-4) var(--ease-out-quart),
+    border-color var(--dur-3) var(--ease-out-quart),
+    box-shadow var(--dur-4) var(--ease-out-quart);
+}
+
+/* Focus rings — accessibility polish */
+a:focus-visible,
+button:focus-visible,
+.btn-p:focus-visible,
+.btn-cta:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent) !important;
+}
+
+/* Reduced motion — respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── FINAL HOTFIX 2026-04-29: Perfect Event title becomes a static part of the orbit page ── */
+#peOrbTitle.pe-title-static {
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+}
+.pe-second-right .pe-orb-sphere {
+  z-index: 5 !important;
+}
+#peGhostTitle.pe-ghost-off {
+  display: none !important;
+}
+
+/* ── HOTFIX v4: remove perfect event blink during handoff ── */
+#peOrbTitle {
+  transition: none !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+#peGhostTitle.pe-ghost-off {
+  display: block !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ── HOTFIX v6: stable crossfade for perfect event, no blink ── */
+#peOrbTitle,
+#peOrbTitle.pe-title-static {
+  opacity: var(--pe-title-alpha, 0) !important;
+  visibility: var(--pe-title-visibility, hidden) !important;
+  transition: none !important;
+  transform: translate(-50%, -50%) translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+#peGhostTitle {
+  opacity: var(--pe-ghost-alpha, 1) !important;
+  visibility: var(--pe-ghost-visibility, visible) !important;
+  display: block !important;
+  transform-style: preserve-3d !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+#peGhostTitle.pe-ghost-off {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  display: block !important;
+}
+
+/* ── HOTFIX v7: restore Perfect Event block, prevent both titles from disappearing ── */
+#peOrbTitle.pe-title-static {
+  display: block !important;
+  opacity: var(--pe-title-alpha, 1) !important;
+  visibility: visible !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) translateZ(0) !important;
+}

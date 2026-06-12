@@ -1,0 +1,93 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 89 — Popup fullscreen: images fill the entire screen.
+
+   Root cause: patch-76 sets height:58vh !important on .op-popup-img.
+   In native fullscreen the browser renders #opPopupImg at full screen size
+   visually, but CSS layout height stays at 58vh — children with height:100%
+   compute against 58vh, leaving a 42vh gap at the bottom.
+
+   Fix A (CSS): #opPopupImg:fullscreen has specificity (1,1,0+pseudo) which
+   beats .op-popup-img specificity (0,1,0) — wins even with !important.
+
+   Fix B (JS class): syncFsIcon in 10-project-popup.js adds .op-popup-fs-active
+   and uses setProperty('height','100vh','important') — inline !important
+   has the absolute highest priority.
+
+   NOTE: JS changes in 10-project-popup.js require a full page reload
+   (Cmd+Shift+R) because scripts are injected once at mount time via
+   script.textContent (run-classic-scripts.js).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Fix A: :fullscreen pseudo-class (higher specificity than patch-76) ──── */
+#opPopupImg:fullscreen,
+#opPopupImg:-webkit-full-screen,
+#opPopupImg:-moz-full-screen {
+  height: 100vh !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+#opPopupImg:fullscreen .op-popup-slides,
+#opPopupImg:-webkit-full-screen .op-popup-slides,
+#opPopupImg:-moz-full-screen .op-popup-slides,
+#opPopupImg.op-popup-fs-active .op-popup-slides {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+  width: 100vw !important;
+}
+
+#opPopupImg:fullscreen .op-popup-slide,
+#opPopupImg:-webkit-full-screen .op-popup-slide,
+#opPopupImg:-moz-full-screen .op-popup-slide,
+#opPopupImg.op-popup-fs-active .op-popup-slide {
+  height: 100vh !important;
+}
+
+#opPopupImg:fullscreen .op-popup-slide img,
+#opPopupImg:-webkit-full-screen .op-popup-slide img,
+#opPopupImg:-moz-full-screen .op-popup-slide img,
+#opPopupImg.op-popup-fs-active .op-popup-slide img {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+#opPopupImg:fullscreen .op-popup-progress,
+#opPopupImg:-webkit-full-screen .op-popup-progress,
+#opPopupImg:-moz-full-screen .op-popup-progress {
+  display: none !important;
+}
+
+.op-popup-img-info {
+  display: none !important;
+}
+
+/* ── Fix B: JS class fallback ─────────────────────────────────────────────── */
+#opPopupImg.op-popup-fs-active {
+  height: 100vh !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+#opPopupImg.op-popup-fs-active .op-popup-slide {
+  height: 100% !important;
+}
+
+#opPopupImg.op-popup-fs-active .op-popup-slide img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+#opPopupImg.op-popup-fs-active .op-popup-progress {
+  display: none !important;
+}

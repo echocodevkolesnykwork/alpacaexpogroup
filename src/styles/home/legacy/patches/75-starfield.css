@@ -1,0 +1,127 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 75 — Starfield: sub-pixel point stars with opacity-only twinkling.
+
+   Stars are SVG <circle> elements (r=0.35–1.0 CSS px) created by JS.
+   viewBox = actual container pixel dimensions → 1 SVG unit = 1 CSS px.
+   NO transform, NO scale, NO translate in keyframes — pure opacity fade.
+   The star appears, glows, and fades. Nothing moves.
+
+   6 animation variants with different timing so the overall effect feels
+   organic: some stars barely flicker, others pulse between near-invisible
+   and almost-bright, at various speeds (2.6 s – 7.5 s).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── SHIMMER / FADE KEYFRAMES ────────────────────────────────────────────── */
+/* All variants: opacity only. No transform. */
+
+@keyframes peSt1 {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.04;
+  }
+}
+@keyframes peSt2 {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  32% {
+    opacity: 0.06;
+  }
+  68% {
+    opacity: 0.52;
+  }
+}
+@keyframes peSt3 {
+  0%,
+  100% {
+    opacity: 0.92;
+  }
+  44% {
+    opacity: 0.03;
+  }
+}
+@keyframes peSt4 {
+  0% {
+    opacity: 0.62;
+  }
+  20% {
+    opacity: 1;
+  }
+  56% {
+    opacity: 0.07;
+  }
+  80% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0.62;
+  }
+}
+@keyframes peSt5 {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.05;
+  }
+  65% {
+    opacity: 0.42;
+  }
+}
+@keyframes peSt6 {
+  0%,
+  100% {
+    opacity: 0.52;
+  }
+  38% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.03;
+  }
+}
+
+/* ── CLASS ASSIGNMENTS ───────────────────────────────────────────────────── */
+/* Duration spread ensures no visible "phase sync" across the starfield. */
+.pe-st1 {
+  animation: peSt1 3.2s ease-in-out infinite;
+}
+.pe-st2 {
+  animation: peSt2 4.9s ease-in-out infinite;
+}
+.pe-st3 {
+  animation: peSt3 2.6s ease-in-out infinite;
+}
+.pe-st4 {
+  animation: peSt4 6.8s ease-in-out infinite;
+}
+.pe-st5 {
+  animation: peSt5 5.3s ease-in-out infinite;
+}
+.pe-st6 {
+  animation: peSt6 7.5s ease-in-out infinite;
+}
+
+/* ── MOBILE ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pe-starfield {
+    display: none !important;
+  }
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pe-st1,
+  .pe-st2,
+  .pe-st3,
+  .pe-st4,
+  .pe-st5,
+  .pe-st6 {
+    animation: none !important;
+  }
+}

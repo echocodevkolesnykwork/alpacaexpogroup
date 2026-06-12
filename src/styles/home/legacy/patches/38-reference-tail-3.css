@@ -1,0 +1,44 @@
+/* Reference style block 39 */
+/* STATIC EXHIBITION CALENDAR — no hover, no animation */
+.gshow-item,
+.gshow-item:hover,
+.gshow-item.active {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: default !important;
+  transition: none !important;
+}
+
+.gshow-name,
+.gshow-item:hover .gshow-name,
+.gshow-item.active .gshow-name {
+  color: #fff !important;
+  text-shadow: none !important;
+  transition: none !important;
+}
+
+.gshow-date,
+.gshow-item:hover .gshow-date,
+.gshow-item.active .gshow-date {
+  color: var(--accent) !important;
+  text-shadow: none !important;
+  transition: none !important;
+}
+
+.gshow-loc,
+.gshow-item:hover .gshow-loc,
+.gshow-item.active .gshow-loc {
+  color: rgba(255, 255, 255, 0.32) !important;
+  text-shadow: none !important;
+  transition: none !important;
+}
+
+.gshow-dot,
+.gshow-item:hover .gshow-dot,
+.gshow-item.active .gshow-dot {
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: none !important;
+  transition: none !important;
+}

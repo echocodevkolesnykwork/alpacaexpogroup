@@ -1,0 +1,374 @@
+/* STAND THAT RUNS A SHOW */
+.show-block {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px 100px;
+}
+.show-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 44px;
+}
+.show-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  font-size: 20px;
+}
+.show-item-t {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.show-item-d {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* FLIP CARDS */
+.show-item {
+  perspective: 1000px;
+  cursor: default;
+}
+.show-item-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.show-item.flipped .show-item-inner {
+  transform: rotateY(180deg);
+}
+.show-front,
+.show-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 18px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.show-front {
+  background: transparent;
+}
+.show-back {
+  background: #020d1a;
+  border: 0.5px solid var(--glass-ab);
+  transform: rotateY(180deg);
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.show-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.3), transparent);
+}
+.show-back-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #020e1c;
+  border-radius: 10px;
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.show-back-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+.video-placeholder-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vpi-play {
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 11px solid rgba(255, 255, 255, 0.25);
+  margin-left: 2px;
+}
+.video-placeholder-txt {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.show-back-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+.btn-flip-back {
+  font-size: 10px;
+  color: var(--muted);
+  background: transparent;
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: default;
+  transition: color 0.2s;
+  letter-spacing: 0.06em;
+}
+.btn-flip-back:hover {
+  color: #fff;
+}
+.btn-watch {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: default;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  align-self: flex-start;
+  margin-top: 16px;
+}
+.btn-watch:hover {
+  background: rgba(0, 212, 255, 0.14);
+}
+.btn-watch-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* PROCESS REDESIGN */
+.process {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px 100px;
+}
+.proc-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 44px;
+}
+.proc-step {
+  flex: 1;
+  padding: 28px 22px;
+  border-radius: 16px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.proc-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 auto 12px;
+  flex-shrink: 0;
+}
+.proc-t {
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.proc-d {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Arrow between steps */
+.proc-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  margin-top: 0;
+  position: relative;
+}
+.proc-arrow svg {
+  animation: arrowPulse 1.5s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+}
+
+/* Last step — Activation with flip */
+.proc-step-flip {
+  flex: 1;
+  position: relative;
+  perspective: 1000px;
+  min-height: 160px;
+}
+.proc-flip-inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  border-radius: 16px;
+}
+.proc-step-flip.flipped .proc-flip-inner {
+  transform: rotateY(180deg);
+}
+.proc-flip-front,
+.proc-flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 18px;
+  text-align: center;
+}
+.proc-flip-front {
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+}
+.proc-flip-front::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.5), transparent);
+}
+.proc-flip-back {
+  background: #020d1a;
+  border: 0.5px solid var(--glass-ab);
+  transform: rotateY(180deg);
+  gap: 10px;
+}
+.proc-flip-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.3), transparent);
+}
+.proc-back-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #020e1c;
+  border-radius: 8px;
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.proc-back-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.btn-proc-watch {
+  margin-top: 10px;
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: default;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+}
+.btn-proc-watch:hover {
+  background: rgba(0, 212, 255, 0.14);
+}
+.btn-proc-watch-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.btn-proc-back {
+  font-size: 9px;
+  color: var(--muted);
+  background: transparent;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 16px;
+  cursor: default;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+.btn-proc-back:hover {
+  color: #fff;
+}

@@ -1,0 +1,317 @@
+/* Reference style block 14 data-fix="final-hero-50-50-centered-menu" */
+/* === FINAL FIX: centered desktop menu + stable 50/50 hero === */
+@media (min-width: 769px) {
+  /* NAV: menu labels are centered in the nav, CTA stays on the right */
+  #nav {
+    width: calc(100% - 64px) !important;
+    max-width: 1180px !important;
+    height: 56px !important;
+    padding: 0 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #nav .nav-inner {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #nav .nav-links {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(24px, 3vw, 42px) !important;
+    width: auto !important;
+    flex: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #nav .nav-links a {
+    white-space: nowrap !important;
+  }
+
+  #nav .nav-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  #nav .burger {
+    display: none !important;
+  }
+
+  /* HERO: exact two-column composition */
+  .pe-pin-wrap {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  #heroSection.hero,
+  .pe-pin-wrap #heroSection.hero {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-rows: 1fr !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: 100vh !important;
+    padding-top: 0 !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+  }
+
+  #heroLeft.hero-left,
+  .pe-pin-wrap #heroLeft.hero-left,
+  #heroLeft.hero-card {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: clamp(82px, 9vh, 120px) clamp(48px, 6vw, 104px) clamp(64px, 8vh, 96px)
+      clamp(56px, 6.5vw, 112px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    background: var(--bg) !important;
+    border-right: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 3 !important;
+  }
+
+  #heroLeft::before {
+    display: none !important;
+  }
+
+  #heroPre,
+  #peHeadline,
+  #heroSub,
+  #heroBtnsRow {
+    width: 100% !important;
+    max-width: 520px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #heroPre {
+    font-size: clamp(18px, 2vw, 30px) !important;
+    line-height: 1.05 !important;
+  }
+
+  #peHeadline {
+    font-size: clamp(44px, 5.4vw, 82px) !important;
+    line-height: 0.92 !important;
+    margin-bottom: 18px !important;
+  }
+
+  #heroSub {
+    font-size: clamp(13px, 1.05vw, 15px) !important;
+    line-height: 1.65 !important;
+    color: rgba(255, 255, 255, 0.46) !important;
+    margin-bottom: 26px !important;
+  }
+
+  #heroBtnsRow,
+  .btns {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  #heroTicker.hero-tag-ticker {
+    left: clamp(56px, 6.5vw, 112px) !important;
+    bottom: clamp(28px, 5vh, 48px) !important;
+    width: min(520px, calc(50vw - 112px)) !important;
+    max-width: 520px !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  #heroRight.hero-right,
+  .pe-pin-wrap #heroRight.hero-right {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 2 !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    z-index: 2 !important;
+  }
+
+  #heroRight .hero-vid,
+  #heroRight .hero-vid iframe {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  #heroRight .hero-vid {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  #heroRight .hero-vid iframe {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 177.78vh !important;
+    height: 100vh !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    transform: translate(-50%, -50%) !important;
+    border: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #heroRight .hero-vid-overlay {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(to left, rgba(2, 13, 26, 0.08), rgba(2, 13, 26, 0.28)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+}
+
+/* Tablet/laptop tightening without changing the 50/50 structure */
+@media (min-width: 769px) and (max-width: 1100px) {
+  #nav .nav-links {
+    gap: 22px !important;
+  }
+  #nav .nav-btn {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  #heroLeft.hero-left,
+  .pe-pin-wrap #heroLeft.hero-left,
+  #heroLeft.hero-card {
+    padding-left: 48px !important;
+    padding-right: 36px !important;
+  }
+
+  #heroPre,
+  #peHeadline,
+  #heroSub,
+  #heroBtnsRow {
+    max-width: 460px !important;
+  }
+
+  #peHeadline {
+    font-size: clamp(38px, 5vw, 58px) !important;
+  }
+
+  #heroTicker.hero-tag-ticker {
+    left: 48px !important;
+    width: min(460px, calc(50vw - 84px)) !important;
+  }
+}
+
+/* Mobile stays usable: video first, text below, no broken 50/50 squeeze */
+@media (max-width: 768px) {
+  #nav {
+    justify-content: space-between !important;
+  }
+
+  #nav .burger {
+    margin-left: auto !important;
+  }
+
+  #heroRight.hero-right {
+    border-radius: 18px 18px 0 0 !important;
+  }
+
+  #heroLeft.hero-left,
+  #heroLeft.hero-card {
+    border-radius: 0 0 18px 18px !important;
+  }
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

@@ -1,0 +1,35 @@
+/* Reference style block 25 id="disable-spheres-darkening-final" */
+/* DISABLE SPHERES DARKENING */
+.pe-pin-wrap,
+.pe-orbit-section,
+.pe-orbit-stage,
+.pe-orbit-bg,
+.pe-orb-wrap,
+.pe-orbs-wrap,
+.pe-spheres-wrap,
+.pe-section-darkened,
+.pe-dark-focus,
+.pe-cinematic-focus {
+  filter: none !important;
+  opacity: 1 !important;
+  background-color: transparent !important;
+}
+
+.pe-pin-wrap::before,
+.pe-pin-wrap::after,
+.pe-orbit-section::before,
+.pe-orbit-section::after,
+.pe-orbit-stage::before,
+.pe-orbit-stage::after {
+  opacity: 0 !important;
+  display: none !important;
+  content: none !important;
+}
+
+body.focus-darkened .pe-pin-wrap,
+body.focus-darkened .pe-orbit-section,
+body.cinematic-depth .pe-pin-wrap,
+body.cinematic-depth .pe-orbit-section {
+  filter: none !important;
+  opacity: 1 !important;
+}

@@ -1,0 +1,136 @@
+/* Reference style block 15 id="pe-layer-isolation-final-fix" */
+/* FIX: second scroll layer must not visually sit under HERO before animation */
+
+#pePinWrap.pe-pin-wrap,
+.pe-pin-wrap {
+  position: relative !important;
+  background: var(--bg) !important;
+  overflow: visible !important;
+}
+
+/* HERO remains the sticky scene, but it is opaque */
+#heroSection.hero {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  overflow: hidden !important;
+  background: var(--bg) !important;
+  isolation: isolate !important;
+}
+
+/* First screen parts cover the second layer until scroll transition */
+#heroLeft.hero-left,
+#heroRight.hero-right {
+  position: relative !important;
+  z-index: 12 !important;
+  background: var(--bg) !important;
+}
+
+#heroRight.hero-right {
+  background: #021020 !important;
+}
+
+/* The second screen is still inside hero for the original animation,
+   but starts completely invisible and non-interactive. */
+#peSecond.pe-second {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 8 !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--bg) !important;
+  overflow: hidden !important;
+}
+
+/* Only when JS adds active class, it can appear above first screen */
+#peSecond.pe-second.pe-active {
+  z-index: 30 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure all second-screen content is hidden until active */
+#peSecond:not(.pe-active) .pe-second-right,
+#peSecond:not(.pe-active) .pe-orb-svg,
+#peSecond:not(.pe-active) .pe-orb-title,
+#peSecond:not(.pe-active) .pe-orb-subtitle-bottom,
+#peSecond:not(.pe-active) .pe-orb-sphere {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* When active, let the original JS animate opacity/transform */
+#peSecond.pe-active .pe-second-right,
+#peSecond.pe-active .pe-orb-svg,
+#peSecond.pe-active .pe-orb-title,
+#peSecond.pe-active .pe-orb-subtitle-bottom,
+#peSecond.pe-active .pe-orb-sphere {
+  visibility: visible !important;
+}
+
+/* Hide accidental subtitle strip before transition */
+#peSecond:not(.pe-active) #peOrbSubtitle {
+  display: none !important;
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

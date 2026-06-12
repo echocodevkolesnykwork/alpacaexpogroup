@@ -1,0 +1,264 @@
+@media (max-width: 768px) {
+  .pe-orb-subtitle {
+    top: calc(50% + 46px);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+  }
+}
+
+/* spacing when VIEW MORE CASES раскрыт */
+#moreCases {
+  margin-top: 38px;
+}
+
+/* FIX: spacing for dynamically loaded cases */
+#moreCases .pg {
+  margin: 0 !important;
+}
+
+#moreCases .pg + .pg {
+  margin-top: 38px !important;
+}
+
+#moreCases .pc {
+  height: 100%;
+}
+
+/* HARD FIX: OUR PROJECTS grid template restored */
+#portfolio {
+  overflow: hidden;
+}
+
+#portfolio .pg {
+  width: 100%;
+  max-width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  margin: 0 !important;
+}
+
+#portfolio .pg.pg-alt {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) !important;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+#portfolio .pc {
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 18px;
+}
+
+#portfolio .pg:not(.pg-alt) .pc:first-child {
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+  min-height: 520px !important;
+}
+
+#portfolio .pg.pg-alt .pc:first-child {
+  grid-column: 3 !important;
+  grid-row: 1 / span 2 !important;
+  min-height: 520px !important;
+}
+
+#portfolio .pg:not(.pg-alt) .pc:not(:first-child),
+#portfolio .pg.pg-alt .pc:not(:first-child) {
+  min-height: 256px !important;
+  aspect-ratio: auto !important;
+}
+
+#portfolio .pc-bg,
+#portfolio .pc-bg img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#portfolio .pc-bg {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+#portfolio .pc-bg img {
+  object-fit: cover !important;
+  display: block !important;
+}
+
+#portfolio > .project-block-spacer {
+  height: 38px !important;
+  width: 100%;
+}
+
+#moreCases {
+  margin-top: 38px !important;
+}
+
+#moreCases .pg + .pg {
+  margin-top: 38px !important;
+}
+
+@media (max-width: 768px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+  }
+
+  #portfolio .pg .pc,
+  #portfolio .pg.pg-alt .pc {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    min-height: 260px !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  #portfolio > .project-block-spacer,
+  #moreCases,
+  #moreCases .pg + .pg {
+    margin-top: 0 !important;
+  }
+
+  #portfolio > .project-block-spacer {
+    height: 28px !important;
+  }
+
+  #moreCases {
+    margin-top: 28px !important;
+  }
+
+  #moreCases .pg + .pg {
+    margin-top: 28px !important;
+  }
+}
+
+/* GLOBAL GRID ALIGNMENT FIX */
+:root {
+  --site-max: 1240px;
+  --site-pad: 32px;
+  --site-pad-mobile: 16px;
+}
+
+/* Keep all main content sections on the same horizontal grid */
+.statement,
+.why-us,
+.portfolio,
+.services-new,
+.svc-orbit-wrap,
+.show-block,
+.process,
+.globe-section,
+.video-testimonial,
+.cta-wrap {
+  width: 100%;
+  max-width: var(--site-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--site-pad) !important;
+  padding-right: var(--site-pad) !important;
+}
+
+/* Sections that already have top/bottom padding keep their vertical rhythm */
+.portfolio {
+  overflow: visible;
+}
+
+/* Full-width visual bands should not force cards outside the shared grid */
+#portfolio .pg {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Keep navbar visually aligned but still compact */
+nav {
+  max-width: min(1240px, calc(100% - 64px));
+}
+
+@media (max-width: 768px) {
+  .statement,
+  .why-us,
+  .portfolio,
+  .services-new,
+  .svc-orbit-wrap,
+  .show-block,
+  .process,
+  .globe-section,
+  .video-testimonial,
+  .cta-wrap {
+    padding-left: var(--site-pad-mobile) !important;
+    padding-right: var(--site-pad-mobile) !important;
+  }
+
+  nav {
+    max-width: calc(100% - 24px);
+  }
+}
+
+/* GLOBAL GRID: match WHAT OUR CLIENTS SAY block width */
+:root {
+  --site-max: 1120px;
+  --site-pad: 32px;
+  --site-pad-mobile: 16px;
+}
+
+/* Make main sections follow the testimonial block scale */
+.statement,
+.why-us,
+.portfolio,
+.services-new,
+.svc-orbit-wrap,
+.show-block,
+.process,
+.globe-section,
+.video-testimonial,
+.cta-wrap {
+  max-width: var(--site-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--site-pad) !important;
+  padding-right: var(--site-pad) !important;
+}
+
+/* Inner containers should not exceed the same visual grid */
+.vt-bento,
+.wu-story,
+.globe-layout,
+.cta-box,
+.services-top,
+.svc-orbit-stage {
+  max-width: 100% !important;
+}
+
+/* OUR PROJECTS should live inside the same width, not stretch wider */
+#portfolio .pg,
+#moreCases .pg {
+  max-width: 100% !important;
+}
+
+/* Navbar aligned to the same site grid */
+nav {
+  max-width: min(1120px, calc(100% - 64px)) !important;
+}
+
+@media (max-width: 768px) {
+  .statement,
+  .why-us,
+  .portfolio,
+  .services-new,
+  .svc-orbit-wrap,
+  .show-block,
+  .process,
+  .globe-section,
+  .video-testimonial,
+  .cta-wrap {
+    padding-left: var(--site-pad-mobile) !important;
+    padding-right: var(--site-pad-mobile) !important;
+  }
+
+  nav {
+    max-width: calc(100% - 24px) !important;
+  }
+}

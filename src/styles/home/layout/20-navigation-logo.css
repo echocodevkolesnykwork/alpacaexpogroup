@@ -1,0 +1,62 @@
+/* FORCE CONTACT NOW BACK TO RIGHT SIDE */
+.nav-contact-wrap {
+  position: absolute !important;
+  right: 0 !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 150 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* LEFT LOGO BUTTON — isolated, does not affect CONTACT NOW */
+.nav-logo-left {
+  position: absolute !important;
+  left: -40px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-28%) !important;
+  z-index: 120 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.nav-logo-left-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: clamp(180px, 30vw, 220px) !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  text-decoration: none !important;
+  line-height: 0 !important;
+  white-space: nowrap !important;
+}
+.nav-logo-left-btn:hover {
+  background: transparent !important;
+}
+.nav-logo-left-img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center left !important;
+}
+@media (max-width: 768px) {
+  .nav-logo-left {
+    display: flex !important;
+    left: -60px !important;
+    top: 50% !important;
+    transform: translateY(-30%) !important;
+  }
+}
+
+/* CONTACT NOW must stay fixed on the right */
+.nav-contact-wrap {
+  position: absolute !important;
+  right: 0 !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}

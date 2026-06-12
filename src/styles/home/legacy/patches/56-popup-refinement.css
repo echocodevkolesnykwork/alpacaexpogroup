@@ -1,0 +1,71 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 56 — Video popup: smaller video, transparent backdrop, nav buttons
+   hugging the video boundary, close button matching nav style.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. VIDEO SIZE & BACKDROP ─────────────────────────────────────────────── */
+.pe-popup-video-wrap {
+  width: min(50vw, calc(50vh * 16 / 9)) !important;
+  max-width: none !important;
+}
+
+.pe-popup-backdrop {
+  background: rgba(4, 12, 24, 0.22) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+}
+
+/* ── 2. NAV BUTTONS — hug the video boundary ─────────────────────────────── */
+/* Video half-width = min(25vw, 25vh * 16/9).
+   Buttons are 56px wide; sit 24px outside the video edge → gap = 28px + 28px.
+   80px = half button (28px) + desired gap (≈52px feels right at this scale).  */
+.pe-popup-nav.prev {
+  left: calc(50% - min(25vw, calc(25vh * 16 / 9)) - 80px) !important;
+}
+.pe-popup-nav.next {
+  right: calc(50% - min(25vw, calc(25vh * 16 / 9)) - 80px) !important;
+}
+
+/* ── 3. CLOSE BUTTON — matches nav button style ───────────────────────────── */
+.pe-popup-close {
+  /* position */
+  position: absolute !important;
+  top: 40px !important;
+  right: 40px !important;
+  left: auto !important;
+
+  /* size & shape */
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+
+  /* center the × glyph */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 28px !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  color: #fff !important;
+
+  /* glass — identical to .pe-popup-nav */
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: none !important;
+
+  transition:
+    transform 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.22s ease,
+    border-color 0.22s ease !important;
+  cursor: pointer !important;
+  z-index: 3 !important;
+}
+
+.pe-popup-close:hover {
+  transform: scale(1.1) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}

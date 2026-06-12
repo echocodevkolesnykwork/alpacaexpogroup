@@ -1,0 +1,181 @@
+/* Critical reference styles extracted from public/ref/home.html. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #020d1a;
+  --accent: #00d4ff;
+  --accent2: #ff4d00;
+  --white: #ffffff;
+  --muted: rgba(255, 255, 255, 0.38);
+  --border: rgba(255, 255, 255, 0.08);
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-b: rgba(255, 255, 255, 0.1);
+  --glass-a: rgba(0, 212, 255, 0.08);
+  --glass-ab: rgba(0, 212, 255, 0.22);
+  --font-d: 'Syne', sans-serif;
+  --font-b: 'DM Sans', sans-serif;
+
+  /* ── Z-INDEX LAYERS ─────────────────────────────────────────────────────
+     Single source of truth. Never hardcode z-index values outside this map.
+     New layers (GSAP planets, section transitions) must use these variables.
+  ─────────────────────────────────────────────────────────────────────── */
+  --z-bg: 0; /* fixed canvas, blobs */
+  --z-content: 1; /* default section content */
+  --z-orbit: 10; /* perfect-event orbit / planet layers */
+  --z-nav: 100; /* sticky nav bar */
+  --z-nav-top: 150; /* nav contact wrap (floats above nav) */
+  --z-overlay: 200; /* fullscreen overlays (portfolio) */
+  --z-modal: 1000; /* popups: request, project */
+  --z-pe-title: 2000; /* perfect-event locked headline */
+  --z-splash: 9000; /* splash screen */
+  --z-flash: 9001; /* sp-flash — must always sit above --z-splash */
+  --z-top: 9999; /* floating contact, nav dropdown */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-b);
+  overflow-x: hidden;
+}
+a,
+button {
+  cursor: pointer;
+}
+
+/* NEON LINES BACKGROUND */
+#neon-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.38;
+}
+
+/* GLASS */
+.g {
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 0.5px solid var(--glass-b);
+  position: relative;
+  overflow: hidden;
+}
+.g::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.18), transparent);
+  pointer-events: none;
+}
+.ga {
+  background: var(--glass-a);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 0.5px solid var(--glass-ab);
+  position: relative;
+  overflow: hidden;
+}
+.ga::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.3), transparent);
+  pointer-events: none;
+}
+
+/* ── LIQUID GLASS BUTTON UTILITY ─────────────────────────────────────────
+   Reusable visual layer. Apply alongside a sizing class:
+     <a class="nav-btn btn-glass">CONTACT NOW</a>
+     <a class="btn-g  btn-glass">View cases</a>
+   This class owns: background, border, backdrop-filter, shadow, transition.
+   Consumer classes own: color, padding, border-radius, font. Never duplicate
+   glass properties in consumer classes — extend or override only what differs.
+   Hover: subtle internal brightening + 1px lift. Color changes are the
+   consumer's responsibility (e.g. .btn-g:hover { color: #fff }).
+   ─────────────────────────────────────────────────────────────────────── */
+/* shadow layer order: top-inset | bottom-inset | outer-drop | glow-slot */
+.btn-glass {
+  position: relative;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.24);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 6px 24px rgba(0, 0, 0, 0.16),
+    0 0 0 rgba(255, 255, 255, 0);
+  transition:
+    color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.btn-glass:hover {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(255, 255, 255, 0.26);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 8px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 rgba(255, 255, 255, 0);
+  transform: translateY(-1px);
+}
+
+/* BLOBS */
+.blobs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+}
+.blob-1 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 65%);
+  top: -200px;
+  right: -200px;
+}
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 65%);
+  bottom: 10%;
+  left: -150px;
+}

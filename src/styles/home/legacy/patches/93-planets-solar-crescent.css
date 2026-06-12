@@ -1,0 +1,82 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 93 — Planet solar crescent: directional cyan glow on the inner face
+   of each planet (the side facing the "perfect event" sun at orbit center).
+
+   Architecture:
+   · .pe-orb-sphere::before is a circle (inset:12%, border-radius:50%) that
+     patch-62 re-enabled and patch-63 calibrated. It currently sits at
+     opacity:0 in the resting state.
+   · This patch makes it visible (opacity:0.75) and adds a directional
+     box-shadow whose offset vector points TOWARD the orbit center (50%,50%).
+     An inset offset in that direction creates the crescent on the lit face.
+     An outer shadow with the same direction adds a soft ambient halo.
+   · On hover patch-63 already fires: opacity:1 + symmetric full glow.
+     The box-shadow transition (0.4s ease-out from patch-62) handles the
+     smooth crescent → full-glow reveal automatically.
+
+   Direction table  (planet top%, left% → offset to center → inset dx/dy):
+     STAND      22% 20% → (+30,+28) → inset +10px +10px
+     ACTIVATION 16% 50% → ( 0,+34) → inset   0   +14px
+     STAFF      22% 80% → (-30,+28) → inset -10px +10px
+     SCREENS    50% 90% → (-40,  0) → inset -14px   0
+     MERCH      82% 78% → (-28,-32) → inset  -9px -11px
+     CONTENT    82% 22% → (+28,-32) → inset  +9px -11px
+     CATERING   94% 54% → (  0,-44) → inset    0  -14px
+     SUPPORT    55% 10% → (+40, -5) → inset +14px  -2px
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared resting opacity — override patch-62's opacity:0 ───────────────── */
+#peSecondRight .pe-orb-ideas::before,
+#peSecondRight .pe-orb-vr::before,
+#peSecondRight .pe-orb-staff::before,
+#peSecondRight .pe-orb-led::before,
+#peSecondRight .pe-orb-materials::before,
+#peSecondRight .pe-orb-motion::before,
+#peSecondRight .pe-orb-bar::before,
+#peSecondRight .pe-orb-activation::before {
+  opacity: 0.75 !important;
+}
+
+/* ── Per-planet directional crescent ─────────────────────────────────────── */
+
+/* STAND */
+#peSecondRight .pe-orb-ideas::before {
+  box-shadow: inset -7px -7px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* ACTIVATION */
+#peSecondRight .pe-orb-vr::before {
+  box-shadow: inset 0 -8px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* STAFF */
+#peSecondRight .pe-orb-staff::before {
+  box-shadow: inset 7px -7px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* SCREENS */
+#peSecondRight .pe-orb-led::before {
+  box-shadow: inset 8px 0 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* MERCH */
+#peSecondRight .pe-orb-materials::before {
+  box-shadow: inset 7px 7px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* CONTENT */
+#peSecondRight .pe-orb-motion::before {
+  box-shadow: inset -7px 7px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* CATERING */
+#peSecondRight .pe-orb-bar::before {
+  box-shadow: inset 0 8px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* SUPPORT */
+#peSecondRight .pe-orb-activation::before {
+  box-shadow: inset -8px 1px 8px -1px rgba(150, 245, 255, 0.95) !important;
+}
+
+/* hover handled by patch-94 */

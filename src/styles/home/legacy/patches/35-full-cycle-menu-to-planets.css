@@ -1,0 +1,9 @@
+/* Reference style block 36 id="full-cycle-menu-to-planets-final" */
+#pe-planets {
+  position: relative;
+  display: block;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  scroll-margin-top: 0;
+}

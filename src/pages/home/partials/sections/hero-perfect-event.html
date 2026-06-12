@@ -1,0 +1,410 @@
+<div id="pe-planets" aria-hidden="true"></div>
+<div class="pe-pin-wrap" id="pePinWrap">
+  <section class="hero" id="heroSection">
+    <!-- dark overlay INSIDE sticky hero -->
+    <div class="pe-bg-dark" id="peBgDark"></div>
+    <!-- hero content -->
+    <div class="hero-left hero-card" id="heroLeft">
+      <div class="hero-pre" id="heroPre">We turn ideas into a</div>
+      <h1 class="pe-headline" id="peHeadline">
+        <em class="pe-highlight" id="peHighlight">perfect event</em>
+      </h1>
+
+      <div class="btns" id="heroBtnsRow">
+        <a class="btn-p" href="#contact">REQUEST CONCEPT</a>
+        <a class="btn-g btn-glass" href="#portfolio">View cases</a>
+      </div>
+      <div
+        class="hero-tag hero-tag-ticker"
+        id="heroTicker"
+        aria-label="Exhibitions: ICE, SiGMA, iGB, GAT, SBC"
+      >
+        <div class="ticker-track">
+          <div class="ticker-set">
+            <span>ICE</span><span class="dot">·</span><span>SiGMA</span><span class="dot">·</span
+            ><span>iGB</span><span class="dot">·</span><span>GAT</span><span class="dot">·</span
+            ><span>SBC</span><span class="dot">·</span>
+          </div>
+          <div class="ticker-set" aria-hidden="true">
+            <span>ICE</span><span class="dot">·</span><span>SiGMA</span><span class="dot">·</span
+            ><span>iGB</span><span class="dot">·</span><span>GAT</span><span class="dot">·</span
+            ><span>SBC</span><span class="dot">·</span>
+          </div>
+          <div class="ticker-set" aria-hidden="true">
+            <span>ICE</span><span class="dot">·</span><span>SiGMA</span><span class="dot">·</span
+            ><span>iGB</span><span class="dot">·</span><span>GAT</span><span class="dot">·</span
+            ><span>SBC</span><span class="dot">·</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right" id="heroRight">
+      <div class="hero-vid">
+        <video
+          id="heroBgVideo"
+          class="hero-vid-player"
+          hidden
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+        >
+          <source id="heroBgVideoSource" src="__HERO_VIDEO_URL__" type="video/mp4" />
+        </video>
+        <iframe
+          class="hero-vid-fallback"
+          hidden
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen=""
+          frameborder="0"
+          src="https://player.vimeo.com/video/1185112878?autoplay=1&amp;muted=1&amp;loop=1&amp;background=1&amp;autopause=0&amp;controls=0"
+          title="Hero background video fallback"
+        ></iframe>
+      </div>
+      <div class="hero-vid-overlay"></div>
+    </div>
+    <!-- second state INSIDE sticky hero — sphere orbit animation -->
+    <div class="pe-second" id="peSecond">
+      <div class="pe-second-left" id="peSecondLeft"></div>
+      <div class="pe-second-right" id="peSecondRight">
+        <div class="pe-orb-title" id="peOrbTitle">perfect event</div>
+        <!-- Orbit SVG rings -->
+        <svg class="pe-orb-svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 700 500">
+          <defs>
+            <linearGradient id="peOrbG1" x1="0%" x2="100%" y1="0%" y2="0%">
+              <stop offset="0%" stop-color="#3090ff" stop-opacity="0"></stop>
+              <stop offset="30%" stop-color="#50d0ff" stop-opacity="0.55"></stop>
+              <stop offset="70%" stop-color="#8060ff" stop-opacity="0.45"></stop>
+              <stop offset="100%" stop-color="#3090ff" stop-opacity="0"></stop>
+            </linearGradient>
+            <filter id="peOrbGlow">
+              <feGaussianBlur result="blur" stdDeviation="4"></feGaussianBlur>
+              <feMerge>
+                <feMergeNode in="blur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- ── LAYER 1 — inner solid orbit (around title/sun) ──────────────
+               Solid continuous ring, thin stroke, subtle blur via CSS.
+               SMIL: slow scale breathing (22s, 2% amp). -->
+          <ellipse
+            id="peOrbitRing3"
+            cx="350"
+            cy="250"
+            fill="none"
+            rx="118"
+            ry="38"
+            stroke="rgba(210,225,248,0.48)"
+            stroke-width="0.6"
+          >
+            <animateTransform
+              attributeName="transform"
+              type="matrix"
+              values="1 0 0 1 0 0; 1.025 0 0 1.025 -8.75 -6.25; 1 0 0 1 0 0"
+              keyTimes="0; 0.5; 1"
+              calcMode="spline"
+              keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+              dur="22s"
+              repeatCount="indefinite"
+            ></animateTransform>
+          </ellipse>
+
+          <!-- ── LAYER 2 — mid dashed orbit — TEMPORARILY REMOVED ──────────── -->
+
+          <!-- ── LAYER 3 — asteroid belt ───────────────────────────────────────
+               Populated procedurally by 32-asteroid-belt.js.
+               Contains irregular polygon asteroids + dust along the orbit path.
+               SMIL rotation (CCW) injected by the same script. -->
+          <g id="peOrbitAsteroidBelt" aria-hidden="true"></g>
+
+          <!-- ── LAYER 4 — outer gradient ring (frames the composition) ───── -->
+          <ellipse
+            id="peOrbitRing1"
+            cx="350"
+            cy="250"
+            fill="none"
+            filter="url(#peOrbGlow)"
+            opacity="0.8"
+            rx="320"
+            ry="105"
+            stroke="url(#peOrbG1)"
+            stroke-width="1.5"
+          ></ellipse>
+        </svg>
+
+        <!-- Secondary solar flare — soft glow near STAND planet, scroll-synced -->
+        <div class="pe-solar-flare" aria-hidden="true"></div>
+
+        <!-- STAND — largest planet per spec -->
+        <div
+          aria-label="Watch STAND video"
+          class="pe-orb-sphere pe-orb-ideas"
+          data-label="STAND"
+          data-video="videos/pe-ideas.mp4"
+          data-popup-video="__POPUP_VIDEO_1__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_STAND_POSTER_URL__"
+          >
+            __PLANET_STAND_HEVC_SOURCE__
+            <source src="__PLANET_STAND_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- ACTIVATION -->
+        <div
+          aria-label="Watch ACTIVATION video"
+          class="pe-orb-sphere pe-orb-vr"
+          data-label="ACTIVATION"
+          data-video="videos/pe-vr.mp4"
+          data-popup-video="__POPUP_VIDEO_2__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_ACTIVATION_POSTER_URL__"
+          >
+            __PLANET_ACTIVATION_HEVC_SOURCE__
+            <source src="__PLANET_ACTIVATION_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- STAFF (Hosts) -->
+        <div
+          aria-label="Watch STAFF video"
+          class="pe-orb-sphere pe-orb-staff"
+          data-label="STAFF"
+          data-video="videos/pe-staff.mp4"
+          data-popup-video="__POPUP_VIDEO_3__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_HOSTS_POSTER_URL__"
+          >
+            __PLANET_HOSTS_HEVC_SOURCE__
+            <source src="__PLANET_HOSTS_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- SCREENS -->
+        <div
+          aria-label="Watch SCREENS video"
+          class="pe-orb-sphere pe-orb-led"
+          data-label="SCREENS"
+          data-video="videos/pe-led.mp4"
+          data-popup-video="__POPUP_VIDEO_1__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_SCREENS_POSTER_URL__"
+          >
+            __PLANET_SCREENS_HEVC_SOURCE__
+            <source src="__PLANET_SCREENS_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- MERCH -->
+        <div
+          aria-label="Watch MERCH video"
+          class="pe-orb-sphere pe-orb-materials"
+          data-label="MERCH"
+          data-video="videos/pe-materials.mp4"
+          data-popup-video="__POPUP_VIDEO_3__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_MERCH_POSTER_URL__"
+          >
+            __PLANET_MERCH_HEVC_SOURCE__
+            <source src="__PLANET_MERCH_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- CATERING -->
+        <div
+          aria-label="Watch CATERING video"
+          class="pe-orb-sphere pe-orb-bar"
+          data-label="CATERING"
+          data-video="videos/pe-bar.mp4"
+          data-popup-video="__POPUP_VIDEO_2__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_CATERING_POSTER_URL__"
+          >
+            __PLANET_CATERING_HEVC_SOURCE__
+            <source src="__PLANET_CATERING_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- CONTENT -->
+        <div
+          aria-label="Watch CONTENT video"
+          class="pe-orb-sphere pe-orb-motion"
+          data-label="CONTENT"
+          data-video="videos/pe-motion.mp4"
+          data-popup-video="__POPUP_VIDEO_1__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_CONTENT_POSTER_URL__"
+          >
+            __PLANET_CONTENT_HEVC_SOURCE__
+            <source src="__PLANET_CONTENT_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+
+        <!-- SUPPORT -->
+        <div
+          aria-label="Watch SUPPORT video"
+          class="pe-orb-sphere pe-orb-activation"
+          data-label="SUPPORT"
+          data-video="videos/pe-activation.mp4"
+          data-popup-video="__POPUP_VIDEO_2__"
+          role="button"
+          tabindex="0"
+        >
+          <video
+            class="pe-orb-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            poster="__PLANET_SUPPORT_POSTER_URL__"
+          >
+            __PLANET_SUPPORT_HEVC_SOURCE__
+            <source src="__PLANET_SUPPORT_URL__" type="video/webm" />
+          </video>
+          <div class="pe-orb-play-icon"></div>
+        </div>
+      </div>
+      <div class="pe-orb-subtitle pe-orb-subtitle-bottom" id="peOrbSubtitle">
+        <span class="full-cycle-fix">FULL CYCLE. ZERO STRESS</span>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- /pe-pin-wrap -->
+
+<!-- Planet video popup — Stage 2.4. data-popup-video per sphere is the CMS override point. -->
+<div class="pe-popup-backdrop" id="pePopupBackdrop" aria-hidden="true">
+  <button
+    class="pe-popup-close"
+    id="pePopupClose"
+    type="button"
+    aria-label="Close video"
+    data-tooltip="Close"
+  >
+    ×
+  </button>
+  <button
+    class="pe-popup-nav prev"
+    id="pePopupPrev"
+    type="button"
+    aria-label="Previous planet"
+    data-tooltip="Previous"
+  >
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+  <div class="pe-popup-video-wrap" role="dialog" aria-modal="true" aria-label="Planet video">
+    <video id="pePopupVideo" playsinline preload="none" muted></video>
+    <button
+      id="pePopupFullscreen"
+      class="pe-popup-fullscreen"
+      type="button"
+      aria-label="Fullscreen"
+      data-tooltip="Fullscreen"
+    >
+      <!-- Enter fullscreen -->
+      <svg
+        class="fs-icon fs-icon-expand"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <polyline points="15 3 21 3 21 9" />
+        <polyline points="9 21 3 21 3 15" />
+        <line x1="21" y1="3" x2="14" y2="10" />
+        <line x1="3" y1="21" x2="10" y2="14" />
+      </svg>
+      <!-- Exit fullscreen -->
+      <svg
+        class="fs-icon fs-icon-compress"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <polyline points="4 14 10 14 10 20" />
+        <polyline points="20 10 14 10 14 4" />
+        <line x1="10" y1="14" x2="3" y2="21" />
+        <line x1="21" y1="3" x2="14" y2="10" />
+      </svg>
+    </button>
+  </div>
+  <button
+    class="pe-popup-nav next"
+    id="pePopupNext"
+    type="button"
+    aria-label="Next planet"
+    data-tooltip="Next"
+  >
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+</div>
+<!-- STATEMENT -->

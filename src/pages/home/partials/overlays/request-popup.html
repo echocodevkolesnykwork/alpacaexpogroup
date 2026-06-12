@@ -1,0 +1,41 @@
+<div class="request-popup" id="requestPopup" aria-hidden="true" inert>
+  <div class="request-popup__backdrop" data-request-close></div>
+  <div
+    class="request-popup__card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="requestPopupTitle"
+  >
+    <button class="request-popup__close" type="button" aria-label="Close popup" data-request-close>
+      ×
+    </button>
+
+    <h2 class="request-popup__title" id="requestPopupTitle">Request <em>free concept</em></h2>
+    <p class="request-popup__text">
+      Tell us a few details about your event. Our team will contact you and prepare the next step.
+    </p>
+    <form
+      class="request-form"
+      action="mailto:info@alpacaexpogroup.com"
+      method="post"
+      enctype="text/plain"
+    >
+      <input
+        class="request-form__field"
+        name="Contact person"
+        type="text"
+        placeholder="Contact person"
+        required
+      />
+      <input class="request-form__field" name="Phone" type="tel" placeholder="Phone" required />
+      <input class="request-form__field" name="Email" type="email" placeholder="Email" required />
+      <input class="request-form__field" name="Event" type="text" placeholder="Event" required />
+      <textarea
+        class="request-form__field request-form__wide"
+        name="Comments"
+        placeholder="Comments"
+      ></textarea>
+      <button class="request-form__submit" type="submit">SEND REQUEST</button>
+    </form>
+  </div>
+</div>

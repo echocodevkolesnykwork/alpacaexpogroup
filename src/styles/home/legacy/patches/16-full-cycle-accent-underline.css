@@ -1,0 +1,88 @@
+/* Reference style block 17 id="full-cycle-accent-underline-final" */
+/* FULL CYCLE. ZERO STRESS — +30% size and animated blue accent underline */
+#peOrbSubtitle.pe-orb-subtitle-bottom {
+  font-size: 15.6px !important;
+  letter-spacing: 0.3em !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  text-shadow: 0 0 18px rgba(0, 212, 255, 0.16) !important;
+}
+
+#peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix {
+  position: relative !important;
+  display: inline-block !important;
+  padding-bottom: 9px !important;
+  font-size: 1em !important;
+}
+
+#peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 78%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    rgba(255, 255, 255, 0.85),
+    var(--accent),
+    transparent
+  );
+  box-shadow:
+    0 0 12px rgba(0, 212, 255, 0.72),
+    0 0 28px rgba(0, 212, 255, 0.28);
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+}
+
+#peOrbSubtitle.underline-on .full-cycle-fix::after {
+  animation:
+    fullCycleUnderlineSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    fullCycleUnderlineGlow 2.2s ease-in-out 1.15s infinite;
+}
+
+@keyframes fullCycleUnderlineSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scaleX(0);
+    filter: blur(5px);
+  }
+  45% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes fullCycleUnderlineGlow {
+  0%,
+  100% {
+    opacity: 0.72;
+    box-shadow:
+      0 0 10px rgba(0, 212, 255, 0.58),
+      0 0 22px rgba(0, 212, 255, 0.22);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 18px rgba(0, 212, 255, 0.9),
+      0 0 42px rgba(0, 212, 255, 0.34);
+  }
+}
+
+@media (max-width: 768px) {
+  #peOrbSubtitle.pe-orb-subtitle-bottom {
+    font-size: 13px !important;
+    letter-spacing: 0.2em !important;
+  }
+  #peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix {
+    padding-bottom: 7px !important;
+  }
+}

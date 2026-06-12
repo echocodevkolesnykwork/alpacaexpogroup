@@ -1,0 +1,40 @@
+/* Reference style block 20 id="reviews-load-more-patch" */
+/* VIEW MORE REVIEWS — opens two blocks with 6 cards each */
+.more-reviews {
+  max-width: 1120px;
+  margin: 18px auto 0;
+  display: none;
+}
+.more-reviews.open {
+  display: block;
+  animation: fup 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.more-reviews-block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.more-reviews-block + .more-reviews-block {
+  margin-top: 14px;
+}
+.more-reviews .vt-cell {
+  min-height: 230px;
+}
+.view-more-cases {
+  font-family: var(--font-b);
+}
+@media (max-width: 900px) {
+  .more-reviews-block {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .more-reviews {
+    margin-top: 14px;
+  }
+  .more-reviews-block {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,39 @@
+/* Reference style block 26 id="spheres-no-abrupt-off-final" */
+/* FINAL FIX: spheres must not switch off abruptly */
+.pe-pin-wrap,
+.pe-orbit-section,
+.pe-orbit-stage,
+.pe-orb-wrap,
+.pe-orb,
+.pe-planet,
+.pe-sphere,
+.pe-orb-play-icon,
+#peOrbitStage,
+#peOrbStage,
+#peOrbs,
+#peSpheres {
+  visibility: visible !important;
+}
+
+.pe-orb,
+.pe-planet,
+.pe-sphere,
+.pe-orb-wrap {
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease !important;
+}
+
+/* prevent old scripts/classes from hard-hiding the spheres */
+.pe-orb.is-hidden,
+.pe-orb.hidden,
+.pe-planet.is-hidden,
+.pe-planet.hidden,
+.pe-sphere.is-hidden,
+.pe-sphere.hidden,
+.pe-orb-wrap.is-hidden,
+.pe-orb-wrap.hidden {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}

@@ -1,0 +1,20 @@
+/* FULL CYCLE CLEAN FIX */
+.hero-tagline,
+.full-cycle-text,
+.fullcycle-tagline {
+  animation: none !important;
+  transition: opacity 0.4s ease !important;
+  transform: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.hero-tagline::before,
+.hero-tagline::after,
+.full-cycle-text::before,
+.full-cycle-text::after,
+.fullcycle-tagline::before,
+.fullcycle-tagline::after {
+  display: none !important;
+  content: none !important;
+}

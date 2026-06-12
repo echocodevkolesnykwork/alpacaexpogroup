@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 85 — Reviews: smart pagination grid, alternating video layout,
+   responsive breakpoints, glassmorphism upgrade, buttery logo hover.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. EXTRA-CHUNK GRID (.vr-chunk) ─────────────────────────────────────── */
+/* 3-column layout mirrors .vt-bento (video + 2 card columns).
+   54-reviews.css already places .vt-cell-video at grid-column:1 grid-row:1/3
+   globally — this rule applies to .vr-chunk children too.                   */
+.vr-chunk {
+  max-width: 1120px;
+  margin: 14px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+/* Alternate layout: video moves to the right column.
+   Cards auto-fill columns 1-2 (grid skips the explicitly placed col-3 cell). */
+.vr-chunk-alt .vt-cell-video {
+  grid-column: 3 !important;
+}
+
+/* [hidden] must beat display:grid !important — mirrors patch-76 pattern */
+#reviews .vr-chunk[hidden] {
+  display: none !important;
+}
+
+/* ── 2. TABLET (769px – 991px) ───────────────────────────────────────────── */
+/* 2-column layout: video stays on its side (portrait), 1 card top + 1 bottom.
+   Cards 3-4 overflow to a third row below the video — clean and balanced.   */
+@media (min-width: 769px) and (max-width: 991px) {
+  .vt-bento {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* Video: col 1, spans rows 1-2. Base rule from 54-reviews.css is already
+     grid-column:1; grid-row:1/3 — explicitly reinforce it here.            */
+  .vt-bento .vt-cell-video {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+  }
+  /* Keep portrait orientation; reduce min-height so it doesn't overpower
+     the layout (55-reviews-video.css sets 560px which is too tall here).   */
+  .video-testimonial .vt-video-wrap.clients-video-vertical {
+    aspect-ratio: 9 / 16 !important;
+    min-height: 360px !important;
+  }
+  .vr-chunk {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* Normal chunk: video stays left */
+  .vr-chunk .vt-cell-video {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+  }
+  /* Alt chunk: video stays right — alternating preserved on tablet */
+  .vr-chunk-alt .vt-cell-video {
+    grid-column: 2 !important;
+    grid-row: 1 / 3 !important;
+  }
+}
+
+/* ── 3. MOBILE (≤ 768px): single-column stack ────────────────────────────── */
+@media (max-width: 768px) {
+  .vt-bento {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .vr-chunk {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  /* [hidden] still wins — higher specificity beats both flex and grid !important */
+}
+
+/* ── 4. GLASSMORPHISM UPGRADE ────────────────────────────────────────────── */
+.vt-cell {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── 5. LOGO — buttery grayscale → color transition ─────────────────────── */
+.vt-logo img,
+.vt-logo svg {
+  transition:
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s ease !important;
+}
+
+.vt-cell:hover .vt-logo img,
+.vt-cell:hover .vt-logo svg {
+  filter: grayscale(0) brightness(1) !important;
+}

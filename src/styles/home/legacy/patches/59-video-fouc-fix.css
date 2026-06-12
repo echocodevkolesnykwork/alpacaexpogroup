@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 59 — Video popup FOUC fix.
+
+   ROOT CAUSE: CSS patches are JS-injected. On first paint the browser sees
+   no patch CSS → backdrop renders at browser-default opacity:1. When the
+   patch injects and sets opacity:0 WITH a transition, the browser animates
+   1→0 over 300ms = a visible flash on every page load.
+
+   Secondary: backdrop-filter on the base state can trigger GPU compositing
+   before opacity:0 takes effect, causing a brief blur bleed-through.
+
+   FIX STRATEGY:
+   · Base state: instant hide (transition:none, backdrop-filter:none).
+   · .is-open state: transition lives here → smooth open; instant close is
+     acceptable and avoids the FOUC without any JS changes.
+   · All child controls (nav, close) get their own opacity/visibility so
+     they can never bleed through if backdrop's stacking context shifts.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. BACKDROP — instant hidden base, no GPU bleed ─────────────────────── */
+.pe-popup-backdrop {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  /* GPU compositing off while hidden — prevents backdrop-filter bleed */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  /* NO transition: prevents 1→0 animation on CSS injection (the FOUC) */
+  transition: none !important;
+}
+
+/* Re-apply blur and transition only when open */
+.pe-popup-backdrop.is-open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  transition: opacity 0.35s ease !important;
+}
+
+/* ── 2. NAV BUTTONS — explicit hidden, don't rely on backdrop inheritance ── */
+.pe-popup-nav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: none !important;
+}
+
+.pe-popup-backdrop.is-open .pe-popup-nav {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  /* slight delay so buttons appear after backdrop fades in */
+  transition:
+    opacity 0.3s ease 0.1s,
+    transform 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.22s ease,
+    border-color 0.22s ease !important;
+}
+
+/* ── 3. CLOSE BUTTON — same treatment as nav buttons ─────────────────────── */
+.pe-popup-close {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: none !important;
+}
+
+.pe-popup-backdrop.is-open .pe-popup-close {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition:
+    opacity 0.3s ease 0.1s,
+    transform 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.22s ease,
+    border-color 0.22s ease !important;
+}
+
+/* ── 4. VIDEO ELEMENT — ensure no native controls or poster flash ─────────── */
+#pePopupVideo {
+  /* controls attribute is absent in HTML; belt-and-suspenders */
+  display: block !important;
+  opacity: 1 !important;
+}

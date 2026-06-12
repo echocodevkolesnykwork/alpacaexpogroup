@@ -1,0 +1,68 @@
+/* Reference style block 34 id="hero-exhibition-marquee-final" */
+/* FINAL HERO EXHIBITION MARQUEE — smooth moving ribbon */
+#heroTicker.hero-tag-ticker {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+#heroTicker .ticker-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  will-change: transform !important;
+  transform: translate3d(0, 0, 0);
+  animation: heroExhibitionsMarquee 18s linear infinite !important;
+}
+
+#heroTicker .ticker-set {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  flex: 0 0 auto !important;
+}
+
+#heroTicker .ticker-track span {
+  flex: 0 0 auto !important;
+  font-family: var(--font-b) !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: rgba(255, 255, 255, 0.42) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+#heroTicker .ticker-track .dot {
+  color: rgba(0, 212, 255, 0.42) !important;
+  font-size: 12px !important;
+  letter-spacing: 0 !important;
+}
+
+#heroTicker:hover .ticker-track {
+  animation-play-state: paused !important;
+}
+
+@keyframes heroExhibitionsMarquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-33.333% - 12px), 0, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  #heroTicker .ticker-track {
+    animation: heroExhibitionsMarquee 14s linear infinite !important;
+  }
+}

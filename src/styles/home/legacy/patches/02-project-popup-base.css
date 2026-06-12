@@ -1,0 +1,192 @@
+/* Reference style block 3 data-fix="our-projects-popup-only" */
+/* OUR PROJECTS popup only — no grid/layout changes */
+.op-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(2, 10, 20, 0.92);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.op-popup.open {
+  display: flex;
+}
+.op-popup-card {
+  position: relative;
+  width: min(980px, 94vw);
+  max-height: 90vh;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #020d1a;
+  border: 1px solid rgba(0, 212, 255, 0.22);
+  box-shadow:
+    0 44px 120px rgba(0, 0, 0, 0.72),
+    0 0 70px rgba(0, 212, 255, 0.12);
+}
+.op-popup-img {
+  width: 100%;
+  max-height: calc(90vh - 108px);
+  background: #020d1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.op-popup-img img {
+  width: 100%;
+  max-height: calc(90vh - 108px);
+  object-fit: contain;
+  display: block;
+}
+.op-popup-info {
+  padding: 18px 24px 22px;
+  background: rgba(6, 14, 26, 0.92);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+.op-popup-client {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: none;
+  margin-bottom: 5px;
+}
+.op-popup-title {
+  font-family: var(--font-d);
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 700;
+  color: #fff;
+}
+.op-popup-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.op-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(2, 13, 26, 0.78);
+  color: #fff;
+  font-size: 24px;
+  line-height: 34px;
+  cursor: default;
+}
+.op-popup-close:hover {
+  color: var(--accent);
+  border-color: rgba(0, 212, 255, 0.42);
+}
+#portfolio .pc {
+  cursor: zoom-in;
+}
+@media (max-width: 768px) {
+  .op-popup {
+    padding: 14px;
+  }
+  .op-popup-card {
+    border-radius: 18px;
+  }
+  .op-popup-info {
+    padding: 16px 18px 18px;
+  }
+}
+
+/* CONTACT ICONS HOVER EFFECT */
+.contact-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s ease;
+}
+
+.contact-icons a:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.12);
+}
+
+/* Brand-specific */
+.contact-icons a.telegram:hover {
+  box-shadow: 0 0 18px rgba(0, 136, 204, 0.6);
+  background: rgba(0, 136, 204, 0.15);
+}
+
+.contact-icons a.whatsapp:hover {
+  box-shadow: 0 0 18px rgba(37, 211, 102, 0.6);
+  background: rgba(37, 211, 102, 0.15);
+}
+
+.full-cycle-fix {
+  font-size: 1.15em;
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

@@ -1,0 +1,8 @@
+/* Reference style block 33 id="final-contact-edge-align" */
+@media (min-width: 769px) {
+  #floatingContact,
+  .floating-contact {
+    right: var(--contact-now-edge-offset, 32px) !important;
+    left: auto !important;
+  }
+}

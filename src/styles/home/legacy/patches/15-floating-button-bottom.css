@@ -1,0 +1,109 @@
+/* Reference style block 16 id="floating-button-bottom-fix" */
+/* Bottom red communication button: hidden on splash, appears by original scroll logic */
+.floating-contact,
+.chat-button,
+.contact-fab {
+  position: fixed !important;
+  right: max(32px, calc((100vw - 960px) / 2 + 24px)) !important;
+  bottom: 28px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 999 !important;
+}
+
+.floating-contact {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(12px) scale(0.88) !important;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.floating-contact.visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Safety: never show over splash */
+body:not(.splash-gone) .floating-contact {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+body.splash-gone .floating-contact.visible {
+  visibility: visible !important;
+}
+
+.floating-contact .fc-main {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 20px !important;
+}
+
+/* Animation removed — was causing Safari GPU compositing artifacts */
+.floating-contact.visible .fc-main {
+  animation: none !important;
+}
+
+.floating-contact .fc-main svg {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.floating-contact .fc-main:hover {
+  transform: translateY(-2px) scale(1.04) !important;
+}
+
+@media (max-width: 768px) {
+  .floating-contact,
+  .chat-button,
+  .contact-fab {
+    right: 24px !important;
+    bottom: 24px !important;
+  }
+  .floating-contact .fc-main {
+    width: 58px !important;
+    height: 58px !important;
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    /* filter:blur removed — sudden GPU layer creation at animation start
+       causes a one-frame flash in both Chrome and Safari */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    /* filter:blur(0) removed — keeps a compositor layer active after animation
+       ends (via forwards fill), contributing to Safari square-border artifact */
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation: floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards;
+  /* bottomBtnPulse removed: animates transform:scale(1.06) on the WRAPPER div,
+     causing Safari to composite the entire wrapper bounding box as a square GPU
+     tile — visible as a rectangular border around the rounded .fc-main button.
+     Patches 69-71 only kill animation on .fc-main (child), not on this wrapper.
+     Removed at source to fix both Safari square border and the visible pulse. */
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

@@ -1,0 +1,319 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Stage 2.5 — Floating CTA + global button hover polish
+   ═══════════════════════════════════════════════════════════════════════════
+   RULES:
+   • No JS changes — scroll visibility logic in scripts 11 / 15 is untouched.
+   • All transitions live on BASE state so mouse-leave never snaps.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. GLOBAL: child elements must never steal hover events ─────────────────
+   SVG / span / pseudo-elements inside buttons were capturing mouse events,
+   causing different :hover states on the border vs. the icon interior.
+   pointer-events: none on every interior node fixes this site-wide.
+   ─────────────────────────────────────────────────────────────────────────── */
+.fc-main > svg,
+.fc-btn > svg,
+.btn-p > svg,
+.btn-p > span,
+.btn-g > svg,
+.btn-g > span,
+.nav-btn > svg,
+.nav-btn > span,
+.nav-contact-item > svg,
+.nav-contact-item::before,
+.btn-cta > svg,
+.btn-cta > span,
+.btn-liquid > svg,
+.btn-watch > span,
+.btn-proc-watch > span {
+  pointer-events: none !important;
+}
+
+/* ── 2. WRAPPER — must be 100% transparent ───────────────────────────────────
+   Root cause of the black box artifact: if any CSS rule (variable default,
+   browser UA reset, or stacking-context quirk) paints a background on the
+   .floating-contact div, it shows as an opaque rectangle behind the rounded
+   .fc-main button. Force transparent on every selector that may be involved.
+   ─────────────────────────────────────────────────────────────────────────── */
+.floating-contact,
+#floatingContact {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ── 3. FC-MAIN — base shape, no backdrop-filter, no animation ──────────────
+   backdrop-filter removed: Safari composites it as a square GPU tile regardless
+   of overflow or border-radius, causing the visible rectangular artifact.
+   overflow:hidden is now safe (no backdrop-filter to conflict with).
+   transition on specific properties only — transition:all was triggering
+   unwanted interpolation on animation: and causing a Chrome first-render blink.
+   ─────────────────────────────────────────────────────────────────────────── */
+.floating-contact .fc-main {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: visible !important;
+  background: rgb(218, 60, 0) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-top-color: rgba(255, 255, 255, 0.45) !important;
+  border-bottom-color: rgba(180, 40, 0, 0.45) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    0 4px 18px rgba(255, 70, 0, 0.44),
+    0 8px 28px rgba(0, 0, 0, 0.28) !important;
+  transition:
+    transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.28s ease,
+    background 0.22s ease !important;
+  animation: none !important;
+}
+
+/* Kill all pseudo-element decorators */
+.floating-contact .fc-main::before,
+.floating-contact .fc-main::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* No pulse animation */
+.floating-contact.visible .fc-main {
+  animation: none !important;
+}
+
+/* ── 4. FC-MAIN HOVER ────────────────────────────────────────────────────── */
+.floating-contact .fc-main:hover,
+.floating-contact .fc-main:focus-visible {
+  transform: translateY(-3px) scale(1.04) !important;
+  background: rgba(255, 92, 10, 0.96) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.48),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    0 6px 22px rgba(255, 70, 0, 0.62),
+    0 14px 36px rgba(0, 0, 0, 0.34) !important;
+}
+
+/* SVG icon: perfectly centered, no pointer events */
+.floating-contact .fc-main > svg {
+  width: 30px !important;
+  height: 30px !important;
+  fill: none !important;
+  stroke: #fff !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  display: block !important;
+  pointer-events: none !important;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35)) !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* ── 5. HOVER BRIDGE ─────────────────────────────────────────────────────────
+   .fc-options sits at bottom:calc(100% + 12px) — its bottom edge is 12px
+   above the .floating-contact container's top. Cursor crossing this invisible
+   gap triggers mouseleave on the wrapper and may close the dropdown prematurely.
+
+   Fix: ::before pseudo on .floating-contact fills the gap with a transparent
+   hit area. pointer-events:auto makes it part of the element's hover region,
+   so mouseleave does NOT fire while cursor is in this bridge zone.
+   height: 18px = 12px gap + 6px buffer into the bottom edge of .fc-options.
+   ─────────────────────────────────────────────────────────────────────────── */
+.floating-contact::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: -10px;
+  right: -10px;
+  height: 18px;
+  pointer-events: auto;
+  background: transparent;
+}
+
+/* ── 6. FC-OPTIONS — glassmorphism container, vertical column ────────────────
+   Visual language is an EXACT match of .nav-contact-menu in the header:
+   dark glass, blur(28px), fine border with brighter top, inset glow.
+   Direction (column-reverse = opens upward) comes from an existing patch.
+   gap:8px prevents button overlap when scale transforms are applied on hover.
+   Transition on BASE state ensures open AND close both animate smoothly.
+   ─────────────────────────────────────────────────────────────────────────── */
+.floating-contact .fc-options {
+  /* glass container */
+  background: rgba(6, 14, 28, 0.96) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 8px !important;
+  gap: 8px !important;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.06) inset,
+    0 20px 48px rgba(0, 0, 0, 0.55),
+    0 8px 16px rgba(0, 0, 0, 0.32) !important;
+  /* reveal/hide — transition on BASE animates both open and close */
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(8px) scale(0.95) !important;
+  transition:
+    opacity 0.28s ease,
+    visibility 0s 0.28s,
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.floating-contact.open .fc-options {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1) !important;
+  transition:
+    opacity 0.28s ease,
+    visibility 0s 0s,
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ── 7. FC-BTN — exact 1:1 match with .nav-contact-item ──────────────────────
+   Every dimension, radius, background, border, and shadow value is copied
+   directly from .nav-contact-item in 10-navigation.css. The slide-in
+   transform (translateY(-6px) → 0) from the original CSS is removed; the
+   glass container handles the reveal animation instead.
+   Transition on BASE with 0.4s matches the global button timing.
+   ─────────────────────────────────────────────────────────────────────────── */
+.floating-contact .fc-btn {
+  /* dimensions — match nav-contact-item */
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+  /* glass background — rgba(255,255,255,0.05) as requested */
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  /* fine border — same as nav-contact-item */
+  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  /* 4-layer shadow matches hover count → enables smooth CSS interpolation */
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
+    0 4px 16px rgba(0, 0, 0, 0.18),
+    0 0 0 rgba(255, 255, 255, 0) !important;
+  /* no slide-in transform — let container handle reveal */
+  transform: none !important;
+  /* 0.4s transition on BASE for smooth leave-state reversal */
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Remove old open-state slide transforms and stagger delays */
+.floating-contact.open .fc-btn,
+.floating-contact.open .fc-btn:nth-child(1),
+.floating-contact.open .fc-btn:nth-child(2) {
+  transform: none !important;
+  transition-delay: 0s !important;
+}
+
+/* Inner gloss highlight — same as nav-contact-item::before */
+.floating-contact .fc-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 1px !important;
+  left: 14% !important;
+  right: 14% !important;
+  height: 38% !important;
+  border-radius: 14px 14px 60% 60% !important;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+
+/* SVG: properly sized, pointer-events off */
+.floating-contact .fc-btn > svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+  pointer-events: none !important;
+  fill: currentColor !important;
+}
+
+/* ── 8. FC-BTN BRAND HOVER — gentle scale(1.02) + brand glow ────────────────
+   Matches .nav-contact-item:hover exactly. scale(1.02) translateY(-2px) is
+   gentle enough to never overlap siblings at gap:8px spacing.
+   Shadow count (4 layers) matches base → CSS interpolates smoothly.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Telegram */
+.floating-contact .fc-btn.tg {
+  color: #27a7e7 !important;
+}
+.floating-contact .fc-btn.tg > svg {
+  fill: #27a7e7 !important;
+  opacity: 1 !important;
+}
+.floating-contact .fc-btn.tg:hover {
+  transform: none !important;
+  background: rgba(39, 167, 231, 0.14) !important;
+  border-color: rgba(39, 167, 231, 0.48) !important;
+  border-top-color: rgba(39, 167, 231, 0.65) !important;
+  box-shadow:
+    0 2px 0 rgba(39, 167, 231, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(39, 167, 231, 0.5) !important;
+}
+
+/* WhatsApp */
+.floating-contact .fc-btn.wa {
+  color: #25d366 !important;
+}
+.floating-contact .fc-btn.wa > svg {
+  fill: #25d366 !important;
+  opacity: 1 !important;
+}
+.floating-contact .fc-btn.wa:hover {
+  transform: none !important;
+  background: rgba(37, 211, 102, 0.14) !important;
+  border-color: rgba(37, 211, 102, 0.48) !important;
+  border-top-color: rgba(37, 211, 102, 0.65) !important;
+  box-shadow:
+    0 2px 0 rgba(37, 211, 102, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(37, 211, 102, 0.5) !important;
+}
+
+/* Email */
+.floating-contact .fc-btn.em {
+  color: #ffffff !important;
+}
+.floating-contact .fc-btn.em > svg {
+  fill: #ffffff !important;
+  opacity: 1 !important;
+}
+.floating-contact .fc-btn.em:hover {
+  transform: none !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-top-color: rgba(255, 255, 255, 0.45) !important;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 20px rgba(255, 255, 255, 0.28) !important;
+}

@@ -1,0 +1,103 @@
+<div aria-hidden="true" class="op-popup" id="opPopup">
+  <!-- Close button is a direct child of the backdrop (.op-popup has no
+       transform, so position:absolute anchors to the viewport corner cleanly) -->
+  <button aria-label="Close" class="op-popup-close" data-tooltip="Закрити" type="button">×</button>
+
+  <button
+    aria-label="Попереднє фото"
+    class="op-popup-nav op-popup-nav--prev"
+    data-tooltip="Назад"
+    type="button"
+    hidden
+  >
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M10 12L6 8l4-4"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+  <button
+    aria-label="Наступне фото"
+    class="op-popup-nav op-popup-nav--next"
+    data-tooltip="Далі"
+    type="button"
+    hidden
+  >
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M6 4l4 4-4 4"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+
+  <div aria-modal="true" class="op-popup-card" role="dialog">
+    <div class="op-popup-img" id="opPopupImg">
+      <!-- .op-popup-slides injected here by JS; siblings below are preserved -->
+      <button
+        aria-label="Fullscreen"
+        class="op-popup-fs"
+        data-tooltip="Fullscreen"
+        id="opPopupFs"
+        type="button"
+      >
+        <!-- Standard 24 px fullscreen icons (Feather-style) -->
+        <svg
+          aria-hidden="true"
+          class="fs-icon fs-icon-expand"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+          />
+        </svg>
+        <svg
+          aria-hidden="true"
+          class="fs-icon fs-icon-compress"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
+          />
+        </svg>
+      </button>
+      <!-- Info overlay above the progress bar -->
+      <div class="op-popup-img-info" id="opPopupImgInfo" aria-hidden="true">
+        <div class="op-popup-img-info-client" id="opPopupImgClient"></div>
+        <div class="op-popup-img-info-title" id="opPopupImgTitle"></div>
+        <div class="op-popup-img-info-meta" id="opPopupImgMeta"></div>
+      </div>
+      <!-- Progress bar at the bottom edge of the image area -->
+      <div class="op-popup-progress" id="opPopupProgress">
+        <span class="op-popup-progress-counter" id="opPopupCounter" aria-hidden="true"
+          >01 / 01</span
+        >
+        <div class="op-popup-progress-track">
+          <div class="op-popup-progress-fill" id="opPopupFill"></div>
+        </div>
+      </div>
+    </div>
+    <div class="op-popup-info">
+      <div class="op-popup-client" id="opPopupClient"></div>
+      <div class="op-popup-title" id="opPopupTitle"></div>
+      <div class="op-popup-meta" id="opPopupMeta"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 69 — Floating CTA: kill all pulse animation + fix Safari square border.
+
+   ROOT CAUSES:
+   · Four separate @keyframes (redContactPulse / fcGlassPulse / fcSolidPulse /
+     fcGentleBreath) across patches 15, 43, 46, 67 all target the same element.
+     Whichever loads last wins, so the button always has some animation running.
+   · will-change: transform, box-shadow (patch-67) + isolation: isolate (patch-46)
+     force Safari to composite .fc-main onto its own GPU tile. Safari renders the
+     tile's full square bounding box before clipping to border-radius — visible as
+     a rectangular artifact around the button.
+   · backface-visibility: hidden (patch-67) is a second GPU-promotion trigger
+     that worsens the bounding-box artifact in WebKit.
+
+   FIXES:
+   1. animation: none on both .fc-main and .fc-main.visible — covers every
+      keyframe name regardless of which patch "wins" for the animation property.
+   2. will-change: auto — removes forced GPU tile, eliminates square border.
+   3. backface-visibility: visible — reverts the WebKit promotion hint.
+   4. Static box-shadow replaces the animated glow: always-on depth, no restart
+      artifacts, no Safari compositing layer boundary.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. KILL ALL ANIMATION ────────────────────────────────────────────────── */
+/* Two selectors needed: base (patch-43 adds fcGlassPulse here) and
+   .visible (patches 15/46/67 add their animations here).                      */
+.floating-contact .fc-main,
+.floating-contact.visible .fc-main {
+  animation: none !important;
+}
+
+/* ── 2. REMOVE GPU PROMOTIONS THAT CAUSE SAFARI SQUARE BORDER ────────────── */
+/* will-change:auto = browser default, no forced compositor tile.
+   backface-visibility:visible = no WebKit GPU-layer hint.
+   These two together eliminate the square artifact in Safari while keeping
+   the hover transform smooth (transform still triggers GPU on demand).        */
+.floating-contact .fc-main {
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+  /* Static ambient glow replaces the animated box-shadow: always present,
+     no restart, identical in Chrome and Safari.                               */
+  box-shadow: 0 0 16px rgba(255, 85, 0, 0.4) !important;
+}
+
+/* ── 3. HOVER — unchanged lift + brighter glow, no animation-play-state ──── */
+.floating-contact .fc-main:hover,
+.floating-contact .fc-main:focus-visible {
+  box-shadow:
+    0 6px 24px rgba(255, 85, 0, 0.68),
+    0 2px 8px rgba(255, 85, 0, 0.3) !important;
+}

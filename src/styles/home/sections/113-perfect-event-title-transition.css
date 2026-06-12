@@ -1,0 +1,76 @@
+/* ── NO-JUMP PERFECT EVENT GHOST TRANSITION ── */
+#peGhostTitle {
+  position: fixed !important;
+  z-index: 9998 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+#peHighlight.pe-ghost-hidden {
+  opacity: 0 !important;
+}
+
+#peOrbTitle {
+  will-change: opacity, filter, transform !important;
+}
+
+/* ── FIX TITLE OVERLAP DURING TRANSITION ── */
+#peHighlight.pe-ghost-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#peGhostTitle {
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+#peOrbTitle {
+  opacity: 0;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+/* ── FINAL: ONE SMOOTH TITLE, NO BLINKING / NO OVERLAP ── */
+#peOrbTitle {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#peGhostTitle {
+  position: fixed !important;
+  z-index: 9998 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+#peHighlight.pe-ghost-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* final transition fix: no duplicate, no blinking, fade after center */
+#peOrbTitle {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#peHighlight.pe-ghost-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+#peGhostTitle {
+  white-space: nowrap !important;
+  text-align: center !important;
+}

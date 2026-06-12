@@ -1,0 +1,96 @@
+/* Stage 2.4 — planet video popup */
+
+.pe-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 5, 20, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.pe-popup-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pe-popup-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 5, 20, 0.6);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.pe-popup-close:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: #00d4ff;
+}
+
+/* Strict 16:9 — width is capped at 80vw OR the width that fills 80vh in 16:9 */
+.pe-popup-video-wrap {
+  position: relative;
+  width: min(80vw, calc(80vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 40px 120px rgba(0, 0, 0, 0.7),
+    0 0 60px rgba(0, 212, 255, 0.12);
+}
+
+/* opacity transition enables the crossfade when auto-cycling between planets */
+.pe-popup-video-wrap video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+  transition: opacity 0.3s ease;
+}
+
+/* ── POPUP-OPEN STATE ────────────────────────────────────────────────────────
+   New UX flow: click → planet resets to default B&W → popup opens.
+   dim the entire orbit wrapper slightly so it recedes behind the backdrop.
+   pointer-events: none on spheres instantly clears :hover, reverting the
+   planet to its default grayscale + normal-size state without any transform
+   override that would fight the orbit translate(-50%, -50%) centering.
+   transition: transform on spheres smooths the de-hover revert (0 → base).
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-second-right.is-popup-open {
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+.pe-second-right.is-popup-open .pe-orb-sphere {
+  pointer-events: none !important;
+  transition: transform 0.25s ease !important;
+}

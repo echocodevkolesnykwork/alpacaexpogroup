@@ -1,0 +1,62 @@
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.94);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  /* bottomBtnPulse removed: scale(1.06) on wrapper creates a square GPU tile
+     in Safari, rendering the compositor bounding box as a visible rectangle */
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

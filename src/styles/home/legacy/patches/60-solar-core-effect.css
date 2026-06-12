@@ -1,0 +1,295 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 60 — "perfect event" solar core.
+
+   Corona layers are on #peSecond::before/after (position:absolute; inset:0
+   from patch-14 → fills the full viewport). #peSecond is centred in the
+   viewport, and #peSecondRight is centred inside #peSecond via
+     left:50%; top:50%; transform:translate(-50%,-50%)
+   so radial-gradient(circle at 50% 50%) on #peSecond aligns exactly with
+   the sun title. This eliminates the visible boundary that the old
+   #peSecondRight-based corona showed at the container edge.
+
+   patch-41's #peSecond::before (nebulaPulse) is superseded by the rules
+   below — same specificity, patch-60 loads later → patch-60 wins.
+
+   Scroll sync: JS sets --solar-alpha on #peSecond (0→1 as p: 0.31→0.46).
+   CSS custom properties cascade DOWN — #peSecond::before reads
+   var(--solar-alpha) inherited from its owner element.
+
+   Pulsation: two independently asynchronous layers (13 s / 17 s, offset -6 s)
+   with uneven keyframe stops → organic, non-mechanical breathing.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 0. CANCEL OLD ORBIT-CONTAINER CORONA ──────────────────────────────────── */
+/* Corona moved from #peSecondRight (container-sized) to #peSecond (viewport). */
+#peSecondRight::before,
+#peSecondRight::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* ── 1. KEYFRAMES ─────────────────────────────────────────────────────────── */
+
+/* Title: 6 irregular brightness surges over 13 s.
+   All drop-shadow radii capped at 200 px — safe within the viewport on any
+   desktop width ≥ 769 px when the title is centred. The wide outer corona
+   (previously 380–560 px shadows) is now handled by #peSecond::before which
+   covers the full viewport without any overflow:clip boundary.              */
+@keyframes solarCoreGlow {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 28px rgba(140, 248, 255, 0.96)) drop-shadow(0 0 72px rgba(0, 212, 255, 0.64))
+      drop-shadow(0 0 160px rgba(0, 162, 232, 0.44));
+  }
+  14% {
+    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 50px rgba(168, 252, 255, 0.99)) drop-shadow(0 0 120px rgba(0, 222, 255, 0.88))
+      drop-shadow(0 0 180px rgba(0, 172, 242, 0.64));
+  }
+  27% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.95))
+      drop-shadow(0 0 26px rgba(115, 242, 255, 0.84)) drop-shadow(0 0 60px rgba(0, 200, 255, 0.56))
+      drop-shadow(0 0 148px rgba(0, 148, 226, 0.38));
+  }
+  46% {
+    filter: drop-shadow(0 0 24px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 64px rgba(210, 255, 255, 1)) drop-shadow(0 0 148px rgba(0, 228, 255, 0.97))
+      drop-shadow(0 0 200px rgba(0, 178, 248, 0.74));
+  }
+  61% {
+    filter: drop-shadow(0 0 11px rgba(255, 255, 255, 0.97))
+      drop-shadow(0 0 30px rgba(118, 244, 255, 0.88)) drop-shadow(0 0 76px rgba(0, 208, 255, 0.6))
+      drop-shadow(0 0 158px rgba(0, 154, 234, 0.42));
+  }
+  79% {
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 46px rgba(155, 250, 255, 0.99)) drop-shadow(0 0 106px rgba(0, 218, 255, 0.8))
+      drop-shadow(0 0 178px rgba(0, 168, 240, 0.57));
+  }
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 28px rgba(140, 248, 255, 0.96)) drop-shadow(0 0 72px rgba(0, 212, 255, 0.64))
+      drop-shadow(0 0 160px rgba(0, 162, 232, 0.44));
+  }
+}
+
+/* Inner corona: organic opacity breathing, 17 s.
+   transform:scale removed — scaling a viewport-sized pseudo-element
+   (inset:0 on #peSecond) causes GPU-compositing edge artifacts at the
+   clip boundary in Chrome/Safari. Opacity-only pulsation is sufficient. */
+@keyframes solarInnerCorona {
+  0% {
+    opacity: 0.62;
+  }
+  14% {
+    opacity: 0.92;
+  }
+  26% {
+    opacity: 0.68;
+  }
+  43% {
+    opacity: 0.9;
+  }
+  57% {
+    opacity: 0.6;
+  }
+  72% {
+    opacity: 0.93;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.62;
+  }
+}
+
+/* Outer corona: slow diffuse breathing, 23 s — opacity-only, same reason. */
+@keyframes solarOuterCorona {
+  0% {
+    opacity: 0.38;
+  }
+  20% {
+    opacity: 0.72;
+  }
+  35% {
+    opacity: 0.42;
+  }
+  54% {
+    opacity: 0.75;
+  }
+  69% {
+    opacity: 0.36;
+  }
+  84% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.38;
+  }
+}
+
+/* ══ SOLAR GLOW OVERFLOW FIX ══════════════════════════════════════════════
+   overflow:hidden clips the Gaussian drop-shadow at the element boundary.
+   overflow:clip replaces it without creating a BFC, so position:sticky
+   and all layout behaviour on #heroSection stay intact.
+
+   Drop-shadow radii are now capped at 200 px (see solarCoreGlow above),
+   so they never reach the container boundary on supported viewports ≥ 769 px.
+   The removed overflow-clip-margin was Safari-incompatible anyway.         */
+#heroSection.hero,
+#peSecond.pe-second,
+.pe-second,
+#peSecond {
+  overflow: clip !important;
+}
+
+/* ── 2. TITLE GLOW ────────────────────────────────────────────────────────── */
+#peOrbTitle.is-centered-sun {
+  animation: solarCoreGlow 13s ease-in-out infinite !important;
+}
+
+/* ── 3. INNER CORONA — #peSecond::before (full viewport) ─────────────────── */
+/* Supersedes patch-41's #peSecond::before (nebulaPulse + simple gradient).
+   Same selector specificity, patch-60 loads later → patch-60 wins.
+   #peSecond is position:absolute; inset:0 → fills full viewport.
+   gradient at circle 50% 50% = viewport centre = sun title position.       */
+#peSecond::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Single centred gradient — a second off-centre gradient (previously at
+     32% 30%) created a faint glow in the top-left area of the viewport
+     that the user saw as an unwanted "corner flare". Removed.
+     The .pe-solar-flare element (inside #peSecondRight) provides the
+     intentional STAND-planet accent independently.                      */
+  background: radial-gradient(
+    ellipse 52% 60% at 50% 50%,
+    rgba(250, 255, 255, 0.99) 0%,
+    rgba(0, 235, 255, 0.94) 3%,
+    rgba(0, 218, 255, 0.82) 7%,
+    rgba(0, 196, 255, 0.64) 14%,
+    rgba(0, 162, 245, 0.42) 24%,
+    rgba(0, 112, 220, 0.2) 38%,
+    rgba(0, 68, 192, 0.04) 55%,
+    rgba(0, 38, 162, 0.02) 72%,
+    rgba(0, 20, 140, 0.01) 84%,
+    transparent 94%
+  );
+  opacity: var(--solar-alpha, 0);
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: center center;
+  transition: none;
+}
+
+#peSecond::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 52% 60% at 50% 50%,
+    rgba(250, 255, 255, 0.99) 0%,
+    rgba(0, 235, 255, 0.94) 3%,
+    rgba(0, 218, 255, 0.82) 7%,
+    rgba(0, 196, 255, 0.64) 14%,
+    rgba(0, 162, 245, 0.42) 24%,
+    rgba(0, 112, 220, 0.2) 38%,
+    rgba(0, 68, 192, 0.04) 55%,
+    rgba(0, 38, 162, 0.02) 72%,
+    rgba(0, 20, 140, 0.01) 84%,
+    transparent 94%
+  );
+  opacity: var(--solar-alpha, 0);
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: center center;
+  transition: none;
+}
+
+#peSecond.is-centered-sun::before {
+  animation: solarInnerCorona 17s ease-in-out infinite;
+}
+
+/* ── 4. OUTER CORONA — #peSecond::after (full viewport, wide diffuse haze) ── */
+/* Renders after #peSecondRight in paint order (::after), but its max opacity
+   (~0.22) is too low to obscure planets — just adds a diffuse atmospheric glow. */
+#peSecond::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 225, 255, 0.22) 0%,
+    rgba(0, 165, 242, 0.14) 20%,
+    rgba(0, 95, 205, 0.08) 40%,
+    rgba(0, 50, 165, 0.04) 60%,
+    rgba(0, 25, 135, 0.01) 78%,
+    transparent 92%
+  );
+  opacity: var(--solar-alpha, 0);
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: center center;
+  transition: none;
+}
+
+#peSecond.is-centered-sun::after {
+  animation: solarOuterCorona 23s ease-in-out infinite;
+  animation-delay: -9s;
+}
+
+/* ── 5. STAND SOLAR FLARE — secondary glow, top-left of orbit ────────────── */
+/* Separate element so it has its own rhythm (19 s, offset -11 s), independent
+   from the central corona. Opacity ~3× paler than the center so it reads as
+   a secondary "sun flare" accent, not a competing focal point.              */
+@keyframes solarFlareStand {
+  0% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.93);
+  }
+  23% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  47% {
+    opacity: 0.42;
+    transform: translate(-50%, -50%) scale(0.91);
+  }
+  71% {
+    opacity: 0.82;
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.93);
+  }
+}
+
+.pe-solar-flare {
+  position: absolute;
+  top: 18%;
+  left: 20%;
+  width: 46%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 215, 255, 0.32) 0%,
+    rgba(0, 185, 248, 0.2) 18%,
+    rgba(0, 140, 225, 0.1) 38%,
+    rgba(0, 80, 195, 0.04) 58%,
+    transparent 76%
+  );
+  /* scroll-synced: inherits --solar-alpha cascaded from #peSecond */
+  opacity: var(--solar-alpha, 0);
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: center center;
+  transition: none;
+}
+
+#peSecond.is-centered-sun .pe-solar-flare {
+  animation: solarFlareStand 19s ease-in-out infinite;
+  animation-delay: -11s;
+}

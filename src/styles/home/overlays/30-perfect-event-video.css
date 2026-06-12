@@ -1,0 +1,464 @@
+/* PERFECT EVENT — clickable spheres video popup */
+.pe-orb-sphere {
+  cursor: pointer !important;
+  user-select: none;
+}
+.pe-orb-sphere:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+.pe-video-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 13, 26, 0.76);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+.pe-video-popup.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.pe-video-popup-box {
+  width: min(82vw, 560px);
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  background: #020d1a;
+  border: 1px solid rgba(0, 212, 255, 0.32);
+  box-shadow:
+    0 36px 120px rgba(0, 0, 0, 0.62),
+    0 0 64px rgba(0, 212, 255, 0.14);
+  transform: scale(0.92) translateY(18px);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pe-video-popup.open .pe-video-popup-box {
+  transform: scale(1) translateY(0);
+}
+.pe-video-popup-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 50px rgba(0, 212, 255, 0.08);
+}
+.pe-video-popup video,
+.pe-video-popup iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  background: #020d1a;
+}
+.pe-video-popup-title {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 4;
+  font-family: var(--font-d);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-transform: none;
+  text-shadow: 0 0 22px rgba(0, 0, 0, 0.55);
+}
+.pe-video-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(2, 13, 26, 0.56);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.pe-video-popup-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 34px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.36);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+@media (max-width: 768px) {
+  .pe-video-popup-box {
+    width: min(92vw, 520px);
+  }
+  .pe-video-popup-title {
+    font-size: 14px;
+    left: 14px;
+    bottom: 14px;
+  }
+}
+
+/* ==== POPUP STYLE UPGRADE ==== */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 13, 26, 0.75);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.popup.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.popup-inner {
+  width: 70%;
+  max-width: 880px;
+  transform: scale(0.9);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.popup.open .popup-inner {
+  transform: scale(1);
+}
+
+.popup-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+}
+
+.popup-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.popup-close {
+  position: absolute;
+  top: -38px;
+  right: 0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.popup-close:hover {
+  color: #00d4ff;
+}
+
+/* ==== FIX POPUP SIZE + 16:9 ==== */
+.popup-inner {
+  width: 60vw;
+  max-width: 800px;
+  margin: auto;
+}
+
+.popup-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.popup-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ==== NETFLIX-STYLE POPUP OPENING ==== */
+.popup {
+  background:
+    radial-gradient(circle at center, rgba(0, 212, 255, 0.08), transparent 42%),
+    rgba(2, 13, 26, 0.88) !important;
+  backdrop-filter: blur(18px) brightness(0.55) !important;
+  -webkit-backdrop-filter: blur(18px) brightness(0.55) !important;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.38s ease,
+    backdrop-filter 0.38s ease,
+    -webkit-backdrop-filter 0.38s ease;
+}
+
+.popup.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.popup-inner {
+  width: 60vw !important;
+  max-width: 800px !important;
+  margin: auto;
+  position: relative;
+  transform: scale(0.72) translateY(28px);
+  opacity: 0;
+  filter: blur(10px);
+  transition:
+    transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.38s ease,
+    filter 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popup.open .popup-inner {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.popup-video {
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  height: auto !important;
+  background: #000;
+  border-radius: 18px !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 48px 140px rgba(0, 0, 0, 0.78),
+    0 0 70px rgba(0, 212, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.popup-video::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12), transparent 18%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.28), transparent 30%);
+  z-index: 2;
+}
+
+.popup-video iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+
+.popup-close {
+  top: -44px !important;
+  right: 0 !important;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.popup-close:hover {
+  color: #00d4ff !important;
+  background: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .popup-inner {
+    width: 92vw !important;
+    max-width: none !important;
+  }
+
+  .popup-close {
+    top: -48px !important;
+  }
+}
+
+/* ==== REAL FIX: PERFECT EVENT SPHERE POPUP — smaller 16:9 Netflix style ==== */
+.pe-video-popup {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10050 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: clamp(18px, 4vw, 48px) !important;
+  background:
+    radial-gradient(circle at center, rgba(0, 212, 255, 0.08), transparent 42%),
+    rgba(2, 13, 26, 0.88) !important;
+  backdrop-filter: blur(18px) brightness(0.55) !important;
+  -webkit-backdrop-filter: blur(18px) brightness(0.55) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition:
+    opacity 0.38s ease,
+    visibility 0.38s ease !important;
+}
+
+.pe-video-popup.open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.pe-video-popup-box {
+  width: min(58vw, 760px) !important;
+  max-width: 760px !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 16 / 9 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 48px 140px rgba(0, 0, 0, 0.78),
+    0 0 70px rgba(0, 212, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  transform: scale(0.72) translateY(28px) !important;
+  opacity: 0 !important;
+  filter: blur(10px) !important;
+  transition:
+    transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.38s ease,
+    filter 0.52s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.pe-video-popup.open .pe-video-popup-box {
+  transform: scale(1) translateY(0) !important;
+  opacity: 1 !important;
+  filter: blur(0) !important;
+}
+
+.pe-video-popup-box::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 0 50px rgba(0, 212, 255, 0.08) !important;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12), transparent 18%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.28), transparent 30%) !important;
+}
+
+.pe-video-popup video,
+.pe-video-popup iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  border: 0 !important;
+  object-fit: cover !important;
+  background: #000 !important;
+}
+
+.pe-video-popup-fallback {
+  position: absolute !important;
+  inset: 0 !important;
+  display: grid;
+  place-items: center;
+  z-index: 1 !important;
+}
+
+.pe-video-popup-title {
+  left: 18px !important;
+  bottom: 16px !important;
+  font-size: 14px !important;
+  z-index: 4 !important;
+}
+
+.pe-video-popup-close {
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 5 !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(2, 13, 26, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.pe-video-popup-close:hover {
+  color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.36) !important;
+  background: rgba(0, 212, 255, 0.12) !important;
+}
+
+@media (max-width: 768px) {
+  .pe-video-popup {
+    padding: 16px !important;
+  }
+
+  .pe-video-popup-box {
+    width: min(92vw, 760px) !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+}
+
+/* ==== PERFECT EVENT CLICK FIX: all 8 spheres/buttons clickable ==== */
+.pe-orb-svg,
+.pe-orbit-cinematic,
+.pe-orb-title,
+#peOrbTitle {
+  pointer-events: none !important;
+}
+
+.pe-orb-sphere,
+.pe-orb-sphere *,
+.pe-orb-sphere::before,
+.pe-orb-sphere::after {
+  pointer-events: auto !important;
+}
+
+.pe-orb-sphere {
+  position: absolute !important;
+  z-index: 40 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+}
+
+.pe-orb-sphere .pe-sphere-label,
+.pe-orb-sphere .pe-play-icon {
+  pointer-events: none !important;
+}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfect Event</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;background:#06060f;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;}
+#scene{position:relative;width:100%;max-width:1200px;}
+#wrap{background:#06060f;border-radius:14px;position:relative;overflow:hidden;user-select:none;}
+#canvas{position:absolute;inset:0;width:100%;height:100%;}
+#main-popup{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:10;}
+
+.popup-inner{
+  pointer-events:all;
+  border-radius:14px;
+  overflow:visible;
+  display:none;
+  flex-direction:column;
+  background:rgba(0,8,24,0.72);
+  border:1px solid rgba(0,212,255,0.35);
+  outline:1px solid rgba(0,212,255,0.08);
+  position:relative;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.popup-inner::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,212,255,0.07) 0%,transparent 60%,rgba(0,212,255,0.03) 100%);
+  pointer-events:none;z-index:0;
+}
+.popup-inner::after{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.7),transparent);
+  pointer-events:none;z-index:1;
+}
+
+.vid-area{
+  background:rgba(0,4,16,0.9);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;
+  position:relative;z-index:2;
+  border-bottom:1px solid rgba(0,212,255,0.15);
+  border-radius:14px 14px 0 0;
+  overflow:hidden;
+}
+.vid-area::after{
+  content:'';
+  position:absolute;bottom:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent);
+}
+
+#vp{
+  border-radius:50%;
+  transition:background 0.4s,box-shadow 0.4s;
+  border:1.5px solid rgba(0,212,255,0.4);
+}
+#vname{
+  color:#00D4FF;
+  font-weight:500;
+  letter-spacing:3px;
+  text-shadow:0 0 18px rgba(0,212,255,0.8),0 0 40px rgba(0,212,255,0.3);
+}
+#vsub{color:rgba(0,212,255,0.4);letter-spacing:1px;}
+
+.chapters{display:flex;gap:3px;position:relative;z-index:2;}
+.ch-seg{flex:1;height:3px;border-radius:2px;cursor:pointer;opacity:0.18;transition:opacity 0.3s,box-shadow 0.3s;}
+.ch-seg.done{opacity:0.45;}
+.ch-seg.cur{opacity:1;box-shadow:0 0 6px 1px rgba(0,212,255,0.5);}
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:6px;
+  position:relative;
+  z-index:2;
+}
+.controls-left{justify-self:start;}
+.controls-center{justify-self:center;}
+.controls-right{justify-self:end;display:flex;align-items:center;gap:6px;}
+.cbtn{
+  background:rgba(0,0,0,0.55);
+  border:0.5px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  color:rgba(255,255,255,0.75);
+  cursor:pointer;
+  display:flex;align-items:center;gap:5px;
+  transition:background 0.2s,border-color 0.2s,box-shadow 0.2s;
+  letter-spacing:0.8px;
+  font-family:inherit;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 8px rgba(0,0,0,0.4);
+}
+.cbtn:hover{
+  background:rgba(0,0,0,0.75);
+  border-color:rgba(0,212,255,0.35);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1), 0 0 14px rgba(0,212,255,0.18);
+}
+.xbtn{
+  position:absolute;
+  top:-14px;
+  right:-14px;
+  width:30px;height:30px;
+  background:rgba(0,0,0,0.7);
+  border:0.5px solid rgba(255,255,255,0.15);
+  border-radius:50%;
+  color:rgba(255,255,255,0.5);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;line-height:1;
+  transition:background 0.2s,color 0.2s,border-color 0.2s,box-shadow 0.2s;
+  font-family:inherit;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:20;
+}
+.xbtn:hover{
+  background:rgba(0,0,0,0.9);
+  border-color:rgba(0,212,255,0.5);
+  color:#00D4FF;
+  box-shadow:0 0 12px rgba(0,212,255,0.35);
+}
+#tmr{
+  color:rgba(0,212,255,0.75);
+  text-shadow:0 0 10px rgba(0,212,255,0.35);
+  font-variant-numeric:tabular-nums;
+}
+
+.fsbtn{
+  width:34px;
+  justify-content:center;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+.fsbtn i{font-size:1.15em;}
+
+
+.popup-inner.is-expanded{
+  position:fixed;
+  inset:28px;
+  width:auto!important;
+  height:auto!important;
+  max-width:none;
+  z-index:9999;
+}
+.popup-inner.is-expanded .vid-area{
+  height:calc(100vh - 116px)!important;
+}
+.popup-inner.is-expanded #vp{
+  width:min(22vh,160px)!important;
+  height:min(22vh,160px)!important;
+}
+.popup-inner.is-expanded #vname{
+  font-size:clamp(28px,5vw,72px)!important;
+}
+.popup-inner.is-expanded #vsub{
+  font-size:clamp(12px,1.4vw,18px)!important;
+}
+body.popup-expanded{
+  overflow:hidden;
+}
+
+#landing-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5;}
+</style>
+</head>
+<body>
+<div id="scene">
+  <div id="wrap">
+    <canvas id="canvas"></canvas>
+    <div id="landing-center">
+      <div style="text-align:center">
+        <div id="ctTitle" style="color:#00D4FF;font-weight:500;letter-spacing:6px;text-shadow:0 0 24px rgba(0,212,255,0.8),0 0 60px rgba(0,212,255,0.4),0 0 120px rgba(0,212,255,0.15);">PERFECT EVENT</div>
+      </div>
+    </div>
+    <div id="main-popup">
+      <div class="popup-inner" id="popupBox">
+        <div class="vid-area" id="vidArea">
+          <div id="vp"></div>
+          <div id="vname"></div>
+          <div id="vsub">chapter <span id="vnum"></span> of 8</div>
+        </div>
+        <button class="xbtn" id="closeB">×</button>
+        <div class="chapters" id="chs" style="padding:3px 14px 1px;"></div>
+        <div class="controls" id="ctrlRow" style="padding:2px 14px 3px;">
+          <div class="controls-left">
+            <button class="cbtn" id="prevB"><i class="ti ti-chevron-left"></i><span>Back</span></button>
+          </div>
+          <span id="tmr" class="controls-center">0:00 / 0:40</span>
+          <div class="controls-right">
+            <button class="cbtn fsbtn" id="fsB" title="Fullscreen" aria-label="Fullscreen">
+              <i class="ti ti-arrows-maximize"></i>
+            </button>
+            <button class="cbtn" id="nextB"><span>Next</span><i class="ti ti-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const planets=[
+  {name:"STAND",      color:"#7C5CBF",glow:"rgba(124,92,191,0.85)"},
+  {name:"ACTIVATION", color:"#2E86C1",glow:"rgba(46,134,193,0.85)"},
+  {name:"SCREENS",    color:"#1A9E7A",glow:"rgba(26,158,122,0.85)"},
+  {name:"CONTENT",    color:"#C9A90A",glow:"rgba(201,169,10,0.85)"},
+  {name:"SUPPORT",    color:"#CB4335",glow:"rgba(203,67,53,0.85)"},
+  {name:"CATERING",   color:"#BA4A00",glow:"rgba(186,74,0,0.85)"},
+  {name:"STAFF",      color:"#117A65",glow:"rgba(17,122,101,0.85)"},
+  {name:"MERCH",      color:"#7D3C98",glow:"rgba(125,60,152,0.85)"},
+];
+
+const CHAP_SEC=5;
+let cur=0,elapsed=0,ticker=null,isOpen=false,hoveredIdx=-1,pulse=0,animId;
+let W,H,cx,cy,pR,popW,popH,orbitRx,orbitRy;
+
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+const wrap=document.getElementById('wrap');
+const scene=document.getElementById('scene');
+const popupBox=document.getElementById('popupBox');
+const landingCenter=document.getElementById('landing-center');
+
+function resize(){
+  const sw=scene.getBoundingClientRect().width||960;
+  W=sw; H=Math.round(W*0.68);
+  pR=Math.min(W,H)*0.048;
+
+  popW=Math.round(W*0.58);
+  const vidH=Math.round(popW*9/16);
+  const ctrlH=Math.round(W*0.028);
+  popH=vidH+ctrlH;
+
+  orbitRx=Math.min(popW/2+pR*3.0, W/2-pR*1.5);
+  orbitRy=Math.min(popH/2+pR*3.2, H/2-pR*1.5);
+
+  scene.style.height=H+'px';
+  wrap.style.height=H+'px';
+  canvas.width=Math.round(W*devicePixelRatio);
+  canvas.height=Math.round(H*devicePixelRatio);
+  canvas.style.width=W+'px';
+  canvas.style.height=H+'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  cx=W/2; cy=H/2;
+
+  popupBox.style.width=popW+'px';
+  document.getElementById('vidArea').style.height=vidH+'px';
+
+  const vpSize=Math.round(vidH*0.22);
+  const vp=document.getElementById('vp');
+  vp.style.width=vpSize+'px'; vp.style.height=vpSize+'px';
+
+  const nameFs=Math.max(14,Math.round(vidH*0.09));
+  document.getElementById('vname').style.fontSize=nameFs+'px';
+  document.getElementById('vsub').style.fontSize=Math.max(11,Math.round(vidH*0.06))+'px';
+
+  const btnFs=Math.max(12,Math.round(W*0.017));
+  const bp=`${Math.round(btnFs*0.45)}px ${Math.round(btnFs*0.85)}px`;
+  document.querySelectorAll('.cbtn').forEach(b=>{b.style.fontSize=btnFs+'px';b.style.padding=bp;});
+  document.getElementById('closeB').style.fontSize=Math.round(btnFs*1.5)+'px';
+  document.getElementById('tmr').style.fontSize=Math.max(10,Math.round(btnFs*0.82))+'px';
+  document.getElementById('ctTitle').style.fontSize=Math.max(28,Math.round(W*0.052))+'px';
+}
+
+function planetPos(i){
+  const a=-Math.PI/2+(i/8)*Math.PI*2;
+  return{x:cx+orbitRx*Math.cos(a), y:cy+orbitRy*Math.sin(a)};
+}
+
+function drawFrame(){
+  if(!W)return;
+  ctx.clearRect(0,0,W,H);
+  pulse+=0.025;
+
+  if(isOpen){
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(orbitRx,orbitRy)*0.9);
+    g.addColorStop(0,'rgba(0,212,255,0.04)');
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  [[0.05,0.12],[0.2,0.05],[0.75,0.08],[0.92,0.55],[0.88,0.88],[0.35,0.92],[0.08,0.72],[0.97,0.2],[0.5,0.97],[0.62,0.04]].forEach(([fx,fy])=>{
+    ctx.fillStyle='rgba(255,255,255,0.38)';
+    ctx.beginPath();ctx.arc(fx*W,fy*H,0.7,0,Math.PI*2);ctx.fill();
+  });
+
+  ctx.save();
+  ctx.strokeStyle='rgba(0,212,255,0.08)';
+  ctx.lineWidth=0.5;ctx.setLineDash([3,8]);
+  ctx.beginPath();
+  for(let i=0;i<=72;i++){
+    const a=(i/72)*Math.PI*2;
+    const x=cx+orbitRx*Math.cos(a);
+    const y=cy+orbitRy*Math.sin(a);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.closePath();ctx.stroke();
+  ctx.setLineDash([]);ctx.restore();
+
+  planets.forEach((p,i)=>{
+    const {x,y}=planetPos(i);
+    const isActive=isOpen&&i===cur;
+    const isDimmed=isOpen&&!isActive;
+    const isHov=!isOpen&&i===hoveredIdx;
+
+    ctx.globalAlpha=isDimmed?0.12:1;
+    const scale=isActive?1.18:(isHov?1.08:1);
+    const r=pR*scale;
+
+    if(isActive){
+      ctx.strokeStyle='rgba(0,212,255,0.6)';
+      ctx.lineWidth=1.5;
+      ctx.shadowColor='rgba(0,212,255,0.5)';
+      ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(x,y,r+3,0,Math.PI*2);ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+
+    ctx.shadowColor=(isActive||isHov)?p.glow:'transparent';
+    ctx.shadowBlur=isActive?(20+7*Math.sin(pulse)):(isHov?14:0);
+    ctx.fillStyle=p.color;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle='rgba(255,255,255,0.13)';
+    ctx.beginPath();ctx.arc(x-r*0.25,y-r*0.27,r*0.33,0,Math.PI*2);ctx.fill();
+
+    ctx.fillStyle='rgba(255,255,255,0.72)';
+    ctx.font=`${Math.round(r*0.52)}px sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('▶',x,y+1);
+
+    const a2=-Math.PI/2+(i/8)*Math.PI*2;
+    const lx=cx+(orbitRx+pR*1.55)*Math.cos(a2);
+    const ly=cy+(orbitRy+pR*1.55)*Math.sin(a2);
+    const fs=Math.max(10,Math.round(W*0.017));
+    ctx.font=`500 ${fs}px sans-serif`;
+    ctx.fillStyle=isActive?'#00D4FF':(isDimmed?'rgba(255,255,255,0.06)':'rgba(255,255,255,0.48)');
+    if(isActive){ctx.shadowColor='rgba(0,212,255,0.7)';ctx.shadowBlur=8;}
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.name,lx,ly);
+    ctx.shadowBlur=0;
+    ctx.globalAlpha=1;
+  });
+
+  animId=requestAnimationFrame(drawFrame);
+}
+
+canvas.addEventListener('mousemove',e=>{
+  if(isOpen)return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  let found=-1;
+  planets.forEach((_,i)=>{
+    const {x,y}=planetPos(i);
+    const dx=mx-x,dy=my-y;
+    if(Math.sqrt(dx*dx+dy*dy)<pR*1.4)found=i;
+  });
+  hoveredIdx=found;
+  canvas.style.cursor=found>=0?'pointer':'default';
+});
+canvas.addEventListener('mouseleave',()=>{hoveredIdx=-1;});
+canvas.addEventListener('click',e=>{
+  if(isOpen)return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  planets.forEach((_,i)=>{
+    const {x,y}=planetPos(i);
+    const dx=mx-x,dy=my-y;
+    if(Math.sqrt(dx*dx+dy*dy)<pR*1.4)openChapter(i);
+  });
+});
+
+function buildChapters(){
+  const chs=document.getElementById('chs');
+  chs.innerHTML='';
+  planets.forEach((p,i)=>{
+    const s=document.createElement('div');
+    s.className='ch-seg';s.style.background=p.color;
+    s.addEventListener('click',()=>jumpTo(i));
+    chs.appendChild(s);
+  });
+}
+
+function updatePopup(){
+  const p=planets[cur];
+  const vp=document.getElementById('vp');
+  vp.style.background=p.color;
+  vp.style.boxShadow=`0 0 20px 6px ${p.glow}, 0 0 0 2px rgba(0,212,255,0.3)`;
+  document.getElementById('vname').textContent=p.name;
+  document.getElementById('vnum').textContent=cur+1;
+  document.querySelectorAll('.ch-seg').forEach((s,i)=>{
+    s.classList.remove('done','cur');
+    if(i<cur)s.classList.add('done');
+    if(i===cur)s.classList.add('cur');
+  });
+}
+
+function updateTimer(){
+  const tot=planets.length*CHAP_SEC;
+  const el=cur*CHAP_SEC+elapsed;
+  const f=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  document.getElementById('tmr').textContent=`${f(el)} / ${f(tot)}`;
+}
+
+function startTicker(){
+  clearInterval(ticker);elapsed=0;updateTimer();
+  ticker=setInterval(()=>{
+    elapsed++;updateTimer();
+    if(elapsed>=CHAP_SEC){
+      cur=(cur+1)%planets.length;
+      updatePopup();elapsed=0;
+    }
+  },1000);
+}
+
+function openChapter(i){
+  cur=i;isOpen=true;
+  popupBox.style.display='flex';
+  landingCenter.style.display='none';
+  updatePopup();startTicker();
+}
+function jumpTo(i){cur=i;updatePopup();startTicker();}
+
+document.getElementById('closeB').addEventListener('click',()=>{
+  isOpen=false;
+  isExpanded=false;
+  popupBox.classList.remove('is-expanded');
+  document.body.classList.remove('popup-expanded');
+  const icon=document.querySelector('#fsB i');
+  if(icon){icon.className='ti ti-arrows-maximize';}
+  popupBox.style.display='none';
+  landingCenter.style.display='flex';
+  clearInterval(ticker);hoveredIdx=-1;
+});
+document.getElementById('prevB').addEventListener('click',()=>{jumpTo((cur-1+planets.length)%planets.length);});
+document.getElementById('nextB').addEventListener('click',()=>{jumpTo((cur+1)%planets.length);});
+
+
+let isExpanded=false;
+document.getElementById('fsB').addEventListener('click', () => {
+  isExpanded=!isExpanded;
+  popupBox.classList.toggle('is-expanded', isExpanded);
+  document.body.classList.toggle('popup-expanded', isExpanded);
+  const icon=document.querySelector('#fsB i');
+  if(icon){
+    icon.className=isExpanded?'ti ti-arrows-minimize':'ti ti-arrows-maximize';
+  }
+});
+
+
+buildChapters();
+resize();
+drawFrame();
+window.addEventListener('resize',()=>{cancelAnimationFrame(animId);resize();});
+</script>
+</body>
+</html>

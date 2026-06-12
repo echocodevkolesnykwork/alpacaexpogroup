@@ -1,0 +1,54 @@
+/* Reference style block 23 id="pe-subtitle-sync-and-pulse-fix" */
+/* FIX 1: main website address stays visually in the bottom-right footer position */
+footer .flnk {
+  margin-left: auto !important;
+  color: rgba(255, 255, 255, 0.46) !important;
+  letter-spacing: 0.04em !important;
+}
+footer .flnk:hover {
+  color: var(--accent) !important;
+}
+
+/* FIX 2: FULL CYCLE appears together with spheres and gets a soft pulse every 20s while PE page is active */
+#peSecond.pe-active #peOrbSubtitle.pe-orb-subtitle-bottom {
+  visibility: visible !important;
+  display: block !important;
+}
+
+#peSecond.pe-active #peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix {
+  animation: fullCycle20sHighlight 20s ease-in-out infinite !important;
+}
+
+@keyframes fullCycle20sHighlight {
+  0%,
+  100% {
+    color: rgba(255, 255, 255, 0.72);
+    text-shadow: 0 0 14px rgba(0, 212, 255, 0.18);
+    filter: brightness(1);
+  }
+  4% {
+    color: #fff;
+    text-shadow:
+      0 0 18px rgba(0, 212, 255, 0.86),
+      0 0 44px rgba(0, 212, 255, 0.36);
+    filter: brightness(1.35);
+  }
+  8% {
+    color: rgba(255, 255, 255, 0.86);
+    text-shadow:
+      0 0 22px rgba(0, 212, 255, 0.62),
+      0 0 34px rgba(255, 255, 255, 0.12);
+    filter: brightness(1.15);
+  }
+  12% {
+    color: rgba(255, 255, 255, 0.72);
+    text-shadow: 0 0 14px rgba(0, 212, 255, 0.18);
+    filter: brightness(1);
+  }
+}
+
+@media (max-width: 768px) {
+  footer .flnk {
+    margin-left: 0 !important;
+  }
+}

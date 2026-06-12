@@ -1,0 +1,51 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 72 — Planet blend mode fix: restore screen on video, normal on sphere.
+
+   ROOT CAUSE OF DARK CIRCLES IN SAFARI (introduced by patch-64):
+   Patch-64 moved mix-blend-mode:screen from .pe-orb-video to the
+   .pe-orb-sphere wrapper. This creates a stacking context on the sphere.
+   Inside that stacking context the video renders with mix-blend-mode:normal —
+   its black circular background passes straight through into the sphere's
+   intermediate compositing layer. That layer (with dark content) is then
+   screen-blended against the section background. Safari composites the
+   intermediate layer incorrectly, showing the dark circle.
+
+   THE ORIGINAL DESIGN (112-perfect-event-sphere-styles.css) was correct:
+   · .pe-orb-video: mix-blend-mode:screen — the video blends directly against
+     the section background, eliminating its black areas (screen of black = transparent).
+     No intermediate stacking context is involved when the sphere wrapper has
+     mix-blend-mode:normal (default).
+   · .pe-orb-sphere: no blend mode — the sphere wrapper does NOT create a
+     stacking context, so the video's blend applies against the actual background.
+
+   WHY patch-64's concern was over-applied:
+   The original Safari "black box" bug (patches 57-58) was caused by
+   filter:drop-shadow on the video — drop-shadow traces the pixel alpha boundary
+   of the GPU-composited video layer, which Safari mis-reads. filter:grayscale
+   is a simple color matrix that does NOT trace pixel boundaries and is safe
+   on <video> in combination with mix-blend-mode:screen.
+
+   SPECIFICITY:
+   · .pe-orb-video at (0,1,0) — same as patch-63/64; later source order wins.
+   · #peSecondRight .pe-orb-sphere at (1,1,0) — same as patch-62/64; later wins.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. VIDEO — screen blend direct against section background ─────────────
+   With mix-blend-mode:screen on the video element directly, black pixels in
+   the video frame become transparent (screen of black with any background = that
+   background). The sphere wrapper has no blend mode, so no stacking context
+   intercepts the blend. Works correctly in both Chrome and Safari.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-video {
+  mix-blend-mode: screen !important;
+}
+
+/* ── 2. SPHERE WRAPPER — no blend mode, no stacking context ────────────────
+   Removing mix-blend-mode:screen from the wrapper eliminates the intermediate
+   compositing layer that was causing the dark-circle artifact in Safari.
+   background:transparent is kept to ensure no accidental fill.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere {
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+}

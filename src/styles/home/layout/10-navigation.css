@@ -1,0 +1,296 @@
+/* NAV */
+nav {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: calc(100% - 64px);
+  max-width: 960px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border-radius: 16px;
+  transition:
+    background 0.4s,
+    border-color 0.4s,
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(6, 14, 26, 0.82);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 0.5px solid var(--glass-b);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+}
+nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.14), transparent);
+  pointer-events: none;
+}
+nav.on {
+  background: rgba(6, 14, 26, 0.88);
+  border-color: rgba(255, 255, 255, 0.13);
+}
+nav.nav-hidden {
+  transform: translateX(-50%) translateY(calc(-100% - 20px));
+}
+.logo {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.logo span {
+  color: var(--accent);
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  /* Larger hit area without changing text layout */
+  padding: 10px 0;
+  position: relative;
+}
+.nav-links a:hover {
+  color: #fff;
+}
+/* Hover underline — anchored to text, not to padding bottom */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 9px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.mobile-menu {
+  display: none;
+}
+/* Identity only — glass appearance comes from .btn-glass */
+.nav-btn {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent2);
+  padding: 7px 18px;
+  border-radius: 22px;
+  text-decoration: none;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+/* .nav-btn:hover — .btn-glass:hover handles all visual changes */
+
+/* CONTACT NOW DROPDOWN — FIXED */
+.nav-contact-wrap {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 150 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.nav-contact-wrap .nav-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+.nav-contact-menu {
+  position: absolute !important;
+  top: calc(100% + 20px) !important;
+  left: 50% !important;
+  right: auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateX(-50%) translateY(-8px) scale(0.96) !important;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0.22s ease !important;
+  z-index: 9999 !important;
+  /* liquid glass container */
+  background: linear-gradient(
+    160deg,
+    rgba(8, 20, 36, 0.9) 0%,
+    rgba(4, 12, 24, 0.84) 100%
+  ) !important;
+  backdrop-filter: blur(28px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.5) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 8px !important;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.06) inset,
+    0 20px 48px rgba(0, 0, 0, 0.5),
+    0 8px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* JS controls open/close via .is-open — no CSS :hover trigger needed */
+.nav-contact-wrap.is-open .nav-contact-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+.nav-contact-item {
+  /* dimensions & shape — unchanged */
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+  /* exact btn-g glass — unified visual language */
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  /* 4-shadow structure matches brand hover states → smooth CSS interpolation */
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
+    0 4px 16px rgba(0, 0, 0, 0.18),
+    0 0 0 rgba(255, 255, 255, 0) !important;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.nav-contact-item:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  ) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.26) !important;
+}
+.nav-contact-item svg {
+  display: block !important;
+  fill: currentColor !important;
+}
+@media (max-width: 768px) {
+  .nav-contact-wrap {
+    display: none !important;
+  }
+}
+
+/* BRAND COLORS FOR CONTACT ICONS */
+.nav-contact-item.telegram {
+  color: #27a7e7 !important;
+}
+.nav-contact-item.whatsapp {
+  color: #25d366 !important;
+}
+.nav-contact-item.email {
+  color: #ffffff !important;
+}
+.nav-contact-item.telegram:hover {
+  background: rgba(39, 167, 231, 0.14) !important;
+  border-color: rgba(39, 167, 231, 0.48) !important;
+  border-top-color: rgba(39, 167, 231, 0.65) !important;
+  /* 4 shadows matching base count — enables smooth CSS transition */
+  box-shadow:
+    0 2px 0 rgba(39, 167, 231, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(39, 167, 231, 0.5) !important;
+}
+.nav-contact-item.whatsapp:hover {
+  background: rgba(37, 211, 102, 0.14) !important;
+  border-color: rgba(37, 211, 102, 0.48) !important;
+  border-top-color: rgba(37, 211, 102, 0.65) !important;
+  box-shadow:
+    0 2px 0 rgba(37, 211, 102, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(37, 211, 102, 0.5) !important;
+}
+.nav-contact-item.email:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-top-color: rgba(255, 255, 255, 0.45) !important;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.22) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 20px rgba(255, 255, 255, 0.28) !important;
+}
+
+.nav-contact-item::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 1px !important;
+  left: 14% !important;
+  right: 14% !important;
+  height: 38% !important;
+  border-radius: 14px 14px 60% 60% !important;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+
+/* FOCUS-VISIBLE — keyboard navigation outline */
+.nav-btn:focus,
+.nav-links a:focus,
+.nav-contact-item:focus {
+  outline: none;
+}
+.nav-btn:focus-visible,
+.nav-links a:focus-visible,
+.nav-contact-item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 4px;
+}
+
+/* FIX WHY US NUMBERS */

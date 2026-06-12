@@ -1,0 +1,74 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 68 — Video popup nav: hug video edges, stronger blur, subtle close.
+
+   Video half-width = min(25vw, calc(25vh * 16 / 9))  (from patch-56).
+   Button width = 56px → half = 28px.
+   "Center at video edge + 4px outside" = offset = 28px + 4px = 32px.
+   → prev: left: calc(50% - min(25vw, …) - 32px)
+   → next: right: same formula.
+   This places the button centre 4px outside the video frame — visually
+   flush while remaining fully outside, like Netflix's control placement.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── NAV BUTTONS — 4px gap from video boundary ──────────────────────────────
+   Button width 56px → half = 28px.
+   4px gap between button edge and video frame:
+   left = video_left_edge - 4px_gap - 56px_button = 50% - video_half - 60px. */
+.pe-popup-nav.prev {
+  left: calc(50% - min(25vw, calc(25vh * 16 / 9)) - 60px) !important;
+}
+.pe-popup-nav.next {
+  right: calc(50% - min(25vw, calc(25vh * 16 / 9)) - 60px) !important;
+}
+
+/* ── NAV BUTTONS — stronger blur for better legibility over video ─────────
+   blur(10px) from patch-54 is too weak over bright video frames.
+   blur(22px) makes the glass pill clearly readable against any content.   */
+.pe-popup-nav {
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+}
+
+/* ── CLOSE BUTTON — near-invisible hover, no scale ───────────────────────
+   scale(1.1) from patch-56 is too prominent for a corner utility button.
+   scale(1.02) + subtle border brightening signals interactivity without
+   drawing attention away from the video content.                          */
+.pe-popup-close:hover {
+  transform: scale(1.02) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
+}
+
+/* ── MOBILE (≤768px) — video 80%, nav buttons overlaid on video edges ────
+   On mobile, 80vw video leaves no room outside for 40-56px buttons.
+   Solution: buttons overlay the inner left/right edges of the video
+   (standard YouTube/Vimeo mobile pattern). Half of 80vw = 40vw.
+   offset = 10px inside the video edge (button edge touches video border).
+   ─────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pe-popup-video-wrap {
+    width: min(80vw, calc(80svh * 16 / 9)) !important;
+  }
+
+  .pe-popup-nav {
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .pe-popup-nav.prev {
+    left: calc(50% - min(40vw, calc(40svh * 16 / 9)) + 10px) !important;
+  }
+
+  .pe-popup-nav.next {
+    right: calc(50% - min(40vw, calc(40svh * 16 / 9)) + 10px) !important;
+  }
+
+  .pe-popup-close {
+    top: 16px !important;
+    right: 16px !important;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 22px !important;
+  }
+}

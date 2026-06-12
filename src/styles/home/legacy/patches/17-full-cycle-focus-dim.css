@@ -1,0 +1,135 @@
+/* Reference style block 18 id="full-cycle-focus-dim-final" */
+/* FULL CYCLE focus mode: dim spheres/page, keep phrase as main accent */
+#peSecond.pe-focus-mode {
+  --fc-focus: 1;
+}
+
+#peSecond::before,
+#peSecond::after,
+#peSecond .pe-second-right,
+#peSecond .pe-orbit-cinematic,
+#peSecond .pe-orb-svg,
+#peSecond .pe-orb-sphere,
+#peSecond #peOrbTitle {
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#peSecond.pe-focus-mode .pe-second-right {
+  opacity: 0.42 !important;
+  filter: brightness(0.38) saturate(0.82) blur(1.2px) !important;
+}
+
+#peSecond.pe-focus-mode .pe-orb-sphere {
+  opacity: 0.34 !important;
+  filter: brightness(0.42) saturate(0.72) blur(0.8px) !important;
+  transform: scale(0.985) !important;
+}
+
+#peSecond.pe-focus-mode .pe-orbit-cinematic,
+#peSecond.pe-focus-mode .pe-orb-svg {
+  opacity: 0.24 !important;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.24)) brightness(0.52) blur(0.8px) !important;
+}
+
+#peSecond.pe-focus-mode::before {
+  opacity: 0.22 !important;
+  filter: blur(26px) brightness(0.55) !important;
+}
+
+#peSecond.pe-focus-mode::after {
+  opacity: 0.18 !important;
+  filter: blur(30px) brightness(0.55) !important;
+}
+
+#peSecond.pe-focus-mode::selection {
+  background: rgba(0, 212, 255, 0.25);
+}
+
+#peOrbSubtitle.pe-orb-subtitle-bottom {
+  z-index: 120 !important;
+  isolation: isolate;
+}
+
+#peSecond.pe-focus-mode #peOrbSubtitle.pe-orb-subtitle-bottom {
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.16),
+    0 0 26px rgba(0, 212, 255, 0.62),
+    0 0 58px rgba(0, 212, 255, 0.3) !important;
+}
+
+#peSecond.pe-focus-mode #peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 118%;
+  height: 210%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 212, 255, 0.16) 0%,
+    rgba(0, 212, 255, 0.055) 42%,
+    transparent 72%
+  );
+  filter: blur(16px);
+  opacity: 0.95;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#peSecond.pe-focus-mode #peOrbSubtitle.underline-on .full-cycle-fix::after {
+  height: 3px;
+  width: 86%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 212, 255, 0.35) 14%,
+    #00d4ff 34%,
+    #fff 50%,
+    #00d4ff 66%,
+    rgba(0, 212, 255, 0.35) 86%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 12px rgba(0, 212, 255, 0.95),
+    0 0 34px rgba(0, 212, 255, 0.55),
+    0 0 70px rgba(0, 212, 255, 0.25);
+  animation:
+    fullCycleUnderlineSweep 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    fullCycleEnergyLine 1.8s ease-in-out 1.05s infinite !important;
+}
+
+@keyframes fullCycleEnergyLine {
+  0%,
+  100% {
+    opacity: 0.78;
+    filter: brightness(1);
+    box-shadow:
+      0 0 10px rgba(0, 212, 255, 0.7),
+      0 0 26px rgba(0, 212, 255, 0.34);
+  }
+  45% {
+    opacity: 1;
+    filter: brightness(1.45);
+    box-shadow:
+      0 0 18px rgba(0, 212, 255, 1),
+      0 0 48px rgba(0, 212, 255, 0.58),
+      0 0 90px rgba(0, 212, 255, 0.28);
+  }
+}
+
+@media (max-width: 768px) {
+  #peSecond.pe-focus-mode .pe-second-right {
+    opacity: 0.36 !important;
+    filter: brightness(0.34) saturate(0.76) blur(1px) !important;
+  }
+  #peSecond.pe-focus-mode #peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix::before {
+    width: 112%;
+    height: 190%;
+  }
+}

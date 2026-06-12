@@ -1,0 +1,12 @@
+/* Reference style block 21 id="full-cycle-scroll-scale-final" */
+/* FULL CYCLE. ZERO STRESS — grows dynamically with scroll */
+#peOrbSubtitle.pe-orb-subtitle-bottom {
+  transform-origin: center center !important;
+  will-change: transform, opacity, text-shadow !important;
+  transition: none !important;
+}
+
+#peOrbSubtitle.pe-orb-subtitle-bottom .full-cycle-fix {
+  transform-origin: center center !important;
+  will-change: transform, filter !important;
+}

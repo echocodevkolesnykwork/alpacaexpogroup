@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 67 — Floating CTA: icon size, minimal pulse, first-hover blink fix.
+
+   Three separate root causes, three targeted fixes.
+
+   1. ICON SIZE — patch-46 has ".floating-contact .fc-main > svg { 26px }"
+      at specificity (0,2,1), which loads AFTER patch-43's 30px and wins.
+      Fix: use the ID selector — #floatingContact gives (1,1,1), beats (0,2,1).
+
+   2. PULSATION — the .visible class is toggled on/off briefly in the planet
+      section. Every toggle restarts the animation from 0%, so the 0%→50%
+      ramp plays visibly each time. Also patch-15's redContactPulse includes
+      transform:scale(1.08) which is jarring.
+      Fix: replace with a near-imperceptible breath — only a tiny box-shadow
+      delta, no scale, long duration (5s). Restart is invisible.
+
+   3. FIRST-HOVER BLINK — patch-46's ::after has pointer-events:auto and
+      extends -20px outside the button. Hover fires while .floating-contact
+      is still mid opacity-transition (0→1, 0.5s). The browser creates a new
+      GPU compositor layer at that moment → one-frame flash.
+      Fix: will-change: transform, box-shadow pre-promotes the layer before
+      any hover occurs. backface-visibility:hidden locks it on the compositor.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. ICON SIZE — specificity (1,1,1) beats patch-46's (0,2,1) ───────────
+   Also covers the descendant selector ".fc-main svg" from patch-15.          */
+#floatingContact .fc-main > svg,
+#floatingContact .fc-main svg {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* ── 2. NEAR-INVISIBLE PULSE — box-shadow only, 5s, tiny delta ─────────────
+   0% and 100% are identical → restart is seamless even on rapid toggle.
+   Box-shadow shifts by ~6px blur and ~0.15 alpha — visible up close but
+   imperceptible during a brief scroll-through of the planet section.
+   No transform, no scale.                                                     */
+@keyframes fcGentleBreath {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(255, 85, 0, 0.32);
+  }
+  50% {
+    box-shadow:
+      0 0 18px rgba(255, 85, 0, 0.48),
+      0 0 5px rgba(255, 85, 0, 0.2);
+  }
+}
+
+.floating-contact.visible .fc-main {
+  animation: fcGentleBreath 5s ease-in-out infinite !important;
+}
+
+/* ── 3. FIRST-HOVER BLINK FIX — pre-promote GPU layer ──────────────────────
+   will-change tells the browser to composite .fc-main onto its own GPU layer
+   immediately, before any interaction. When hover fires (even from the 20px
+   ::after hit-area during fade-in), no new layer is needed → no blink.
+   backface-visibility:hidden is an additional WebKit signal to keep the
+   element GPU-resident between interactions.                                  */
+.floating-contact .fc-main {
+  will-change: transform, box-shadow !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}

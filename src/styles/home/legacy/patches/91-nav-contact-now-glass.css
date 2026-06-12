@@ -1,0 +1,93 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 91 — Header "CONTACT NOW": premium glass, accent2 (#ff5500) always.
+
+   Text color stays var(--accent2) = #ff5500 in both rest and hover states.
+   Glass is applied directly (overflow:hidden clips backdrop-filter).
+   ::before = top specular shimmer + right-side warm blush.
+   ::after  = bottom edge warm inner glow (depth layer).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Resting glass ────────────────────────────────────────────────────────── */
+#navContactBtn {
+  position: relative !important;
+  overflow: hidden !important;
+  /* 3-stop gradient: warm tint at top, neutral mid, slight depth at bottom */
+  background: linear-gradient(
+    160deg,
+    rgba(255, 100, 20, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 55%,
+    rgba(0, 0, 0, 0.06) 100%
+  ) !important;
+  backdrop-filter: blur(28px) saturate(1.6) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    /* top inner highlight */
+    inset 0 1px 0 rgba(255, 160, 80, 0.18),
+    /* bottom inner shadow — depth */ inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    /* outer drop */ 0 4px 18px rgba(0, 0, 0, 0.28),
+    /* ambient warm glow */ 0 0 22px rgba(255, 85, 0, 0.1),
+    /* subtle outer rim */ 0 0 0 0.5px rgba(255, 85, 0, 0.08) !important;
+  transition:
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s ease,
+    background 0.32s ease,
+    border-color 0.32s ease !important;
+}
+
+/* Top specular shimmer + right-edge warm blush */
+#navContactBtn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 10% !important;
+  right: 10% !important;
+  height: 1px !important;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 160, 80, 0.45) 40%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 160, 80, 0.45) 60%,
+    transparent
+  ) !important;
+  pointer-events: none !important;
+}
+
+/* Bottom inner depth line */
+#navContactBtn::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 20% !important;
+  right: 20% !important;
+  height: 1px !important;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 85, 0, 0.14),
+    transparent
+  ) !important;
+  pointer-events: none !important;
+}
+
+/* ── Hover ────────────────────────────────────────────────────────────────── */
+#navContactBtn:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 85, 0, 0.15) 0%,
+    rgba(255, 120, 40, 0.07) 55%,
+    rgba(0, 0, 0, 0.04) 100%
+  ) !important;
+  border-color: rgba(255, 85, 0, 0.28) !important;
+  border-top-color: rgba(255, 85, 0, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 160, 80, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.32),
+    0 0 32px rgba(255, 85, 0, 0.22),
+    0 0 0 0.5px rgba(255, 85, 0, 0.16) !important;
+  /* text color intentionally NOT set — var(--accent2) stays */
+}

@@ -1,0 +1,350 @@
+/* ── NEON SPHERES / VIDEO ICON / GLOSS PATCH ── */
+.pe-second {
+  background:
+    radial-gradient(ellipse at 50% 52%, rgba(0, 212, 255, 0.1) 0%, transparent 44%),
+    radial-gradient(ellipse at 32% 42%, rgba(80, 80, 255, 0.08) 0%, transparent 38%),
+    radial-gradient(ellipse at 70% 60%, rgba(0, 212, 255, 0.07) 0%, transparent 44%), #020d1a;
+}
+
+.pe-orbit-lines,
+.pe-orbit-lines svg {
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.35))
+    drop-shadow(0 0 26px rgba(0, 110, 255, 0.18));
+}
+
+.pe-orb-title {
+  color: #00d4ff !important;
+  text-shadow:
+    0 0 10px rgba(0, 212, 255, 0.75),
+    0 0 34px rgba(0, 212, 255, 0.45),
+    0 0 76px rgba(0, 130, 255, 0.25) !important;
+}
+
+/* ── NUCLEAR RING KILL — two layers of specificity ──────────────────────────
+   Layer 1 (.pe-orb-sphere): overrides 110-perfect-event-orbit-core.css
+   Layer 2 (#peSecondRight + all 8 planet classes): beats any injected patches
+   outline: none catches browser focus rings on role="button" elements.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-sphere,
+.pe-orb-ideas,
+.pe-orb-vr,
+.pe-orb-staff,
+.pe-orb-led,
+.pe-orb-bar,
+.pe-orb-materials,
+.pe-orb-motion,
+.pe-orb-activation,
+#peSecondRight .pe-orb-sphere {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none;
+  background: transparent !important;
+}
+
+.pe-orb-sphere::before,
+.pe-orb-sphere::after,
+#peSecondRight .pe-orb-sphere::before,
+#peSecondRight .pe-orb-sphere::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* ── THE ACTUAL PHANTOM RING ─────────────────────────────────────────────────
+   .pe-orb-play-icon is an empty <div> in the HTML (separate from .pe-play-icon
+   created by JS). It has border: 1px solid rgba(255,255,255,0.3) and a white
+   background — a circular element centered in the sphere at 30% of its size.
+   On small planets, this circle covers ~50% of the sphere and looks like a ring
+   wrapping the planet content. Kill the border/bg; keep only the ::after triangle.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-play-icon {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Label OUTSIDE the sphere — below it */
+.pe-orb-sphere .pe-sphere-label {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  /* hide play icon, show only text */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.pe-orb-sphere .pe-sphere-label .pe-label-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 0.72vw, 22px);
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.52);
+  text-transform: none;
+  white-space: nowrap;
+  text-shadow: none;
+}
+
+/* Hide play icon inside label */
+.pe-orb-sphere .pe-sphere-label .pe-play-icon,
+.pe-orb-sphere .pe-sphere-label::after,
+.pe-orb-sphere .pe-sphere-label::before {
+  display: none !important;
+}
+
+.pe-orb-sphere:hover {
+  transform: translate(-50%, calc(-50% - 4px)) scale(1.04) !important;
+}
+
+/* drop-shadow follows the planet's actual pixel silhouette.
+   scale(1.15) on the video element (not the wrapper) so it animates
+   independently of any wrapper-level lift transform from the sphere hover. */
+.pe-orb-sphere:hover .pe-orb-video {
+  transform: scale(1.15) !important;
+  filter: grayscale(0) contrast(0.05) brightness(0.1) drop-shadow(0 0 15px rgba(0, 212, 255, 0.8))
+    drop-shadow(0 0 30px rgba(0, 100, 255, 0.5)) !important;
+}
+
+/* ── FIX VIDEO ICON ALIGNMENT INSIDE SPHERES ── */
+.pe-orb-sphere {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* label is now OUTSIDE — absolute below sphere */
+.pe-orb-sphere .pe-sphere-label {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 20 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  line-height: 1 !important;
+}
+
+.pe-orb-sphere .pe-sphere-label::before,
+.pe-orb-sphere .pe-sphere-label::after {
+  content: none !important;
+}
+
+/* stable centered video button */
+.pe-orb-sphere .pe-play-icon {
+  position: relative !important;
+  z-index: 7 !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 255, 255, 0.86) !important;
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.26),
+    0 0 18px rgba(0, 212, 255, 0.32),
+    inset 0 0 10px rgba(0, 212, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+.pe-orb-sphere .pe-play-icon::before {
+  content: '' !important;
+  display: block !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin-left: 3px !important;
+  border-left: 9px solid rgba(255, 255, 255, 0.92) !important;
+  border-top: 6px solid transparent !important;
+  border-bottom: 6px solid transparent !important;
+  filter: drop-shadow(0 0 7px rgba(0, 212, 255, 0.55)) !important;
+}
+
+/* make tiny spheres keep icon centered and proportional */
+.pe-orb-sphere.small .pe-play-icon,
+.pe-orb-sphere[data-size='small'] .pe-play-icon {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+}
+
+/* ── FINAL SMOOTH TITLE + LABEL VISIBILITY PATCH ── */
+.pe-orb-title,
+#peOrbTitle,
+#peHighlight {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+#peHighlight {
+  transform-origin: center center !important;
+}
+
+.pe-orb-title,
+#peOrbTitle {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate3d(-50%, -50%, 0) scale(1) !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  line-height: 0.95 !important;
+}
+
+.pe-orb-sphere {
+  /* contain removed — needed for label outside sphere */
+}
+
+.pe-orb-sphere .pe-sphere-label {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  text-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+  /* no glow, no cyan */
+}
+
+.pe-orb-sphere .pe-label-text {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  white-space: nowrap !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: clamp(12px, 2vw, 18px) !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  text-shadow: none !important;
+  line-height: 1 !important;
+}
+
+/* Hide play icon */
+.pe-orb-sphere .pe-play-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(8px) !important;
+  position: relative !important;
+  z-index: 5 !important;
+  flex-shrink: 0 !important;
+  margin: 0 auto !important;
+  /* triangle via clip */
+}
+.pe-orb-sphere .pe-play-icon::before {
+  content: '' !important;
+  display: block !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-top: 5px solid transparent !important;
+  border-bottom: 5px solid transparent !important;
+  border-left: 8px solid rgba(255, 255, 255, 0.55) !important;
+  margin-left: 2px !important;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2)) !important;
+}
+
+/* ── ORBIT SVG RINGS — permanently hidden ── */
+.pe-orb-svg {
+  display: none !important;
+}
+
+/* ── PLANET VIDEO ────────────────────────────────────────────────────────
+   Fills the sphere, mix-blend-mode: screen removes the black background:
+   black areas become transparent, bright planet content shows through.
+   z-index: 1 keeps it below the ::before gloss (z:2) and play icon (z:5+).
+   ─────────────────────────────────────────────────────────────────────── */
+.pe-orb-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  /* grayscale(1): planets start desaturated and reveal color on hover.
+     grayscale must be first so its position is stable for CSS transition. */
+  filter: grayscale(1) contrast(1.15) brightness(0.9);
+  pointer-events: none;
+  z-index: 1;
+  /* transform included so scale(1.15) on hover animates smoothly without
+     fighting any wrapper-level transform owned by the parent sphere. */
+  transition:
+    transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    filter 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* ── MOBILE: replace orbit with vertical flex stack ──────────────────────
+   Below 768px the scroll-based orbit animation is disabled by JS.
+   We reset all absolute positioning and switch to a simple column layout.
+   !important overrides both the orbit CSS and any JS inline transforms.
+   ─────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pe-second-right {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    height: auto !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    padding: 32px 0 48px !important;
+    overflow: visible !important;
+  }
+
+  /* reset all individual sphere positions to flow in the column */
+  .pe-orb-sphere {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    /* uniform base size on mobile — cumulative ×1.15 ×1.10 from original */
+    width: clamp(127px, 38vw, 165px) !important;
+    height: clamp(127px, 38vw, 165px) !important;
+    /* bottom margin leaves room for the absolute label below each sphere */
+    margin-bottom: 28px !important;
+  }
+
+  /* Stand stays visually largest — cumulative ×1.15 ×1.10 from original */
+  .pe-orb-ideas {
+    width: clamp(175px, 53.1vw, 222px) !important;
+    height: clamp(175px, 53.1vw, 222px) !important;
+  }
+}
+
+/* Directional lighting via ::after was removed — the overlay rendered as an
+   offset square artefact due to the sphere's internal transform context.
+   Hard reset ensures no ::after ever renders on orbit spheres. */
+.pe-orb-sphere::after {
+  display: none !important;
+  content: none !important;
+}

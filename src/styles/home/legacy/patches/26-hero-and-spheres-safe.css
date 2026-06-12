@@ -1,0 +1,31 @@
+/* Reference style block 27 id="hero-and-spheres-safe-final" */
+/* HERO SAFE FIX: second planet layer must not cover the first Hero screen */
+#heroSection.hero #heroLeft,
+#heroSection.hero #heroRight {
+  visibility: visible;
+}
+
+#heroSection.hero #peSecond:not(.pe-active) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#heroSection.hero #peSecond.pe-active {
+  visibility: visible !important;
+}
+
+/* SPHERES SAFE FIX: when planet scene is active, spheres do not fade/dim */
+#peSecond.pe-active .pe-orb-sphere {
+  visibility: visible !important;
+  filter: none !important;
+}
+
+#peSecond.pe-active .pe-orb-sphere[style*='opacity: 0'],
+#peSecond.pe-active .pe-orb-sphere[style*='opacity:0'] {
+  opacity: 1 !important;
+}
+
+#peSecond.pe-focus-mode {
+  filter: none !important;
+}

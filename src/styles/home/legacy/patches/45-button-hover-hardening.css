@@ -1,0 +1,37 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 45 — FC-MAIN hover + overflow fix.
+   btn-glass / btn-g / btn-p rules removed — original button CSS is the
+   source of truth for hero buttons.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── FC-MAIN: overflow visible so hit-area buffer extends outward ──────────── */
+.floating-contact .fc-main {
+  overflow: visible !important;
+  isolation: isolate !important;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.3s ease !important;
+}
+
+/* ── FC-MAIN ::after — hit-area buffer ──────────────────────────────────────── */
+.floating-contact .fc-main::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  inset: -15px !important;
+  background: transparent !important;
+  z-index: -1 !important;
+  pointer-events: auto !important;
+  border-radius: inherit !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* ── FC-MAIN HOVER ──────────────────────────────────────────────────────────── */
+.floating-contact .fc-main:hover,
+.floating-contact .fc-main:focus-visible {
+  animation-play-state: paused !important;
+  transform: scale(1.04) translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(255, 85, 0, 0.6) !important;
+}

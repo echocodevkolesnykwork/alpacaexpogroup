@@ -1,0 +1,156 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Stage 2.5b — Hero button hover, ticker hitbox, CTA solid redesign
+   Loads AFTER patch 43 — overrides glassmorphism where needed.
+   No JS changes. No layout shifts.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ══ 2. TICKER CAROUSEL — larger hitbox + confident hover ════════════════════
+   #heroTicker .ticker-track span words are font-size:11px → ~11px tall hit
+   area. Small targets cause misses and jarring enter/leave cycles.
+
+   Fix: ::before pseudo-element extends the hit area 8px above and below the
+   text (matching the ticker's own padding:8px so it stays inside overflow:hidden)
+   and 4px left/right. The ::before shares the span's pointer events, so
+   hovering over the extended zone correctly triggers span:hover.
+
+   transform:scale(1.05) is applied with will-change:transform declared on the
+   BASE so the compositor pre-allocates the layer and the scale is GPU-smooth.
+   ─────────────────────────────────────────────────────────────────────────── */
+#heroTicker .ticker-track span:not(.dot) {
+  position: relative !important;
+  cursor: pointer !important;
+  will-change: transform !important;
+  /* transition on BASE so leave-state animates out cleanly */
+  transition:
+    color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    text-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Invisible hit-area extension — stays within ticker's 8px padding */
+#heroTicker .ticker-track span:not(.dot)::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -8px !important;
+  bottom: -8px !important;
+  left: -4px !important;
+  right: -4px !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+}
+
+#heroTicker .ticker-track span:not(.dot):hover {
+  color: #fff !important;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.7),
+    0 0 24px rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.05) !important;
+}
+
+/* ══ 3. FC-MAIN — solid opaque CTA, width synced with dropdown panel ═════════
+
+   ROOT CAUSE of misalignment: .fc-options (padding:8px + 48px buttons) is
+   64px wide, but .fc-main was only 48px. With right:0 anchor on the options
+   panel, it overflowed 16px left of the button → visual gap / mismatch.
+
+   Fix: pin the wrapper to 64px. Both button and options fill it at width:100%
+   so they share the exact same left/right edges at all times.
+
+   Root cause of glassmorphism artifacts (patch 43): backdrop-filter + the
+   residual ::before/::after from 30-floating-contact.css painted ghost layers.
+   This patch replaces the glass with a clean solid #ff5500 fill, no blur.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Lock wrapper to 64px — the canonical reference width for both children */
+.floating-contact,
+#floatingContact {
+  width: 64px !important;
+}
+
+/* SOLID CTA — overrides glassmorphism from patch 43 */
+.floating-contact .fc-main {
+  width: 100% !important; /* 64px — matches options panel */
+  height: 54px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important; /* safe — no backdrop-filter present */
+  /* solid fill — no glassmorphism */
+  background: #ff5500 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-color: transparent !important;
+  /* outer glow only — no inset white highlight */
+  box-shadow:
+    0 4px 16px rgba(255, 85, 0, 0.45),
+    0 8px 28px rgba(0, 0, 0, 0.28) !important;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s ease !important;
+}
+
+/* Kill all pseudo-element decorators from previous patches */
+.floating-contact .fc-main::before,
+.floating-contact .fc-main::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* SVG: larger, perfectly centered */
+.floating-contact .fc-main > svg {
+  width: 26px !important;
+  height: 26px !important;
+  fill: none !important;
+  stroke: #fff !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  display: block !important;
+  pointer-events: none !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* HOVER — simple scale + warm glow, nothing aggressive */
+.floating-contact .fc-main:hover,
+.floating-contact .fc-main:focus-visible {
+  animation-play-state: paused !important;
+  transform: scale(1.04) translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(255, 85, 0, 0.6) !important;
+}
+
+/* PULSE — glow-ring only, no box-shadow conflict with hover */
+.floating-contact.visible .fc-main {
+  animation: fcSolidPulse 2.6s ease-out infinite !important;
+}
+
+.floating-contact.visible .fc-main:hover {
+  animation: none !important;
+}
+
+@keyframes fcSolidPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 4px 16px rgba(255, 85, 0, 0.45),
+      0 8px 28px rgba(0, 0, 0, 0.28),
+      0 0 0 0px rgba(255, 85, 0, 0.28);
+  }
+  55% {
+    box-shadow:
+      0 4px 20px rgba(255, 85, 0, 0.58),
+      0 10px 32px rgba(0, 0, 0, 0.32),
+      0 0 0 9px rgba(255, 85, 0, 0);
+  }
+}
+
+/* Sync options panel width with button — fill the 64px wrapper */
+.floating-contact .fc-options {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+}

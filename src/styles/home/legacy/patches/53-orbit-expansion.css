@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 53 — Orbit expansion (desktop) + video popup background states.
+   Mobile/tablet (≤ 900px) is fully protected by the min-width media query.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. DESKTOP ORBIT CONTAINER EXPANSION (+20%) ─────────────────────────── */
+/* Wrapped in min-width: 901px so mobile/tablet rules are never touched.
+   Planets use % positions relative to .pe-second-right — they scale outward
+   automatically as the container grows. No per-sphere changes needed.    */
+@media (min-width: 901px) {
+  .pe-second-right {
+    width: min(96vw, 1420px) !important; /* was min(92vw, 1180px) */
+    height: min(85vh, 750px) !important; /* was min(72vh, 620px)  */
+  }
+}
+
+/* ── 2. DESKTOP PLANET COORDINATES — pushed to container edges ───────────── */
+/* Wrapped in min-width: 901px — tablet/mobile coordinates are untouched.
+   JS applies translate(-50%, -50%) so top/left mark the sphere CENTER.     */
+@media (min-width: 901px) {
+  .pe-orb-activation {
+    top: 50% !important;
+    left: 5% !important;
+  } /* SUPPORT  — left-center  */
+  .pe-orb-led {
+    top: 50% !important;
+    left: 95% !important;
+  } /* SCREENS  — right-center */
+  .pe-orb-vr {
+    top: 2% !important;
+    left: 50% !important;
+  } /* ACTIVATION — top-center  */
+  .pe-orb-bar {
+    top: 98% !important;
+    left: 54% !important;
+  } /* CATERING — bottom-center */
+  .pe-orb-ideas {
+    top: 15% !important;
+    left: 15% !important;
+  } /* STAND    — top-left      */
+  .pe-orb-staff {
+    top: 15% !important;
+    left: 85% !important;
+  } /* STAFF    — top-right     */
+  .pe-orb-motion {
+    top: 85% !important;
+    left: 20% !important;
+  } /* CONTENT  — bottom-left   */
+  .pe-orb-materials {
+    top: 85% !important;
+    left: 80% !important;
+  } /* MERCH    — bottom-right  */
+
+  /* Expand SVG rings proportionally to match new planet spread */
+  .pe-second-right .pe-orb-svg {
+    transform: translate(-50%, -50%) scale(1.18) !important;
+  }
+}
+
+/* ── 3. POPUP BACKGROUND STATES ───────────────────────────────────────────── */
+/* JS adds .is-popup-active to document.body and .is-playing-video to the
+   clicked sphere. body.is-popup-active cancels patch-42's container opacity
+   so per-sphere dimming works correctly.                                    */
+
+/* Cancel patch 42's whole-container dim — individual spheres handle it */
+body.is-popup-active #peSecondRight {
+  opacity: 1 !important;
+  transition: opacity 0.5s ease !important;
+}
+
+/* 3a. Dim all inactive planets */
+body.is-popup-active .pe-second-right .pe-orb-sphere:not(.is-playing-video) {
+  filter: grayscale(1) opacity(0.25) !important;
+  pointer-events: none !important;
+  transition: filter 0.5s ease !important;
+}
+
+/* 3b. Keep the active planet bright and lifted */
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video {
+  filter: none !important;
+  opacity: 1 !important;
+  transform: scale(1.05) translate(-50%, -50%) !important;
+  z-index: 10 !important;
+  box-shadow:
+    0 0 25px rgba(0, 212, 255, 0.6),
+    0 0 55px rgba(0, 100, 255, 0.35),
+    0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  transition:
+    transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.5s ease !important;
+}
+
+/* 3c. Dim SVG orbit rings */
+body.is-popup-active .pe-orb-svg {
+  opacity: 0.15 !important;
+  transition: opacity 0.5s ease !important;
+}

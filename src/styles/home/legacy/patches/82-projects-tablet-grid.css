@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 82 — Projects: split tablet vs mobile layout.
+
+   Cascade logic vs patch-80 (max-width:991px flex):
+   • At 769–991 px: both patches match. Same specificity (1,1,0), patch-82
+     loads later → display:grid wins here.
+   • At ≤ 768 px:  patch-82's min-width:769px rule does NOT match, so
+     patch-80's flex column keeps full control at mobile.
+   • Patch-81 [hidden] rule (specificity 1,2,0) beats every display rule
+     here, so pagination hiding still works at all viewport widths.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── TABLET: 2-column grid (769 px – 991 px) ─────────────────────────────── */
+@media (min-width: 769px) and (max-width: 991px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 16px !important;
+  }
+
+  /* All cards: uniform blocks, no span inheritance from desktop layout */
+  #portfolio .pg .pc,
+  #portfolio .pg .pc:first-child,
+  #portfolio .pg.pg-alt .pc,
+  #portfolio .pg.pg-alt .pc:first-child {
+    width: 100% !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* 5th card fills the empty slot — spans both columns for a clean rectangle */
+  #portfolio .pg .pc:last-child,
+  #portfolio .pg.pg-alt .pc:last-child {
+    grid-column: span 2 !important;
+  }
+}
+
+/* ── MOBILE: single-column flex (≤ 768 px) ───────────────────────────────── */
+/* Explicitly restates the mobile intent so it remains readable and
+   independent of patch-80's broad max-width:991px rule.                    */
+@media (max-width: 768px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  #portfolio .pg .pc,
+  #portfolio .pg .pc:first-child,
+  #portfolio .pg.pg-alt .pc,
+  #portfolio .pg.pg-alt .pc:first-child {
+    width: 100% !important;
+    height: 350px !important;
+    min-height: 350px !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: auto !important;
+  }
+}

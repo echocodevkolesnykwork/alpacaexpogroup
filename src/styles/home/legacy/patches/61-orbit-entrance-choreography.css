@@ -1,0 +1,123 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 61 — Planet Orbit Entrance Choreography
+
+   Initial state: labels (.pe-label-text) start hidden below their sphere.
+   JS (26-planet-engine.js) adds .label-revealed to each .pe-orb-sphere in
+   clockwise stagger order, triggered after the solar flash fires.
+
+   Specificity ladder:
+     #peSecondRight .pe-orb-sphere .pe-label-text           → (1,2,0) !important
+       beats patch-112's  .pe-orb-sphere .pe-label-text      → (0,2,0) !important
+     #peSecondRight .pe-orb-sphere.label-revealed .pe-label-text → (1,3,0) !important
+       beats the hiding rule for the revealed phase.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 769px) {
+  /* ── 1. INITIAL HIDDEN STATE ─────────────────────────────────────────────── */
+  #peSecondRight .pe-orb-sphere .pe-label-text {
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition:
+      opacity 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      color 0.36s ease-out,
+      text-shadow 0.36s ease-out,
+      filter 0.36s ease-out !important;
+  }
+
+  /* ── 2. REVEALED — .label-revealed added by JS with per-sphere stagger ──── */
+  #peSecondRight .pe-orb-sphere.label-revealed .pe-label-text {
+    opacity: 1 !important;
+    transform: translateY(0px) !important;
+  }
+
+  #peSecondRight .pe-orb-sphere .pe-sphere-label .pe-label-text {
+    position: relative !important;
+    z-index: 1 !important;
+    isolation: isolate !important;
+  }
+
+  /* ── LABEL FLASH — one-shot pulse, triggered by 01-core-interactions.js ───
+     Direct !important properties are used because base label styles also use
+     !important; keyframe animations cannot reliably override that cascade. */
+  #peSecond.planet-label-splash #peSecondRight .pe-orb-sphere .pe-label-text {
+    color: rgba(0, 212, 255, 1) !important;
+    text-shadow:
+      0 0 10px rgba(0, 212, 255, 1),
+      0 0 26px rgba(0, 118, 255, 0.75),
+      0 0 52px rgba(0, 72, 195, 0.45) !important;
+    filter: brightness(1.8) saturate(1.35) !important;
+  }
+
+  #peSecondRight .pe-orb-sphere .pe-sphere-label {
+    position: absolute !important;
+    isolation: isolate !important;
+    overflow: visible !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #peSecondRight .pe-orb-sphere .pe-label-text::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 120% !important;
+    height: 100% !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+    border-radius: 999px !important;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(0, 212, 255, 0.72) 0%,
+      rgba(0, 212, 255, 0.34) 20%,
+      rgba(0, 118, 255, 0.22) 44%,
+      rgba(0, 72, 195, 0.1) 66%,
+      transparent 82%
+    ) !important;
+    opacity: 0 !important;
+    filter: blur(22px) saturate(1.2) !important;
+    pointer-events: none !important;
+    mix-blend-mode: screen !important;
+    z-index: -1 !important;
+    transition:
+      opacity 0.18s ease-out,
+      transform 0.48s ease-out !important;
+  }
+
+  #peSecond.planet-label-splash #peSecondRight .pe-orb-sphere .pe-label-text::before {
+    opacity: 0.86 !important;
+    transform: translate(-50%, -50%) scale(1.18) !important;
+  }
+
+  /* ── 3. SOLAR BLOOM OVERLAY ──────────────────────────────────────────────── */
+  /* position: absolute within #peSecondRight, centered on the orbit title.
+     GSAP controls transform (xPercent, yPercent, scale) and opacity.
+     Gradient is soft and diffuse — this is a slow corona breath, not a flash.
+     Low white-core opacity prevents harshness; colour matches the solar glow.
+     mix-blend-mode: screen on a <div> is safe (no GPU alpha-channel issue);
+     isolation: isolate on #peSecondRight confines the blend to the orbit panel. */
+  .pe-flash-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 720px;
+    height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(180, 242, 255, 0.1) 10%,
+      rgba(0, 212, 255, 0.07) 24%,
+      rgba(0, 72, 195, 0.01) 64%,
+      transparent 80%
+    );
+    pointer-events: none;
+    z-index: 20;
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+  }
+}
+
+/* #peSecondRight .pe-flash-overlay {
+  display: none !important;
+} */

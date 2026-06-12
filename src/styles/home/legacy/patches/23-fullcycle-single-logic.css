@@ -1,0 +1,53 @@
+/* Reference style block 24 id="fullcycle-final-single-logic" */
+/* FINAL FIX: FULL CYCLE. ZERO STRESS — single stable logic */
+.hero-tagline,
+.full-cycle-tagline,
+.pe-tagline,
+#full-cycle-tagline,
+.full-cycle-text,
+.fullcycle-tagline,
+.full-cycle-fix {
+  animation: none !important;
+  transition: opacity 0.35s ease !important;
+  transform: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  will-change: auto !important;
+}
+
+.hero-tagline.animate-in,
+.full-cycle-tagline.animate-in,
+.pe-tagline.animate-in,
+#full-cycle-tagline.animate-in {
+  animation: none !important;
+}
+
+.hero-tagline::before,
+.hero-tagline::after,
+.full-cycle-tagline::before,
+.full-cycle-tagline::after,
+.pe-tagline::before,
+.pe-tagline::after,
+#full-cycle-tagline::before,
+#full-cycle-tagline::after,
+.full-cycle-text::before,
+.full-cycle-text::after,
+.fullcycle-tagline::before,
+.fullcycle-tagline::after,
+.full-cycle-fix::before,
+.full-cycle-fix::after {
+  display: none !important;
+  content: none !important;
+}
+
+.fullcycle-hidden-final {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.fullcycle-visible-final {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}

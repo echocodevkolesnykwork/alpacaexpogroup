@@ -1,0 +1,278 @@
+/* Reference style block 13 data-fix="mobile-static-hero-order-fix" */
+/* === MOBILE FIX: first hero is static; sphere scene is a separate second screen === */
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .pe-pin-wrap {
+    position: relative !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .pe-pin-wrap .hero,
+  #heroSection.hero,
+  .hero {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-top: 82px !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+  }
+
+  .pe-bg-dark,
+  #peBgDark,
+  #peGhostTitle {
+    display: none !important;
+  }
+
+  #heroRight,
+  .hero-right {
+    order: 1 !important;
+    position: relative !important;
+    flex: none !important;
+    width: calc(100% - 32px) !important;
+    height: 36dvh !important;
+    min-height: 220px !important;
+    max-height: 310px !important;
+    margin: 0 16px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+  }
+
+  .hero-vid,
+  .hero-vid iframe {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  #heroLeft,
+  .hero-left,
+  .hero-card {
+    order: 2 !important;
+    position: relative !important;
+    flex: none !important;
+    width: calc(100% - 32px) !important;
+    min-height: 0 !important;
+    margin: 0 16px !important;
+    padding: 24px 22px 28px !important;
+    justify-content: flex-start !important;
+    background: rgba(0, 212, 255, 0.055) !important;
+    border: 0.5px solid rgba(255, 255, 255, 0.07) !important;
+    border-top: 0 !important;
+    border-radius: 0 0 20px 20px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+    z-index: 2 !important;
+  }
+
+  #heroPre,
+  #peHeadline,
+  #peHighlight,
+  #heroSub,
+  #heroBtnsRow,
+  #heroTicker,
+  .hero-pre,
+  .pe-headline,
+  .pe-highlight,
+  .hero-sub,
+  .btns,
+  .hero-tag-ticker {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  #peHighlight,
+  .pe-highlight {
+    display: block !important;
+    color: var(--accent) !important;
+    white-space: normal !important;
+  }
+
+  /* Critical: sphere screen must come AFTER video+text, not above it */
+  #peSecond,
+  .pe-second {
+    order: 3 !important;
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 590px !important;
+    margin: 0 !important;
+    padding: 60px 16px 82px !important;
+    background: #020d1a !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    z-index: 1 !important;
+  }
+
+  #peSecondLeft,
+  .pe-second-left {
+    display: none !important;
+  }
+
+  #peSecondRight,
+  .pe-second-right {
+    position: relative !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 100% !important;
+    max-width: 720px !important;
+    height: 70dvh !important;
+    min-height: 410px !important;
+    transform: translate(-50%, -50%) !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  #peOrbTitle,
+  .pe-orb-title {
+    opacity: 1 !important;
+    visibility: visible !important;
+    --pe-title-alpha: 1 !important;
+    --pe-title-visibility: visible !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: clamp(32px, 10vw, 52px) !important;
+  }
+
+  .pe-orb-svg {
+    opacity: 0.58 !important;
+    visibility: visible !important;
+    transform: translate(-50%, -50%) scale(0.82) !important;
+  }
+
+  .pe-orb-sphere {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: translate3d(0, 0, 0) scale(0.86) !important;
+    pointer-events: auto !important;
+  }
+
+  #peOrbSubtitle,
+  .pe-orb-subtitle-bottom {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) !important;
+    bottom: 44px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  #heroSection.hero,
+  .hero {
+    padding-top: 80px !important;
+  }
+  #heroRight,
+  .hero-right {
+    height: 34dvh !important;
+    min-height: 205px !important;
+    max-height: 270px !important;
+  }
+  #heroLeft,
+  .hero-left {
+    padding: 22px 18px 26px !important;
+  }
+  #heroBtnsRow,
+  .btns {
+    grid-template-columns: 1fr !important;
+  }
+  #peSecond,
+  .pe-second {
+    min-height: 560px !important;
+    padding-top: 48px !important;
+  }
+  #peSecondRight,
+  .pe-second-right {
+    height: 68dvh !important;
+    min-height: 390px !important;
+  }
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

@@ -1,0 +1,161 @@
+/* Reference style block 4 data-fix="our-projects-card-expand-animation" */
+/* CARD EXPAND ANIMATION: popup opens from clicked OUR PROJECTS card */
+.op-popup {
+  display: flex !important;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(2, 10, 20, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition:
+    opacity 0.34s ease,
+    background 0.34s ease,
+    backdrop-filter 0.34s ease,
+    -webkit-backdrop-filter 0.34s ease;
+}
+.op-popup.open {
+  opacity: 1;
+  pointer-events: auto;
+  background: rgba(2, 10, 20, 0.9);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.op-popup-card {
+  transform-origin: center center;
+  opacity: 0;
+}
+.op-popup.open .op-popup-card {
+  animation: opCardExpand 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.op-popup.closing {
+  opacity: 0;
+  pointer-events: none;
+}
+.op-popup.closing .op-popup-card {
+  animation: opCardCollapse 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes opCardExpand {
+  0% {
+    opacity: 0.72;
+    transform: translate3d(var(--op-start-x, 0px), var(--op-start-y, 0px), 0)
+      scale(var(--op-start-scale, 0.34));
+    filter: blur(2px);
+    border-radius: 18px;
+  }
+  52% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+    border-radius: 24px;
+  }
+}
+@keyframes opCardCollapse {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(var(--op-start-x, 0px), var(--op-start-y, 0px), 0)
+      scale(var(--op-start-scale, 0.34));
+    filter: blur(2px);
+  }
+}
+
+/* CONTACT ICONS HOVER EFFECT */
+.contact-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s ease;
+}
+
+.contact-icons a:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.12);
+}
+
+/* Brand-specific */
+.contact-icons a.telegram:hover {
+  box-shadow: 0 0 18px rgba(0, 136, 204, 0.6);
+  background: rgba(0, 136, 204, 0.15);
+}
+
+.contact-icons a.whatsapp:hover {
+  box-shadow: 0 0 18px rgba(37, 211, 102, 0.6);
+  background: rgba(37, 211, 102, 0.15);
+}
+
+.full-cycle-fix {
+  font-size: 1.15em;
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

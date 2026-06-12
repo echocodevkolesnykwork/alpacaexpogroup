@@ -1,0 +1,53 @@
+/* ── FIXED PERFECT EVENT TRANSITION: center lock + early fade ── */
+#peOrbTitle {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#peHighlight.pe-ghost-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#peGhostTitle {
+  white-space: nowrap !important;
+  text-align: center !important;
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+/* ── PERFECT EVENT CENTER LOCK: fixed layer stays independent from page scroll ── */
+#peGhostTitle {
+  position: fixed !important;
+}
+
+/* final hard lock for centered Perfect Event */
+#peGhostTitle {
+  position: fixed !important;
+  z-index: 9998 !important;
+}
+
+/* ── HARD FIX: PERFECT EVENT MUST NOT JUMP AFTER CENTER LOCK ── */
+#peGhostTitle {
+  position: fixed !important;
+  z-index: 9998 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter !important;
+}
+
+/* final persistent center lock for Perfect Event */
+#peGhostTitle {
+  position: fixed !important;
+  z-index: 9998 !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transform-origin: center center !important;
+}

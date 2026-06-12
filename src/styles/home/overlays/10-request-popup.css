@@ -1,0 +1,225 @@
+/* REQUEST CONCEPT POPUP */
+.request-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  /* visibility:hidden removed — it prevents backdrop-filter from computing,
+     causing the blur to appear with a visible delay on open. With only
+     opacity:0 the backdrop compositor layer stays warm in the background. */
+  transition: opacity 0.28s ease;
+}
+.request-popup.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.request-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 13, 26, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.request-popup__card {
+  position: relative;
+  width: min(560px, 100%);
+  border-radius: 28px;
+  padding: 34px 34px 30px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(0, 212, 255, 0.12), transparent 34%),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.045) 52%,
+      rgba(255, 255, 255, 0.085) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.3);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 38px 90px rgba(0, 0, 0, 0.48),
+    0 0 80px rgba(0, 212, 255, 0.08);
+  backdrop-filter: blur(34px) saturate(1.45);
+  -webkit-backdrop-filter: blur(34px) saturate(1.45);
+  transform: translateY(18px) scale(0.96);
+  /* 60ms delay: backdrop blur (pre-warmed) appears for one beat before card
+     slides in, creating a layered reveal without double-opacity compound */
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.06s;
+  overflow: hidden;
+}
+.request-popup.is-open .request-popup__card {
+  transform: translateY(0) scale(1);
+}
+.request-popup__card::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 12%;
+  right: 12%;
+  height: 28%;
+  border-radius: 28px 28px 60% 60%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.request-popup__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.request-popup__close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.05);
+}
+.request-popup__eyebrow {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.request-popup__title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-d);
+  font-size: clamp(18px, 1.9vw, 26px);
+  line-height: 1.02;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.request-popup__title em {
+  font-style: normal;
+  color: var(--accent);
+  text-shadow: 0 0 38px rgba(0, 212, 255, 0.38);
+}
+.request-popup__text {
+  position: relative;
+  z-index: 1;
+  font-size: 14.4px;
+  line-height: 1.55;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 22px;
+  max-width: 420px;
+}
+.request-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.request-form__field {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 13, 26, 0.34);
+  color: #fff;
+  padding: 14px 15px;
+  font-family: var(--font-b);
+  font-size: 12px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.request-form__field::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.request-form__field:focus {
+  border-color: rgba(0, 212, 255, 0.46);
+  background: rgba(2, 13, 26, 0.48);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.08);
+}
+.request-form__wide {
+  grid-column: 1 / -1;
+}
+textarea.request-form__field {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.request-form__submit {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: 8px;
+  min-height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-b);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0 0 3px;
+  border-bottom: 0.5px solid rgba(0, 212, 255, 0.3);
+  box-shadow: none;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.request-form__submit:hover {
+  color: #fff;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+body.request-popup-open {
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .request-popup {
+    padding: 14px;
+  }
+  .request-popup__card {
+    padding: 28px 18px 22px;
+    border-radius: 24px;
+  }
+  .request-form {
+    grid-template-columns: 1fr;
+  }
+  .request-form__wide {
+    grid-column: auto;
+  }
+}
+
+/* FORM FIELD PROPORTIONS FIX */
+.request-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+.request-form textarea.request-form__wide {
+  grid-column: 1 / -1 !important;
+}

@@ -1,0 +1,101 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 66 — Video popup: fullscreen button
+   Position: bottom-right corner inside .pe-popup-video-wrap.
+   The tooltip uses ::before with attr(data-tooltip); it stays within the
+   video container bounds (button is at bottom:12px, tooltip appears above
+   it — comfortably inside the container's overflow:hidden boundary).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── BUTTON BASE ─────────────────────────────────────────────────────────── */
+.pe-popup-fullscreen {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(2, 8, 20, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.pe-popup-fullscreen:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.45);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* ── ICONS ───────────────────────────────────────────────────────────────── */
+.pe-popup-fullscreen .fs-icon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* Default: expand visible, compress hidden */
+.pe-popup-fullscreen .fs-icon-expand {
+  display: block;
+}
+.pe-popup-fullscreen .fs-icon-compress {
+  display: none;
+}
+
+/* Fullscreen active (JS toggles .is-fullscreen): swap icons */
+.pe-popup-fullscreen.is-fullscreen .fs-icon-expand {
+  display: none;
+}
+.pe-popup-fullscreen.is-fullscreen .fs-icon-compress {
+  display: block;
+}
+
+/* ── TOOLTIP ─────────────────────────────────────────────────────────────── */
+/* Appears above the button on hover. Content pulled from data-tooltip attr
+   so JS can update it ("Fullscreen" / "Exit fullscreen") without touching CSS. */
+.pe-popup-fullscreen::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  padding: 5px 9px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 8, 20, 0.88);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-d, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.pe-popup-fullscreen:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}

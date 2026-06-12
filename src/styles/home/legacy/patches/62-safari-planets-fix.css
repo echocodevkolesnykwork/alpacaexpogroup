@@ -1,0 +1,116 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 62 — Safari Planet Fix: GPU-safe glow architecture + smooth scale
+
+   ROOT CAUSE (two bugs):
+   1. SAFARI BLACK BOX — filter: drop-shadow applied to a GPU-composited
+      <video> with an alpha channel. WebKit creates a separate compositor
+      layer for the video and renders its alpha boundary as opaque black
+      before compositing. Patches 57 and 58 both do this.
+   2. JERKY HOVER — transitioning `filter` and `transform` simultaneously on
+      a <video> element forces Safari to tear down and rebuild compositor
+      layers mid-animation, causing frame drops.
+
+   FIX ARCHITECTURE:
+   · All filter stripped from .pe-orb-video in every state (base/hover/active).
+   · Glow promoted to .pe-orb-sphere::before — a pure CSS box-shadow layer
+     that composites independently of the video's GPU layer. No alpha issue.
+   · Sphere hover uses translate3d(-50%, -50%, 0) scale() so the browser
+     promotes the sphere to a compositor layer before the interaction fires,
+     eliminating the first-hover jitter.
+   · will-change: transform on base state locks each sphere onto the GPU.
+
+   SPECIFICITY NOTES:
+   · To override patch-112's "#peSecondRight .pe-orb-sphere::before {
+     display:none !important; content:none !important; }" which has (1,1,1),
+     we use the same selector — later source order (deferred patches inject
+     after homeStyleBlocks) wins at equal specificity + !important.
+   · Hover overrides on .pe-orb-sphere use #peSecondRight prefix → (1,1,1)
+     beats patches 57/58 plain class rules at (0,2,0).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. STRIP FILTER + FIX BLEND MODE ON VIDEO ───────────────────────────────
+   HEVC files with a true alpha channel must render with mix-blend-mode: normal
+   so the browser uses the native alpha track directly. mix-blend-mode: screen
+   (the previous "transparent black" hack) discards native alpha and treats
+   black as transparent via math — wrong for real-alpha sources; causes black
+   bounding boxes in Safari because the alpha boundary is mis-read.
+   background: transparent ensures no browser default black shows through
+   transparent regions of the frame.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-video {
+  filter: none !important;
+  transform: none !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+}
+
+.pe-orb-sphere:hover .pe-orb-video,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video .pe-orb-video {
+  filter: none !important;
+  transform: none !important;
+}
+
+/* ── 2. RE-ENABLE ::before — hardware-accelerated glow layer ─────────────────
+   patch-112 killed ::before with "display:none !important; content:none
+   !important" at specificity (1,1,1) for "#peSecondRight .pe-orb-sphere::before".
+   This rule matches the same specificity; later source order wins.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 10% !important;
+  border-radius: 50% !important;
+  /* z-index: 0 — sits behind video (z:1) but above transparent sphere bg */
+  z-index: 0 !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+  transform: scale(1) !important;
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.4s ease-out,
+    box-shadow 0.4s ease-out !important;
+  will-change: opacity, transform !important;
+  pointer-events: none !important;
+}
+
+/* ── 3. GLOW ON ::before FOR HOVER + POPUP-ACTIVE STATE ─────────────────────
+   box-shadow (not drop-shadow/filter) composites on a separate GPU layer that
+   is completely independent of the video's alpha compositor layer. No black
+   box, no Safari rendering artifact.
+   Outer shadow: visible aura ring around the sphere.
+   Inset shadow: ambient interior fill showing through transparent sphere bg.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere:hover::before,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video::before {
+  opacity: 1 !important;
+  box-shadow:
+    0 0 10px var(--planet-glow),
+    inset 0 0 5px var(--planet-glow) !important;
+  transform: scale(1.1) !important;
+}
+
+/* ── 4. GPU-SMOOTH SPHERE SCALE ──────────────────────────────────────────────
+   will-change: transform on the BASE state promotes each sphere to its own
+   compositor layer upfront. Safari then never needs to tear down / rebuild a
+   layer mid-animation, eliminating the first-hover stutter.
+   translate3d (not translate) is the explicit 3D form — WebKit treats it as a
+   definitive signal to use the hardware transform path.
+   transform-style: preserve-3d keeps the 3D rendering context intact so
+   translate3d on hover doesn't flatten back into a 2D repaint.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere {
+  will-change: transform !important;
+  transform-style: preserve-3d !important;
+  /* cancel any filter the sphere wrapper ever received */
+  filter: none !important;
+}
+
+#peSecondRight .pe-orb-sphere:hover,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video {
+  transform: translate3d(-50%, -50%, 0) scale(1.08) !important;
+  filter: none !important;
+  z-index: 10 !important;
+  opacity: 1 !important;
+}

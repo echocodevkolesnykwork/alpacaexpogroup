@@ -1,0 +1,30 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 52 — Hero button: flush hitbox shield + nuke all child pointer events.
+   No visual changes. Overrides patch 50's extended ::after with inset:0.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Kill pointer events on ALL descendants (text nodes, spans, SVGs, etc.) */
+#heroBtnsRow .btn-glass * {
+  pointer-events: none !important;
+}
+
+/* ::before is visual-only, must never steal events */
+#heroBtnsRow .btn-glass::before {
+  pointer-events: none !important;
+}
+
+/* Wrapper needs position:relative as the containing block for ::after */
+#heroBtnsRow .btn-glass {
+  position: relative !important;
+}
+
+/* Flush transparent shield exactly over the button — no gaps, no holes */
+#heroBtnsRow .btn-glass::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 99 !important;
+  border-radius: inherit !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+}

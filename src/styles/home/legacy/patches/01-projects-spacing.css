@@ -1,0 +1,134 @@
+/* Reference style block 2 data-fix="projects-spacing" */
+/* FIX: clean spacing between OUR PROJECTS groups without affecting card grid */
+.portfolio > .pg {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-items: stretch;
+}
+.portfolio > .project-block-spacer {
+  height: 38px;
+  width: 100%;
+}
+.portfolio > .pg .pc {
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .portfolio > .project-block-spacer {
+    height: 28px;
+  }
+}
+
+/* spacing when VIEW MORE CASES раскрыт */
+#moreCases {
+  margin-top: 38px;
+}
+
+/* FIX: spacing for dynamically loaded cases */
+#moreCases .pg {
+  margin: 0 !important;
+}
+
+#moreCases .pg + .pg {
+  margin-top: 38px !important;
+}
+
+#moreCases .pc {
+  height: 100%;
+}
+
+/* CONTACT ICONS HOVER EFFECT */
+.contact-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s ease;
+}
+
+.contact-icons a:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.12);
+}
+
+/* Brand-specific */
+.contact-icons a.telegram:hover {
+  box-shadow: 0 0 18px rgba(0, 136, 204, 0.6);
+  background: rgba(0, 136, 204, 0.15);
+}
+
+.contact-icons a.whatsapp:hover {
+  box-shadow: 0 0 18px rgba(37, 211, 102, 0.6);
+  background: rgba(37, 211, 102, 0.15);
+}
+
+.full-cycle-fix {
+  font-size: 1.15em;
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.94);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: bottomBtnPulse 2s ease-in-out 0.5s infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

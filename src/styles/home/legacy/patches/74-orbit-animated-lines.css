@@ -1,0 +1,429 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 74 — Orbit ring CSS + comet system.
+
+   ORBIT RINGS (state / visibility):
+     #peOrbitRing3   — inner solid ring, static (SMIL breathing only), blur
+     #peOrbitRing2   — mid dashed ring, hidden (temporarily removed)
+     #peOrbitAsteroidBelt — 16-layer belt, SMIL <animate> dashoffset per layer
+                            populated by 32-asteroid-belt.js
+     #peOrbitRing1   — outer gradient ring, static
+
+   All rings start at opacity:0 and are revealed by 31-orbit-scroll-reveal.js
+   which adds .orbit-ring-visible at scroll progress thresholds.
+
+   ACTIVATION planet (.pe-orb-vr) lowered: desktop top 12%, tablet top 20%.
+
+   COMET SYSTEM (JS: 29-orbit-meteor.js):
+     6 CSS keyframe trajectories (3 LTR + 3 RTL), all top→bottom.
+     3 size variants (sm/md/lg). z-index:3 — below planets (z:4) and title (z:8).
+     Colors via CSS custom properties so JS can override for planet tints.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ══ ORBIT SVG DISPLAY FIX ═══════════════════════════════════════════════════
+   112-perfect-event-sphere-styles.css sets:
+     .pe-orb-svg { display: none !important; }
+   — written to hide the OLD placeholder rings. Our animated rings need the SVG
+   visible on tablet + desktop. Specificity (0,2,0) beats (0,1,0) → always wins.
+   Patch-14 already handles opacity:0 / visibility:hidden before pe-active is
+   set, so the orbits are invisible until the planets section is scrolled into.  */
+@media (min-width: 769px) {
+  .pe-second-right .pe-orb-svg {
+    display: block !important;
+  }
+}
+
+/* ── RING3 (inner) — closer to nucleus, saturated, with soft glow ────────── */
+#peOrbitRing3 {
+  opacity: 0;
+  /* SVG geometry override: bring ring closer to the sun centre */
+  rx: 88px;
+  ry: 29px;
+  stroke: rgba(72, 148, 255, 0.72) !important;
+  stroke-width: 1px !important;
+  /* blur gives diffuse edge; drop-shadow adds a soft neon corona ring */
+  filter: blur(1.2px) drop-shadow(0 0 4px rgba(72, 148, 255, 0.48)) !important;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── RING2 — temporarily removed ─────────────────────────────────────────── */
+#peOrbitRing2 {
+  display: none !important;
+}
+
+/* ── ASTEROID BELT — group opacity + scroll-synced reveal ──────────────────
+   Content and CCW rotation injected by 32-asteroid-belt.js.                */
+#peOrbitAsteroidBelt {
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── RING1 (outer) — scroll-synced reveal, no rotation change ────────────── */
+#peOrbitRing1 {
+  opacity: 0;
+  transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── REVEALED STATES — JS (31-orbit-scroll-reveal.js) adds .orbit-ring-visible */
+#peOrbitRing3.orbit-ring-visible {
+  opacity: 0.75;
+} /* boosted: closer+saturated ring needs less fade */
+#peOrbitAsteroidBelt.orbit-ring-visible {
+  opacity: 1;
+}
+#peOrbitRing1.orbit-ring-visible {
+  opacity: 0.8;
+}
+
+/* ── 3D ORBITAL PLANE — perspective tilt on the SVG ──────────────────────────
+   perspective on #peSecondRight sets the vanishing point for its children.
+   rotateX on the SVG tilts the orbital plane: bottom comes toward the viewer,
+   top recedes — mimics a solar system viewed from slightly above.
+   perspective: 1100px → subtle depth (top/bottom ≈ ±7% size difference).
+   Applied only on desktop where the pinned orbit is visible.
+   NOTE: perspective property makes #peSecondRight a containing block for
+   fixed-position descendants; verified that no fixed children exist inside it
+   (comets are position:absolute, ghost/corona are in body/#peSecond).       */
+@media (min-width: 769px) {
+  #peSecondRight {
+    perspective: 1100px;
+  }
+  .pe-second-right .pe-orb-svg {
+    transform: translate(-50%, -50%) scale(0.96) rotateX(14deg) !important;
+  }
+}
+
+/* ── SOLAR GLOW OVERFLOW FIX — high-specificity override ─────────────────
+   patch-14 sets #heroSection.hero { overflow: hidden !important } (1,1,0).
+   #pePinWrap #heroSection.hero has specificity (2,1,0) → always wins.
+   overflow:clip replaces hidden without creating a Block Formatting Context,
+   so position:sticky and layout remain intact.
+   Drop-shadow radii are capped at 200 px in solarCoreGlow (60-solar-core-effect.css),
+   so they never reach the container boundary — no overflow-clip-margin needed. */
+#pePinWrap #heroSection.hero {
+  overflow: clip !important;
+}
+
+/* ── ACTIVATION PLANET — lower position on desktop + tablet ──────────────── */
+/* Desktop ≥901px: was top:2% (barely visible) → moved to 12% */
+@media (min-width: 901px) {
+  .pe-orb-vr {
+    top: 12% !important;
+    left: 50% !important;
+  }
+}
+/* Tablet 769–900px: was top:14% → 20% */
+@media (min-width: 769px) and (max-width: 900px) {
+  .pe-orb-vr {
+    top: 20% !important;
+    left: 46% !important;
+  }
+}
+
+/* ── PLANET LOOP FLASH — 33-planet-loop-smooth.js ───────────────────────────
+   Applied when a planet video nears its loop point to mask the hard cut.
+   Shows real planet colour + gentle glow ring, no scale change.
+   Transitions in/out smoothly via the CSS transition on both properties.  */
+.pe-loop-flash .pe-orb-video {
+  filter: grayscale(0) contrast(1.05) brightness(0.95) !important;
+  transition: filter 0.38s ease-in-out !important;
+}
+.pe-loop-flash {
+  box-shadow:
+    inset 0 0 30px rgba(0, 212, 255, 0.16),
+    0 0 24px rgba(0, 212, 255, 0.7),
+    0 0 56px rgba(0, 115, 255, 0.38),
+    0 0 90px rgba(0, 212, 255, 0.14) !important;
+  transition: box-shadow 0.38s ease-in-out !important;
+}
+
+/* ── PLANET SIZES +10% (desktop, all except STAND) ───────────────────────────
+   STAND (.pe-orb-ideas) is unchanged — it is already the dominant focal planet.
+   All other 7 planets scale uniformly × 1.10 on their clamp() values.
+   Specificity (0,2,0) beats patch-111's (0,1,0) for the same class.        */
+@media (min-width: 769px) {
+  /* ACTIVATION: 76→84, 8.3vw→9.1vw, 108→119 */
+  .pe-second-right .pe-orb-vr {
+    width: clamp(84px, 9.1vw, 119px) !important;
+    height: clamp(84px, 9.1vw, 119px) !important;
+  }
+  /* STAFF: 111→122, 12vw→13.2vw, 160→176 */
+  .pe-second-right .pe-orb-staff {
+    width: clamp(122px, 13.2vw, 176px) !important;
+    height: clamp(122px, 13.2vw, 176px) !important;
+  }
+  /* SCREENS: 81→89, 9.1vw→10vw, 117→129 */
+  .pe-second-right .pe-orb-led {
+    width: clamp(89px, 10vw, 129px) !important;
+    height: clamp(89px, 10vw, 129px) !important;
+  }
+  /* MERCH: 122→134, 13.2vw→14.5vw, 176→194 */
+  .pe-second-right .pe-orb-materials {
+    width: clamp(134px, 14.5vw, 194px) !important;
+    height: clamp(134px, 14.5vw, 194px) !important;
+  }
+  /* CATERING: 74→81, 8.6vw→9.5vw, 109→120 */
+  .pe-second-right .pe-orb-bar {
+    width: clamp(81px, 9.5vw, 120px) !important;
+    height: clamp(81px, 9.5vw, 120px) !important;
+  }
+  /* CONTENT: 97→107, 10.8vw→11.9vw, 144→158 */
+  .pe-second-right .pe-orb-motion {
+    width: clamp(107px, 11.9vw, 158px) !important;
+    height: clamp(107px, 11.9vw, 158px) !important;
+  }
+  /* SUPPORT: 111→122, 12vw→13.2vw, 160→176 */
+  .pe-second-right .pe-orb-activation {
+    width: clamp(122px, 13.2vw, 176px) !important;
+    height: clamp(122px, 13.2vw, 176px) !important;
+  }
+}
+
+/* ── MOBILE / REDUCED MOTION ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #peOrbitRing3,
+  #peOrbitAsteroidBelt,
+  #peOrbitRing1 {
+    display: none;
+  }
+  .pe-comet {
+    display: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #peOrbitAsteroidBelt {
+    animation: none !important;
+  }
+  .pe-comet {
+    display: none !important;
+  }
+}
+
+/* ══ COMET SYSTEM ════════════════════════════════════════════════════════════
+
+   Elements created dynamically by 29-orbit-meteor.js and appended to
+   #peSecondRight. z-index:3 keeps them above SVG orbits (z:1) and
+   starfield (z:2), but below planets (z:4) and the title (z:8).
+
+   All comets use transform-origin:left center. The tail is at the left end
+   (transparent in gradient), head at the right end (bright). At any rotation
+   angle the right end is the visual leading edge:
+     LTR: rotate(27–54°)  → right end points down-right  ✓
+     RTL: rotate(126–153°) → right end points down-left   ✓
+
+   CSS custom properties allow JS to tint individual comets with planet colors:
+     --comet-head  : head / core colour     (default neon cyan)
+     --comet-glow1 : inner glow             (default cyan)
+     --comet-glow2 : outer glow blur        (default cyan pale)
+   JS also overrides `background` and `box-shadow` inline for coloured comets.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── BASE COMET ──────────────────────────────────────────────────────────── */
+.pe-comet {
+  --comet-head: rgba(0, 212, 255, 0.92);
+  --comet-glow1: rgba(0, 212, 255, 0.78);
+  --comet-glow2: rgba(0, 175, 255, 0.36);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 100px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transform-origin: left center;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 212, 255, 0.4) 28%,
+    rgba(180, 232, 255, 0.82) 65%,
+    #fff 100%
+  );
+  box-shadow:
+    0 0 4px var(--comet-glow1),
+    0 0 14px var(--comet-glow2);
+}
+
+/* Bright glowing head on the leading edge */
+.pe-comet::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: radial-gradient(circle, #fff 0%, var(--comet-head) 50%, transparent 100%);
+  box-shadow:
+    0 0 5px 2px var(--comet-glow1),
+    0 0 12px 3px var(--comet-glow2);
+  animation: peCometHeadPulse 0.13s ease-in-out infinite;
+}
+
+@keyframes peCometHeadPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translateY(-50%) scale(1.32);
+  }
+}
+
+/* ── SIZE VARIANTS ───────────────────────────────────────────────────────── */
+.pe-comet-sm {
+  width: 52px;
+  height: 2px;
+}
+.pe-comet-sm::after {
+  width: 6px;
+  height: 6px;
+}
+
+.pe-comet-md {
+  width: 85px;
+  height: 3px;
+}
+.pe-comet-md::after {
+  width: 9px;
+  height: 9px;
+}
+
+.pe-comet-lg {
+  width: 118px;
+  height: 4px;
+}
+.pe-comet-lg::after {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── TRAJECTORIES ────────────────────────────────────────────────────────────
+   Element anchored at top:0; left:0 of #peSecondRight.
+   #peSecondRight is centered on the hero, so vw/vh translate guarantees
+   off-screen start and end positions on any viewport.
+
+   Rotation = angle of comet long axis aligned to direction of travel.
+   LTR angles calculated from pixel displacement on 1440×900 reference:
+     ltr1 ~27° | ltr2 ~41° | ltr3 ~54°
+   RTL: mirror = 180° – LTR angle
+     rtl1 153° | rtl2 139° | rtl3 126°
+
+   CSS class provides base duration; JS overrides animationDuration inline.  */
+
+@keyframes peCometLTR1 {
+  0% {
+    opacity: 0;
+    transform: translate(-18vw, -28vh) rotate(27deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.52;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(115vw, 106vh) rotate(27deg);
+  }
+}
+@keyframes peCometLTR2 {
+  0% {
+    opacity: 0;
+    transform: translate(-8vw, -28vh) rotate(41deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(80vw, 98vh) rotate(41deg);
+  }
+}
+@keyframes peCometLTR3 {
+  0% {
+    opacity: 0;
+    transform: translate(15vw, -30vh) rotate(54deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(74vw, 100vh) rotate(54deg);
+  }
+}
+@keyframes peCometRTL1 {
+  0% {
+    opacity: 0;
+    transform: translate(115vw, -28vh) rotate(153deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.52;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-18vw, 106vh) rotate(153deg);
+  }
+}
+@keyframes peCometRTL2 {
+  0% {
+    opacity: 0;
+    transform: translate(92vw, -28vh) rotate(139deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(20vw, 98vh) rotate(139deg);
+  }
+}
+@keyframes peCometRTL3 {
+  0% {
+    opacity: 0;
+    transform: translate(78vw, -30vh) rotate(126deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(26vw, 100vh) rotate(126deg);
+  }
+}
+
+/* Animation applied by CSS class; JS can override animationDuration inline */
+.pe-comet-ltr1 {
+  animation: peCometLTR1 2s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}
+.pe-comet-ltr2 {
+  animation: peCometLTR2 2.2s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}
+.pe-comet-ltr3 {
+  animation: peCometLTR3 2.4s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}
+.pe-comet-rtl1 {
+  animation: peCometRTL1 2s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}
+.pe-comet-rtl2 {
+  animation: peCometRTL2 2.2s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}
+.pe-comet-rtl3 {
+  animation: peCometRTL3 2.4s cubic-bezier(0.25, 0, 0.6, 1) forwards;
+}

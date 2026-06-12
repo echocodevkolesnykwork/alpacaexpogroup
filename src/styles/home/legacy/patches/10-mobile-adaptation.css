@@ -1,0 +1,493 @@
+/* Reference style block 11 data-fix="mobile-adaptation-final" */
+/* === FINAL MOBILE ADAPTATION PATCH === */
+/* ── TABLET: uniform project cards (769–991px) ──────────────────────────────
+   Desktop shows large-card asymmetric grids (2fr+1fr+1fr / pg-alt).
+   GSAP-driven scroll animations don't run at this range, and the asymmetric
+   layout looks unbalanced on tablet. Force a uniform 2-column grid with
+   equal fixed-height cards instead. */
+@media (min-width: 769px) and (max-width: 991px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt,
+  #moreCases .pg,
+  #moreCases .pg.pg-alt {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+  }
+
+  #portfolio .pg .pc,
+  #portfolio .pg.pg-alt .pc,
+  #portfolio .pg .pc:first-child,
+  #portfolio .pg.pg-alt .pc:first-child,
+  #moreCases .pg .pc,
+  #moreCases .pg.pg-alt .pc {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    height: 280px !important;
+    min-height: 280px !important;
+    aspect-ratio: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  #splash-screen .sp-text,
+  .sp-text {
+    font-size: clamp(30px, 9vw, 58px) !important;
+    line-height: 0.96 !important;
+    padding: 0 22px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  nav {
+    width: calc(100% - 24px) !important;
+    max-width: none !important;
+    left: 12px !important;
+    right: 12px !important;
+    transform: none !important;
+    top: 10px !important;
+    height: 54px !important;
+    padding: 0 14px !important;
+    border-radius: 16px !important;
+  }
+  .logo {
+    font-size: 14px !important;
+    white-space: nowrap !important;
+  }
+  .burger {
+    display: flex !important;
+  }
+  .mobile-menu {
+    gap: 20px !important;
+    padding: 72px 22px 34px !important;
+  }
+  .mobile-menu a {
+    font-size: 18px !important;
+    line-height: 1.05 !important;
+  }
+  .mobile-menu .mob-cta {
+    font-size: 11px !important;
+    padding: 13px 28px !important;
+  }
+
+  .pe-pin-wrap {
+    height: 260vh !important;
+    overflow: visible !important;
+  }
+  .pe-pin-wrap .hero,
+  .hero {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    padding-top: 72px !important;
+    overflow: hidden !important;
+  }
+  .hero-right {
+    flex: 0 0 42dvh !important;
+    min-height: 42dvh !important;
+    width: 100% !important;
+    border-radius: 0 0 22px 22px !important;
+  }
+  .hero-vid iframe {
+    width: 177.78vh !important;
+    height: 100vh !important;
+    min-width: 100% !important;
+    min-height: 56.25vw !important;
+  }
+  .hero-left {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    justify-content: center !important;
+    padding: 24px 22px 28px !important;
+    border-right: 0 !important;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.07) !important;
+  }
+  .hero-card,
+  #heroLeft {
+    max-width: none !important;
+  }
+  .hero-pre {
+    font-size: clamp(28px, 8.3vw, 42px) !important;
+    line-height: 1.02 !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+  }
+  .pe-headline {
+    margin-bottom: 12px !important;
+  }
+  .pe-highlight,
+  #peHighlight {
+    font-size: clamp(34px, 10vw, 52px) !important;
+    line-height: 1.02 !important;
+    white-space: normal !important;
+  }
+  .hero-sub,
+  #heroSub {
+    max-width: 100% !important;
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+    margin-bottom: 16px !important;
+  }
+  .btns,
+  #heroBtnsRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .btn-p,
+  .btn-g {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 12px 10px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Exhibition ticker: same width as hero text, no drifting on mobile */
+  .hero-tag-ticker,
+  #heroTicker {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 14px 0 0 !important;
+    padding: 8px 10px !important;
+    border-radius: 12px !important;
+    transform: none !important;
+  }
+  #heroTicker .ticker-track span {
+    font-size: 10px !important;
+  }
+
+  .hero-stats {
+    display: none !important;
+  }
+  .scr {
+    display: none !important;
+  }
+
+  /* Second hero state / sphere scene: fit inside phone viewport */
+  .pe-second-right {
+    width: 100vw !important;
+    height: 58dvh !important;
+    top: 55% !important;
+    left: 50% !important;
+  }
+  .pe-orb-svg {
+    transform: translate(-50%, -50%) scale(0.82) !important;
+    opacity: 0.56 !important;
+  }
+  .pe-orb-title {
+    font-size: clamp(30px, 9vw, 48px) !important;
+  }
+  .pe-orb-sphere {
+    transform: scale(0.82) !important;
+  }
+  .pe-orb-sphere .pe-sphere-label {
+    font-size: 8px !important;
+  }
+
+  section,
+  .sec,
+  .statement,
+  .why-us,
+  .portfolio,
+  .services,
+  .show-block,
+  .shows,
+  .process,
+  .video-testimonial,
+  .cta-wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .statement {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+  .why-us {
+    padding-top: 72px !important;
+    padding-bottom: 76px !important;
+  }
+  .services,
+  .show-block,
+  .shows,
+  .process,
+  .portfolio {
+    padding-bottom: 68px !important;
+  }
+
+  .sh {
+    font-size: clamp(26px, 8vw, 38px) !important;
+  }
+  .eyebrow {
+    font-size: 9px !important;
+    margin-bottom: 10px !important;
+  }
+  .sec-hd {
+    align-items: flex-start !important;
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .st-inner,
+  .vt-bento,
+  .globe-layout,
+  .services-top {
+    grid-template-columns: 1fr !important;
+  }
+
+  .wu-story {
+    max-width: 100% !important;
+    gap: 28px !important;
+  }
+  .wu-item,
+  .wu-item.reverse {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    min-height: 0 !important;
+    padding-bottom: 24px !important;
+  }
+  .wu-item.reverse .wu-video-card,
+  .wu-item.reverse .wu-copy {
+    order: initial !important;
+  }
+  .wu-video-card {
+    aspect-ratio: 16/10 !important;
+    border-radius: 16px !important;
+  }
+  .wu-copy {
+    max-width: 100% !important;
+    padding-left: 16px !important;
+  }
+  .wu-copy h3 {
+    font-size: 22px !important;
+  }
+
+  /* Projects: equal compact cards on mobile */
+  #portfolio .pg,
+  #portfolio .pg.pg-alt,
+  .portfolio .pg,
+  .portfolio .pg.pg-alt {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  #portfolio .pc,
+  #portfolio .pg .pc,
+  #portfolio .pg.pg-alt .pc,
+  .portfolio .pc,
+  .portfolio .pg .pc,
+  .portfolio .pg.pg-alt .pc,
+  #portfolio .pc:first-child,
+  .portfolio .pc:first-child {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    height: 180px !important;
+    min-height: 180px !important;
+    aspect-ratio: auto !important;
+    border-radius: 16px !important;
+  }
+  #portfolio .pc-bg img,
+  .portfolio .pc-bg img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  .pc-info {
+    padding: 11px 13px !important;
+  }
+  .pc-t {
+    font-size: 13px !important;
+  }
+  .pc-m {
+    font-size: 10px !important;
+  }
+
+  .svc-g,
+  .show-grid,
+  .shw-g,
+  .svc-grid-new,
+  .proc-g,
+  .proc-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .proc-arrow {
+    display: none !important;
+  }
+  .proc-step,
+  .proc-step-flip {
+    min-height: 140px !important;
+  }
+
+  .svc-orbit-stage {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .svc-orbit-center {
+    grid-column: 1 / -1 !important;
+    order: -1 !important;
+  }
+  .svc-glass-btn {
+    height: 112px !important;
+    border-radius: 16px !important;
+  }
+  .svc-glass-btn span {
+    font-size: 9px !important;
+  }
+
+  .vt-preview {
+    border-radius: 18px !important;
+  }
+  .vt-bottom {
+    align-items: flex-end !important;
+    gap: 12px !important;
+  }
+  .vt-title {
+    font-size: 19px !important;
+  }
+
+  .cta-box {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: left !important;
+    padding: 34px 22px !important;
+    gap: 22px !important;
+  }
+  .btn-cta {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  footer {
+    flex-direction: column !important;
+    gap: 10px !important;
+    text-align: center !important;
+    padding: 24px 18px !important;
+  }
+
+  .floating-contact {
+    opacity: 0;
+    animation:
+      floatingBtnReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards,
+      bottomBtnPulse 2s ease-in-out 3.2s infinite;
+    right: 14px !important;
+    bottom: 14px !important;
+  }
+  .fc-main {
+    width: 56px !important;
+    height: 56px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-right {
+    flex-basis: 39dvh !important;
+    min-height: 39dvh !important;
+  }
+  .hero-left {
+    padding: 20px 18px 24px !important;
+  }
+  .hero-pre {
+    font-size: clamp(25px, 8vw, 34px) !important;
+  }
+  .pe-highlight,
+  #peHighlight {
+    font-size: clamp(31px, 9.5vw, 42px) !important;
+  }
+  .hero-sub,
+  #heroSub {
+    font-size: 11.5px !important;
+  }
+  .btns,
+  #heroBtnsRow {
+    grid-template-columns: 1fr !important;
+  }
+  #portfolio .pc,
+  .portfolio .pc,
+  #portfolio .pc:first-child,
+  .portfolio .pc:first-child {
+    height: 160px !important;
+    min-height: 160px !important;
+  }
+  .svc-orbit-stage {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

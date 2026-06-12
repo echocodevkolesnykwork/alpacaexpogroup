@@ -1,0 +1,176 @@
+/* ── TITLE TRANSITION FIX ────────────────────────────────────────────────────
+   The rAF loop writes transform on every frame via inline styles.
+   Any CSS transition on transform fights the JS update and causes a jerk.
+
+   #peHighlight — transition: none. Its show/hide is driven by the ghost:
+   pe-ghost-hidden hides it while the ghost travels, destroyGhost() reveals
+   it instantly. A CSS opacity transition here causes a 0.3s fade-in AFTER
+   the ghost is removed — that's the scroll-back flicker.
+
+   #peGhostTitle — keeps opacity transition; harmless since JS sets inline
+   opacity every rAF frame anyway.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peHighlight {
+  transition: none !important;
+}
+#peGhostTitle {
+  transition: opacity 0.3s ease !important;
+}
+
+/* ── PLAY ICON: proportional size + visual restore ───────────────────────────
+   110-perfect-event-orbit-core.css defines the base 35% / aspect-ratio rule.
+   112-perfect-event-sphere-styles.css kills border/background.
+   This patch (loads last as deferred) restores the glass circle with a
+   matching transition so blur/opacity animate smoothly on hover.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-play-icon {
+  width: 35% !important;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  max-width: unset !important;
+  max-height: unset !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.44) !important;
+  background: rgba(0, 0, 0, 0.26) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  box-shadow:
+    0 0 14px rgba(0, 212, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  /* transition covers backdrop-filter/filter/opacity for the hover blur effect */
+  transition:
+    backdrop-filter 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    filter 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s ease !important;
+}
+
+/* On hover the backdrop blur intensifies — glass deepens without touching
+   the triangle, which must stay pixel-sharp at all times. */
+.pe-orb-sphere:hover .pe-orb-play-icon {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ── SOLAR GLOW — DEEP SPACE STAR ────────────────────────────────────────────
+   8 s cycle: slow majestic breathing instead of the previous fast pulse.
+   50% amplitude is intentionally large so the glow reads across the canvas,
+   but softer than before to avoid overwhelming the planet silhouettes.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes solarBreathing {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55))
+      drop-shadow(0 0 26px rgba(0, 212, 255, 0.55)) drop-shadow(0 0 56px rgba(0, 130, 255, 0.28));
+  }
+  50% {
+    filter: drop-shadow(0 0 40px #fff) drop-shadow(0 0 100px #00d4ff) drop-shadow(0 0 250px #0077ff);
+  }
+}
+
+#peOrbTitle.is-centered-sun {
+  animation: solarBreathing 8s ease-in-out infinite;
+}
+
+/* ── DEEP SPACE GALAXY BACKGROUND ────────────────────────────────────────────
+   nebulaPulse: 8 s, reduced amplitude (scale 0.98↔1.02, opacity 0.7↔0.9)
+   for a subtle, hypnotic expansion rather than an aggressive pop.
+
+   transition on the base rule gives a 2.5 s fade-OUT when .is-centered-sun
+   is removed (scrolling back). The animation overrides the transition for
+   opacity while active, so there is no conflict during normal forward scroll.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes nebulaPulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+#peSecond::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 212, 255, 0.25) 0%,
+    rgba(0, 100, 255, 0.15) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 2.5s ease-in-out;
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: center center;
+}
+
+#peSecond.is-centered-sun::before {
+  animation: nebulaPulse 8s ease-in-out infinite;
+}
+
+/* ── PLANET ORBIT PULSE — hover / focus ─────────────────────────────────────
+   Three-layer box-shadow pulses between a dim and a vivid state, simulating
+   an orbiting energy field around the planet.
+   box-shadow is used (not filter:drop-shadow) because filter on the wrapper
+   would create an isolated stacking context and break the child video's
+   mix-blend-mode:screen transparency.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes planetOrbitPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 12px rgba(0, 212, 255, 0.3),
+      0 0 32px rgba(0, 120, 255, 0.16),
+      0 0 58px rgba(0, 212, 255, 0.06);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(0, 212, 255, 0.58),
+      0 0 58px rgba(0, 120, 255, 0.3),
+      0 0 95px rgba(0, 212, 255, 0.12);
+  }
+}
+
+.pe-orb-sphere {
+  /* zero-size transparent shadow gives the transition a typed value to
+     animate FROM on hover-out, so the glow fades smoothly rather than pops */
+  box-shadow: 0 0 0 0 transparent !important;
+  transition:
+    transform 0.7s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.7s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.pe-orb-sphere:hover,
+.pe-orb-sphere:focus-visible {
+  transform: translate(-50%, calc(-50% - 6px)) scale(1.06) !important;
+  /* animation drives box-shadow; transition handles the smooth exit when
+     hover ends (browser interpolates from last animated value → transparent) */
+  animation: planetOrbitPulse 2.5s ease-in-out infinite !important;
+  outline: none !important;
+}
+
+/* ── MOBILE CLEAN COLUMN ─────────────────────────────────────────────────────
+   Hero fills the small viewport; pe-second is a self-contained relative block
+   directly below with no z-index bleed.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pe-pin-wrap .hero,
+  #heroSection.hero,
+  .hero {
+    min-height: 100svh !important;
+    overflow: hidden !important;
+  }
+
+  #peSecond.pe-second,
+  .pe-second {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+}

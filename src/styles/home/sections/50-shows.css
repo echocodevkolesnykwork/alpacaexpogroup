@@ -1,0 +1,38 @@
+/* SHOWS */
+.shows {
+  padding: 0 48px 100px;
+}
+.shw-g {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 44px;
+}
+.shw {
+  padding: 26px 22px;
+  border-radius: 18px;
+  cursor: default;
+  transition: border-color 0.3s;
+}
+.shw:hover {
+  border-color: var(--glass-ab) !important;
+}
+.shw-n {
+  font-family: var(--font-d);
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.shw-loc {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.shw-d {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+}

@@ -1,0 +1,98 @@
+/* Reference style block 32 id="clients-apple-style-reveal" */
+/* WHAT OUR CLIENTS SAY — premium Apple-style reveal */
+.video-testimonial {
+  overflow: hidden !important;
+}
+.video-testimonial .vt-bento {
+  perspective: 1200px !important;
+}
+.video-testimonial .vt-head,
+.video-testimonial .vt-cell-video,
+.video-testimonial .vt-cell,
+.video-testimonial .more-cases-wrap {
+  opacity: 0 !important;
+  filter: blur(16px) saturate(0.82) !important;
+  transform: translate3d(0, 44px, 0) scale(0.965) !important;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s ease,
+    border-color 0.45s ease !important;
+  will-change: opacity, transform, filter !important;
+}
+.video-testimonial .vt-head {
+  transform: translate3d(0, 28px, 0) scale(0.98) !important;
+}
+.video-testimonial .vt-cell-video {
+  transform: translate3d(-38px, 54px, 0) rotateY(5deg) scale(0.965) !important;
+}
+.video-testimonial .vt-cell:nth-of-type(odd) {
+  transform: translate3d(34px, 46px, 0) rotateY(-4deg) scale(0.965) !important;
+}
+.video-testimonial .vt-cell:nth-of-type(even) {
+  transform: translate3d(-24px, 46px, 0) rotateY(3deg) scale(0.965) !important;
+}
+.video-testimonial .vt-head.vt-in,
+.video-testimonial .vt-cell-video.vt-in,
+.video-testimonial .vt-cell.vt-in,
+.video-testimonial .more-cases-wrap.vt-in {
+  opacity: 1 !important;
+  filter: blur(0) saturate(1) !important;
+  transform: translate3d(0, 0, 0) rotateY(0) scale(1) !important;
+}
+.video-testimonial .vt-cell.vt-in::after,
+.video-testimonial .vt-cell-video.vt-in .vt-video-wrap::after {
+  animation: clientsNeonSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.video-testimonial .vt-cell.vt-in .vt-logo,
+.video-testimonial .vt-cell.vt-in .vt-quote-wrap,
+.video-testimonial .vt-cell.vt-in .vt-author {
+  animation: clientsSoftLift 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.video-testimonial .vt-cell.vt-in .vt-quote-wrap {
+  animation-delay: 0.06s;
+}
+.video-testimonial .vt-cell.vt-in .vt-author {
+  animation-delay: 0.11s;
+}
+@keyframes clientsSoftLift {
+  from {
+    transform: translateY(14px);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes clientsNeonSweep {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 212, 255, 0);
+    opacity: 0.35;
+  }
+  45% {
+    box-shadow: 0 0 34px rgba(0, 212, 255, 0.2);
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 212, 255, 0);
+    opacity: 0.55;
+  }
+}
+@media (max-width: 768px) {
+  .video-testimonial .vt-head,
+  .video-testimonial .vt-cell-video,
+  .video-testimonial .vt-cell,
+  .video-testimonial .vt-cell:nth-of-type(odd),
+  .video-testimonial .vt-cell:nth-of-type(even),
+  .video-testimonial .more-cases-wrap {
+    transform: translate3d(0, 34px, 0) scale(0.97) !important;
+  }
+  .video-testimonial .vt-head.vt-in,
+  .video-testimonial .vt-cell-video.vt-in,
+  .video-testimonial .vt-cell.vt-in,
+  .video-testimonial .more-cases-wrap.vt-in {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+}

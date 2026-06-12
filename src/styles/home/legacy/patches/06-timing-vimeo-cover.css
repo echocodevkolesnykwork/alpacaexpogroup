@@ -1,0 +1,114 @@
+/* Reference style block 7 data-fix="timing-vimeo-cover" */
+/* FIX: Timing Vimeo fills entire video card */
+.wu-video-card iframe.vimeo-cover {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 177.78% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 177.78% !important;
+  transform: translate(-50%, -50%) !important;
+  border: 0 !important;
+}
+@media (max-width: 768px) {
+  .wu-video-card iframe.vimeo-cover {
+    width: 177.78% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 177.78% !important;
+  }
+}
+
+/* CONTACT ICONS HOVER EFFECT */
+.contact-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s ease;
+}
+
+.contact-icons a:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.12);
+}
+
+/* Brand-specific */
+.contact-icons a.telegram:hover {
+  box-shadow: 0 0 18px rgba(0, 136, 204, 0.6);
+  background: rgba(0, 136, 204, 0.15);
+}
+
+.contact-icons a.whatsapp:hover {
+  box-shadow: 0 0 18px rgba(37, 211, 102, 0.6);
+  background: rgba(37, 211, 102, 0.15);
+}
+
+.full-cycle-fix {
+  font-size: 1.15em;
+}
+
+@keyframes bottomBtnPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 26px rgba(255, 77, 0, 0.38);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+@keyframes floatingBtnReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating contact appears with the same delay as FULL CYCLE. ZERO STRESS */
+@keyframes floatingContactReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#floatingContact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingContact.visible {
+  pointer-events: auto;
+  animation:
+    floatingContactReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards,
+    bottomBtnPulse 2s ease-in-out calc(3.2s + 0.9s) infinite;
+}
+
+/* Floating contact options open upward */
+#floatingContact .fc-options,
+.floating-contact .fc-options {
+  bottom: calc(100% + 12px) !important;
+  top: auto !important;
+  flex-direction: column-reverse !important;
+}

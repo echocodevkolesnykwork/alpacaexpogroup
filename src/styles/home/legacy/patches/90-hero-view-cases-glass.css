@@ -1,0 +1,53 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 90 — Hero "View cases": visual upgrade to match .view-more-cases.
+
+   Architecture note: patch-50 already put the glass on ::before to prevent
+   backdrop-filter flicker. This patch only overrides the VISUAL values on
+   that ::before (background, border, shadow, backdrop) — the structural
+   layer (position, inset, z-index, overflow, border-radius) is untouched.
+
+   Top specular shimmer is layered into ::before's background property
+   (1px gradient at the top edge, 14%→86% width) since ::before is already
+   occupied by the glass layer.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Resting glass — matches .view-more-cases ─────────────────────────────── */
+#heroBtnsRow .btn-glass::before {
+  background:
+    /* top specular shimmer — glass edge highlight */
+    linear-gradient(to right, transparent, rgba(255, 255, 255, 0.28), transparent) 14% 0 / 72% 1px
+      no-repeat,
+    /* main glass gradient */
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter: blur(20px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 4px 20px rgba(0, 0, 0, 0.22),
+    0 0 20px rgba(0, 212, 255, 0.08) !important;
+  transition:
+    background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease !important;
+}
+
+/* ── Hover lift — -2px matches .view-more-cases ───────────────────────────── */
+#heroBtnsRow .btn-glass:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* ── Hover glass — cyan tint, stronger glow ───────────────────────────────── */
+#heroBtnsRow .btn-glass:hover::before {
+  background:
+    linear-gradient(to right, transparent, rgba(255, 255, 255, 0.28), transparent) 14% 0 / 72% 1px
+      no-repeat,
+    linear-gradient(145deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 212, 255, 0.04) 100%) !important;
+  border-color: rgba(0, 212, 255, 0.28) !important;
+  border-top-color: rgba(0, 212, 255, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(0, 212, 255, 0.18) !important;
+}

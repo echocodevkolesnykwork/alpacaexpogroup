@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 50 — Hero "View cases": 3-layer flicker-free hover architecture.
+   Scoped strictly to #heroBtnsRow .btn-glass — header button untouched.
+
+   Root cause of flicker: backdrop-filter on the element itself gets
+   re-composited on every hover enter/leave, causing a paint flash.
+   Fix: move the glass visual to ::before (overflow:hidden clips the blur
+   to the button bounds), keep the wrapper structural-only, and use ::after
+   as a transparent 20px hit-area buffer so the cursor never "falls off"
+   the edge during a fast sweep.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Layer 0: Wrapper — structural only, visual stripped to ::before ─────── */
+#heroBtnsRow .btn-glass {
+  position: relative !important;
+  overflow: visible !important; /* ::after must extend beyond bounds */
+  isolation: isolate !important; /* new stacking context for z-index layers */
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  /* only properties that stay on the wrapper: text color + lift */
+  transition:
+    color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+#heroBtnsRow .btn-glass:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* ── Layer 1: Visual glass — ::before, clipped to button shape ───────────── */
+#heroBtnsRow .btn-glass::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  border-radius: inherit !important;
+  overflow: hidden !important; /* clips backdrop-filter to the button */
+  pointer-events: none !important;
+  /* exact original glass visual */
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  ) !important;
+  backdrop-filter: blur(24px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.5) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 6px 24px rgba(0, 0, 0, 0.16),
+    0 0 0 rgba(255, 255, 255, 0) !important;
+  transition:
+    background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+#heroBtnsRow .btn-glass:hover::before {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  ) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.26) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.1) inset,
+    0 8px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 rgba(255, 255, 255, 0) !important;
+}
+
+/* ── Layer 2: Transparent hit-area buffer — 20px beyond button bounds ─────── */
+#heroBtnsRow .btn-glass::after {
+  content: '' !important;
+  position: absolute !important;
+  top: -20px !important;
+  bottom: -20px !important;
+  left: -20px !important;
+  right: -20px !important;
+  z-index: 99 !important;
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+
+/* ── Children — non-interactive so ::after wins all cursor events ─────────── */
+#heroBtnsRow .btn-glass > * {
+  pointer-events: none !important;
+  position: relative !important;
+  z-index: 1 !important;
+}

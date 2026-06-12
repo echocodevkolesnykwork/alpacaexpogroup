@@ -1,0 +1,57 @@
+/* Reference style block 29 id="clients-cards-logo-center-final" */
+/* WHAT OUR CLIENTS SAY — logo size + centered */
+.video-testimonial .review-card img,
+.video-testimonial .testimonial-card img,
+.video-testimonial .client-card img,
+.video-testimonial .vt-card img,
+.clients-section .review-card img,
+.clients-section .testimonial-card img,
+.clients-section .client-card img,
+.clients-section .vt-card img,
+#clients img,
+#testimonials img {
+  display: block !important;
+  margin: 0 auto 18px !important;
+  max-width: 170px !important;
+  max-height: 82px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: grayscale(1) brightness(0.82) contrast(1.08) !important;
+  opacity: 0.86 !important;
+  transition:
+    filter 0.32s ease,
+    opacity 0.32s ease,
+    transform 0.32s ease !important;
+}
+
+.video-testimonial .review-card:hover img,
+.video-testimonial .testimonial-card:hover img,
+.video-testimonial .client-card:hover img,
+.video-testimonial .vt-card:hover img,
+.clients-section .review-card:hover img,
+.clients-section .testimonial-card:hover img,
+.clients-section .client-card:hover img,
+.clients-section .vt-card:hover img,
+#clients .review-card:hover img,
+#clients .testimonial-card:hover img,
+#clients .client-card:hover img,
+#testimonials .review-card:hover img,
+#testimonials .testimonial-card:hover img,
+#testimonials .client-card:hover img {
+  filter: grayscale(0) brightness(1) contrast(1) !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+/* If logo is in a wrapper, center the wrapper too */
+.video-testimonial .clients-logo-wrap,
+.clients-section .clients-logo-wrap,
+#clients .clients-logo-wrap,
+#testimonials .clients-logo-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-bottom: 18px !important;
+}

@@ -1,0 +1,17 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 81 — Restore [hidden] supremacy on tablet/mobile (≤ 991 px).
+   Problem: patch-80's display:flex!important on .pg overrides the HTML
+   [hidden] attribute (UA display:none has no !important), causing all
+   pre-rendered chunks to appear at once on load.
+   Fix: a single higher-specificity rule that forces display:none!important
+   back onto any [hidden] grid or spacer element, applied last in cascade.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+  #portfolio .pg[hidden],
+  #portfolio .pg.pg-alt[hidden],
+  #portfolio .project-block-spacer[hidden],
+  #moreCases .pg[hidden],
+  #moreCases .pg.pg-alt[hidden] {
+    display: none !important;
+  }
+}

@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 64 — Safari layer-isolation fix + bottom-planet glow calibration.
+
+   BUG (Safari black frame in resting state only):
+   WebKit's GPU compositor handles <video> elements on a separate render path.
+   Applying mix-blend-mode: screen directly to <video> asks that compositor to
+   blend via the video-specific GPU pipeline, which mis-reads the alpha boundary
+   of the video frame as opaque black — ONLY in the resting state where
+   filter: grayscale is also active. The two GPU operations (blend + filter)
+   on the same video element collapse into a single pass that WebKit gets wrong.
+
+   FIX — split the operations onto two separate DOM layers:
+   · .pe-orb-sphere (a plain <div>): owns mix-blend-mode: screen. Safari
+     composites <div> screen-blends correctly. NO isolation: isolate — that
+     property forces an offscreen buffer whose default fill is opaque black
+     before the screen blend is applied, recreating the capsule artifact.
+     mix-blend-mode alone already creates an implicit stacking context.
+     background: transparent ensures no solid fill interferes.
+   · .pe-orb-video: mix-blend-mode: normal. The video now renders into the
+     sphere's already-blended stacking context and contributes its pixels
+     as-is. filter: grayscale stays here (CSS filter on <video> alone is
+     fine; it's the COMBINATION of filter + mix-blend-mode that breaks).
+
+   SPECIFICITY NOTES:
+   · Sphere blend rule: "#peSecondRight .pe-orb-sphere" matches (1,1,0) —
+     same as patch-62, but patch-64 loads last so later source order wins.
+   · Video mix-blend-mode: ".pe-orb-video" at (0,1,0) beats patch-63's same
+     selector by later source order.
+   · Bottom-planet ::before inset: "#peSecondRight .pe-orb-{bar|motion|
+     materials}::before" at (1,1,1) — same as patch-63's base ::before rule,
+     later source wins.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. SPHERE WRAPPER — takes over the screen blend ─────────────────────────
+   Moving mix-blend-mode: screen from <video> to its <div> parent routes the
+   blending through Safari's standard (correct) compositor path.
+   isolation: isolate was previously here but caused the "black capsule" bug:
+   Safari renders isolated stacking contexts in an offscreen buffer with an
+   opaque black default fill, which shows as a rectangular capsule around the
+   video frame before the screen blend can eliminate the black background.
+   mix-blend-mode: screen already creates an implicit stacking context, so
+   isolation is redundant and has been removed.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere {
+  mix-blend-mode: screen !important;
+  background: transparent !important;
+  /* isolation: isolate removed — it forces an offscreen buffer with an opaque
+     black default fill in Safari, causing the visible black capsule around each
+     planet video frame. mix-blend-mode already creates an implicit stacking
+     context, so isolation is redundant and harmful here. */
+}
+
+/* ── 2. VIDEO — render normally inside the already-blended stacking context ──
+   mix-blend-mode: normal lets the video pixels (including the black BG) pass
+   straight into the sphere's stacking context. The sphere's screen blend then
+   eliminates the black. filter: grayscale lives here and is safe in isolation.
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-video {
+  mix-blend-mode: normal !important;
+}
+
+/* ── 3. BOTTOM PLANETS — tighter ::before inset ──────────────────────────────
+   pe-orb-bar (CATERING), pe-orb-motion (CONTENT), pe-orb-materials (MERCH)
+   have more padding around the visual planet inside their square video frame
+   than the top/side planets. The 12% inset from patch-63 still shows a gap.
+   18% closes it — verified against the visible planet silhouette boundary.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-bar::before,
+#peSecondRight .pe-orb-motion::before,
+#peSecondRight .pe-orb-materials::before {
+  inset: 18% !important;
+  border-radius: 50% !important;
+}

@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 49 — Brute-force fixes: dropdown scale kill + border hit-area trick
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ══ 1. FC-BTN HOVER — maximum specificity scale kill ════════════════════════
+   Every previous transform:none was overridden by a more-specific rule.
+   Using 4-level compound selectors + scale/translate longhand properties
+   to cover every possible transform path. gap:8px prevents visual overlap.
+   ─────────────────────────────────────────────────────────────────────────── */
+html body #floatingContact .floating-contact .fc-options .fc-btn:hover,
+html body .floating-contact .fc-options .fc-btn:hover,
+html body .floating-contact .fc-options .fc-btn.tg:hover,
+html body .floating-contact .fc-options .fc-btn.wa:hover,
+html body .floating-contact .fc-options .fc-btn.em:hover {
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  margin: 0 !important;
+}
+
+html body #floatingContact .floating-contact .fc-options {
+  gap: 8px !important;
+}
+
+/* ── FC-BTN — transition identical to .nav-contact-item ─────────────────── */
+html body .floating-contact .fc-options .fc-btn {
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}

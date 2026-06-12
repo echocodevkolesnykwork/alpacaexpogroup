@@ -1,0 +1,46 @@
+/* CINEMATIC SCALE-UP — FULL CYCLE. ZERO STRESS */
+.hero-tagline,
+.full-cycle-tagline,
+.pe-tagline,
+#full-cycle-tagline {
+  transform-origin: center center !important;
+  will-change: transform, opacity, filter, letter-spacing !important;
+}
+
+.hero-tagline.animate-in,
+.full-cycle-tagline.animate-in,
+.pe-tagline.animate-in,
+#full-cycle-tagline.animate-in {
+  animation: cinematicFullCycleIn 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes cinematicFullCycleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.78) translateY(18px);
+    filter: blur(14px);
+    letter-spacing: 0.24em;
+    text-shadow: 0 0 0 rgba(0, 212, 255, 0);
+  }
+  42% {
+    opacity: 1;
+    filter: blur(0);
+    text-shadow: 0 0 24px rgba(0, 212, 255, 0.36);
+  }
+  72% {
+    transform: scale(1.24) translateY(-3px);
+    letter-spacing: 0.08em;
+    text-shadow:
+      0 0 18px rgba(255, 255, 255, 0.18),
+      0 0 42px rgba(0, 212, 255, 0.42);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.18) translateY(0);
+    filter: blur(0);
+    letter-spacing: 0.06em;
+    text-shadow:
+      0 0 14px rgba(255, 255, 255, 0.12),
+      0 0 34px rgba(0, 212, 255, 0.32);
+  }
+}

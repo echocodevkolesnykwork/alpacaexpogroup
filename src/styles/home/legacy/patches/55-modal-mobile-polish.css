@@ -1,0 +1,94 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 55 — Request Concept modal: glassmorphism polish + mobile layout.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. GLASSMORPHISM POLISH (all breakpoints) ────────────────────────────── */
+.request-popup__card {
+  background: linear-gradient(
+    160deg,
+    rgba(15, 20, 30, 0.85) 0%,
+    rgba(5, 10, 15, 0.75) 100%
+  ) !important;
+  backdrop-filter: blur(24px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ── 2. MOBILE — stack form to single column ─────────────────────────────── */
+/* Overrides the rogue `grid-template-columns: 1fr 1fr !important` rule
+   at the bottom of 10-request-popup.css that was breaking mobile layout.  */
+@media (max-width: 768px) {
+  /* Outer wrapper: tight padding so modal doesn't touch viewport edges */
+  .request-popup {
+    padding: 16px !important;
+    align-items: center !important;
+  }
+
+  /* Card: safe margins + reduced inner padding */
+  .request-popup__card {
+    width: calc(100% - 32px) !important;
+    max-width: 100% !important;
+    padding: 32px 20px 24px !important;
+    padding-top: 32px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Title: right padding so text never slides under the close button */
+  .request-popup__title {
+    padding-right: 50px !important;
+  }
+
+  /* Close button: always tappable above any overlapping bounding boxes */
+  .request-popup__close {
+    z-index: 10 !important;
+  }
+
+  /* Form: flex column wins over any !important grid rule */
+  .request-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* Fields: full width, no stray margins */
+  .request-form__field,
+  .request-form__wide {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Submit: fit to text so the underline decoration stays tight */
+  .request-form__submit {
+    width: max-content !important;
+    align-self: center !important;
+    margin-top: 16px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* textarea: modest fixed height on small screens */
+  textarea.request-form__field {
+    min-height: 80px !important;
+  }
+
+  /* Submit button: bump to full-width pill on mobile */
+  .request-form__submit {
+    justify-self: unset !important;
+    margin-top: 4px !important;
+    text-align: center !important;
+  }
+
+  /* Close button: 44×44 minimum tap target */
+  .request-popup__close {
+    width: 44px !important;
+    height: 44px !important;
+    top: 14px !important;
+    right: 14px !important;
+    font-size: 24px !important;
+    border-radius: 12px !important;
+  }
+}

@@ -1,0 +1,74 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 83 — Bulletproof tablet grid (769 px – 991 px).
+
+   Why previous patches (79, 82) failed:
+   40-responsive-grid.css sets the desktop first-child rule at specificity
+   (1,4,0) — e.g. #portfolio .pg:not(.pg-alt) .pc:first-child (1+1+1+1+1).
+   Any selector below (1,4,0) loses to it among !important declarations,
+   regardless of source order.
+
+   Fix: mirror the EXACT specificity of each desktop rule in this patch.
+   Same specificity + later source order = this patch wins.
+
+   Specificity map:
+     #portfolio .pg                              → (1,1,0)
+     #portfolio .pg.pg-alt                       → (1,2,0)
+     #portfolio .pg:not(.pg-alt) .pc:first-child → (1,4,0)  ← key blocker
+     #portfolio .pg.pg-alt      .pc:first-child  → (1,4,0)  ← key blocker
+     #portfolio .pg:not(.pg-alt) .pc:not(:first) → (1,4,0)
+     #portfolio .pg.pg-alt      .pc:not(:first)  → (1,4,0)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 769px) and (max-width: 991px) {
+  /* ── Grid containers — (1,1,0) and (1,2,0): same as originals, later wins */
+  #portfolio .pg,
+  #portfolio .pg.pg-alt {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 16px !important;
+  }
+
+  /* ── Reset the hero first-child span — (1,4,0): mirrors desktop selector  */
+  /* Desktop locks .pc:first-child to grid-row: 1/span 2 and a fixed column.
+     Using the identical :not(.pg-alt) / .pg.pg-alt patterns gives us the
+     same (1,4,0) with later cascade → we win.                              */
+  #portfolio .pg:not(.pg-alt) .pc:first-child,
+  #portfolio .pg.pg-alt .pc:first-child {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* ── All other cards — (1,4,0): mirrors desktop :not(:first-child) rule   */
+  #portfolio .pg:not(.pg-alt) .pc:not(:first-child),
+  #portfolio .pg.pg-alt .pc:not(:first-child) {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* ── 5th card: panoramic full-width banner — (1,4,0), placed AFTER the    */
+  /* :not(:first-child) reset so it wins grid-column and height for the      */
+  /* last card (same specificity, later in this file = winner).              */
+  #portfolio .pg:not(.pg-alt) .pc:last-child,
+  #portfolio .pg.pg-alt .pc:last-child {
+    grid-column: 1 / -1 !important;
+    height: 460px !important;
+    min-height: 460px !important;
+  }
+}
+
+/* ── [hidden] guard — (1,2,0) beats the grid display rules above (1,1,0) ── */
+/* Keeps pagination working: deferred chunks stay invisible until revealed.  */
+@media (max-width: 991px) {
+  #portfolio .pg[hidden],
+  #portfolio .pg.pg-alt[hidden],
+  #portfolio .project-block-spacer[hidden] {
+    display: none !important;
+  }
+}

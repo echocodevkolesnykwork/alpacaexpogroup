@@ -1,0 +1,51 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 58 — Orbit: bottom coords, scale bump, glow on video element.
+   drop-shadow on the wrapper is ignored by GPU-composited <video> — fix:
+   apply filter directly to .pe-orb-video so the GPU layer receives it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. BOTTOM ORBIT COORDINATES ─────────────────────────────────────────── */
+@media (min-width: 901px) {
+  .pe-orb-bar {
+    top: 83% !important;
+    left: 50% !important;
+  } /* CATERING — bottom      */
+  .pe-orb-motion {
+    top: 78% !important;
+    left: 26% !important;
+  } /* CONTENT  — bottom-left */
+  .pe-orb-materials {
+    top: 78% !important;
+    left: 74% !important;
+  } /* MERCH    — bottom-right */
+
+  .pe-second-right .pe-orb-svg {
+    transform: translate(-50%, -50%) scale(1.02) !important;
+  }
+}
+
+/* ── 2. BASE TRANSITION — buttery smooth ─────────────────────────────────── */
+.pe-orb-sphere {
+  transition:
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.9s ease !important;
+}
+
+/* ── 3. SCALE ON HOVER / ACTIVE — reduced ────────────────────────────────── */
+.pe-orb-sphere:hover,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video {
+  transform: translate(-50%, -50%) scale(1.05) !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+}
+
+/* ── 4. GLOW ON VIDEO ELEMENT (bypass GPU-composited wrapper bug) ─────────── */
+.pe-orb-video {
+  transition: filter 0.9s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.pe-orb-sphere:hover .pe-orb-video,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video .pe-orb-video {
+  filter: drop-shadow(0 0 20px var(--planet-glow)) drop-shadow(0 0 50px var(--planet-glow)) !important;
+}

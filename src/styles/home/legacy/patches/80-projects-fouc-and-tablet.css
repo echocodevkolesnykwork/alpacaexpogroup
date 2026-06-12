@@ -1,0 +1,55 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 80 — Projects: FOUC kill + nuclear tablet/mobile layout.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. KILL THE POPUP FOUC ───────────────────────────────────────────────── */
+/* Patch-03 already sets opacity:0 on .op-popup, but the FOUC happens in the
+   gap before deferred patches load. This rule covers that window:
+   - visibility:hidden prevents sub-pixel flash even at opacity:0
+   - z-index:-1 drops it behind the page so no accidental click capture
+   - transition:none ensures no fade TOWARD the hidden state on first render
+   The :not(.open) selector deactivates automatically when JS adds .open,
+   restoring patch-03's opacity/transition/z-index for the open animation.   */
+.op-popup:not(.open):not(.closing) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: none !important;
+  z-index: -1 !important;
+}
+
+/* ── 2. NUCLEAR TABLET + MOBILE LAYOUT (≤ 991 px) ────────────────────────── */
+/* Use #portfolio/.pg selectors (specificity 1,1,0) to beat the desktop
+   display:grid!important rules in 40-responsive-grid.css (same specificity,
+   later cascade wins) and patch-79's grid attempt.
+   Switching to flex completely sidesteps all grid-template-area / grid-span
+   conflicts — there are no spanning concepts in a flex column.             */
+@media (max-width: 991px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt,
+  #moreCases .pg,
+  #moreCases .pg.pg-alt {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important; /* defensive — some browsers need this */
+    gap: 16px !important;
+  }
+
+  /* Every card — including the hero first-child — becomes identical full-width blocks */
+  #portfolio .pg .pc,
+  #portfolio .pg .pc:first-child,
+  #portfolio .pg.pg-alt .pc,
+  #portfolio .pg.pg-alt .pc:first-child,
+  #moreCases .pg .pc,
+  #moreCases .pg.pg-alt .pc {
+    width: 100% !important;
+    height: 350px !important;
+    min-height: 350px !important;
+    max-width: 100% !important;
+    /* Clear any grid placement that could bleed through */
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: auto !important;
+    flex-shrink: 0 !important;
+  }
+}

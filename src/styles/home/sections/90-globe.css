@@ -1,0 +1,260 @@
+/* GLOBE SECTION */
+.globe-section {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px 100px;
+}
+.globe-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 44px;
+}
+.globe-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gshows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gshow-item {
+  padding: 13px 18px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: default;
+  transition: all 0.25s;
+}
+.gshow-item:hover,
+.gshow-item.active {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+.gshow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+.gshow-item.active .gshow-dot,
+.gshow-item:hover .gshow-dot {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: none;
+}
+.gshow-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+.gshow-loc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.32);
+  margin-top: 2px;
+}
+.gshow-date {
+  font-size: 10px;
+  color: var(--accent);
+  margin-left: auto;
+  letter-spacing: 0.05em;
+}
+@media (max-width: 768px) {
+  .globe-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes glowPulse2 {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes flicker2 {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.4;
+  }
+  94% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.7;
+  }
+  98% {
+    opacity: 1;
+  }
+}
+@keyframes scanH2 {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 110%;
+  }
+}
+.services-new {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px 100px;
+}
+.services-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.svc-grid-new {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.svc-new {
+  background: var(--bg);
+  padding: 28px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.svc-new:hover {
+  background: #081520;
+}
+.svc-new::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+.svc-new:hover::after {
+  transform: scaleX(1);
+}
+.svc-new-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.08), transparent);
+  left: -100%;
+}
+.svc-new:hover .svc-new-scan {
+  animation: scanH2 0.8s ease forwards;
+}
+.svc-new-num {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.svc-new-t {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 7px;
+}
+.svc-new-d {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.32);
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .services-top {
+    grid-template-columns: 1fr;
+  }
+  .svc-grid-new {
+    grid-template-columns: 1fr;
+  }
+  .services-new {
+    padding-left: 20px;
+    padding-right: 182px;
+  }
+}
+
+/* LIQUID GLASS TEXT */
+.liquid-glass-wrap {
+  display: inline-block;
+  position: relative;
+  padding: 22px 52px;
+  border-radius: 100px;
+
+  /* Glass base */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+
+  /* Border — light refraction */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.38);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+
+  /* Shadow — depth */
+  box-shadow:
+    0 2px 0 0 rgba(255, 255, 255, 0.22) inset,
+    0 -1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 24px 48px rgba(0, 0, 0, 0.28),
+    0 8px 16px rgba(0, 0, 0, 0.18),
+    0 0 0 0.5px rgba(255, 255, 255, 0.06);
+}
+
+/* Top specular highlight — the iOS glass "shine" */
+.liquid-glass-wrap::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 12%;
+  right: 12%;
+  height: 40%;
+  border-radius: 100px 100px 60% 60%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+/* Bottom subtle glow */
+.liquid-glass-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.3), transparent);
+  pointer-events: none;
+}
+
+.liquid-glass-text {
+  font-size: clamp(28px, 3.5vw, 48px);
+  position: relative;
+  z-index: 1;
+  /* Slight text shadow for depth */
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+}

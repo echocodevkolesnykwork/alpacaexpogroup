@@ -1,0 +1,117 @@
+/* FINAL MOBILE FIX: hero text must be under video, never overlap */
+@media (max-width: 768px) {
+  .pe-pin-wrap {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #heroSection,
+  .pe-pin-wrap .hero,
+  .hero {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding-top: 95px !important;
+    overflow: visible !important;
+  }
+
+  #heroRight,
+  .hero-right {
+    order: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+    flex: none !important;
+    width: calc(100% - 32px) !important;
+    height: clamp(235px, 52vw, 330px) !important;
+    min-height: clamp(235px, 52vw, 330px) !important;
+    margin: 0 16px !important;
+    border-radius: 0 0 22px 22px !important;
+    overflow: hidden !important;
+  }
+
+  #heroLeft,
+  .hero-left {
+    order: 2 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    flex: none !important;
+    width: calc(100% - 32px) !important;
+    min-height: 0 !important;
+    margin: 0 16px 0 !important;
+    padding: 22px 26px 26px !important;
+    justify-content: flex-start !important;
+    background: rgba(0, 26, 38, 0.92) !important;
+    backdrop-filter: blur(22px) !important;
+    -webkit-backdrop-filter: blur(22px) !important;
+    border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 0 !important;
+    border-radius: 0 0 22px 22px !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  #heroLeft::before,
+  .hero-left::before {
+    display: none !important;
+  }
+
+  #heroPre,
+  .hero-pre {
+    display: block !important;
+    margin: 0 0 4px !important;
+    font-size: clamp(30px, 9vw, 42px) !important;
+    line-height: 1.02 !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  #peHeadline,
+  .pe-headline {
+    margin: 0 0 14px !important;
+    line-height: 1.02 !important;
+  }
+
+  #peHighlight,
+  .pe-highlight {
+    font-size: clamp(42px, 11vw, 58px) !important;
+    line-height: 1.02 !important;
+  }
+
+  #heroSub,
+  .hero-sub {
+    max-width: 100% !important;
+    margin: 0 0 20px !important;
+  }
+
+  #heroBtnsRow,
+  .btns {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  #heroSection,
+  .pe-pin-wrap .hero,
+  .hero {
+    padding-top: 94px !important;
+  }
+
+  #heroRight,
+  .hero-right {
+    width: calc(100% - 24px) !important;
+    height: 292px !important;
+    min-height: 292px !important;
+    margin: 0 12px !important;
+  }
+
+  #heroLeft,
+  .hero-left {
+    width: calc(100% - 24px) !important;
+    margin: 0 12px 0 !important;
+    padding: 20px 26px 24px !important;
+  }
+}

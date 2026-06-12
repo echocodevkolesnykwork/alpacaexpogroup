@@ -1,0 +1,249 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 77 — Projects: premium polish.
+   Covers: loading spinner, card fade-up animation, global auto-advance dot
+   sync, modal nav positioning (planet-formula), progress bar, fullscreen btn,
+   tooltip parity with planet popup (patches 56 / 68 / 73).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. LOADING SPINNER ───────────────────────────────────────────────────── */
+.btn-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid rgba(0, 212, 255, 0.28);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: btnSpinnerRotate 0.65s linear infinite;
+  vertical-align: middle;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+
+@keyframes btnSpinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── 2. STAGGERED CARD FADE-UP ────────────────────────────────────────────── */
+.fade-up-enter {
+  animation: projectCardFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes projectCardFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 3. MODAL NAV ARROWS — planet-formula positioning ─────────────────────── */
+/* Card width = min(980px, 94vw). Half = min(490px, 47vw).
+   Formula mirrors patch-68: 50vw − half_width − 60px (28px half-button + 4px gap + padding).
+   max() clamps to ≥ 8px so arrows never go off-screen on mid-range viewports.  */
+.op-popup-nav--prev {
+  left: max(8px, calc(50vw - min(490px, 47vw) - 60px)) !important;
+}
+.op-popup-nav--next {
+  right: max(8px, calc(50vw - min(490px, 47vw) - 60px)) !important;
+}
+
+/* Stronger blur — matches patch-68's upgrade from 10px → 22px */
+.op-popup-nav {
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+}
+
+/* ── 4. TOOLTIP ON NAV + CLOSE — mirrors patch-73 ────────────────────────── */
+.op-popup-close::before,
+.op-popup-nav::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  padding: 5px 9px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 8, 20, 0.88);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-d, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+  z-index: 1;
+}
+
+/* Close: tooltip below (button is top-right, tooltip above goes off-screen) */
+.op-popup-close::before {
+  top: calc(100% + 8px);
+  right: 0;
+  transform: translateY(-5px);
+}
+.op-popup-close:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nav: tooltip above, centred */
+.op-popup-nav::before {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+}
+.op-popup-nav:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Subtle close hover — matches patch-68 */
+.op-popup-close:hover {
+  transform: scale(1.04) !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
+}
+
+/* ── 5. FULLSCREEN BUTTON — mirrors .pe-popup-fullscreen (patch-66) ───────── */
+.op-popup-fs {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(2, 8, 20, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.op-popup-fs:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.45);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.op-popup-fs .fs-icon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.op-popup-fs .fs-icon-expand {
+  display: block;
+}
+.op-popup-fs .fs-icon-compress {
+  display: none;
+}
+.op-popup-fs.is-fullscreen .fs-icon-expand {
+  display: none;
+}
+.op-popup-fs.is-fullscreen .fs-icon-compress {
+  display: block;
+}
+
+/* Fullscreen tooltip — above, right-aligned (matches patch-66) */
+.op-popup-fs::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  padding: 5px 9px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 8, 20, 0.88);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-d, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+.op-popup-fs:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 6. PROGRESS BAR ─────────────────────────────────────────────────────── */
+.op-popup-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.07);
+}
+
+.op-popup-progress-counter {
+  font-family: var(--font-d);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 44px;
+}
+
+.op-popup-progress-track {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.op-popup-progress-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: linear-gradient(to right, var(--accent), rgba(0, 212, 255, 0.5));
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%; /* default: 1/1 */
+}
+
+/* ── 7. MOBILE ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* On mobile, arrows sit at safe viewport edges (no room for formula) */
+  .op-popup-nav--prev {
+    left: 6px !important;
+  }
+  .op-popup-nav--next {
+    right: 6px !important;
+  }
+
+  .op-popup-progress {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+}

@@ -1,0 +1,9 @@
+/* Reference style block 35 id="reviews-anchor-fix-final" */
+#reviews {
+  scroll-margin-top: 96px !important;
+}
+@media (max-width: 768px) {
+  #reviews {
+    scroll-margin-top: 88px !important;
+  }
+}

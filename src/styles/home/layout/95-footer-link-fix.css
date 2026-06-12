@@ -1,0 +1,33 @@
+/* SAFE FOOTER SITE LINK — FINAL */
+footer {
+  position: relative !important;
+}
+.footer-site-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-family: var(--font-d) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.56) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  margin-left: 24px !important;
+}
+.footer-site-link::after {
+  content: '↗' !important;
+  color: var(--accent) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+.footer-site-link:hover {
+  color: #fff !important;
+}
+@media (max-width: 768px) {
+  .footer-site-link {
+    margin-left: 0 !important;
+    margin-top: 6px !important;
+  }
+}

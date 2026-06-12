@@ -1,0 +1,616 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 95 — Planet section responsive: mobile sickle arc + tablet
+   vertical orbit.
+
+   Mobile  ≤768px : STAND as hero planet, 7 others in rightward sickle arc.
+                    No sun title, no corona, no labels, no subtitle.
+                    pe-second flows as a separate block below the hero.
+   Tablet 769–991px : Vertical ellipse orbit (taller than wide),
+                      reduced planet sizes, correct center-anchoring.
+   Desktop ≥992px  : Untouched — all existing desktop rules remain.
+
+   Cascade notes (all !important-aware):
+   · patch-14 (`14-perfect-event-layer-isolation.css`) uses
+     `#peSecond:not(.pe-active) .xxx { opacity:0 !important }` with
+     specificity (1,2,0). Mobile overrides must match/exceed that.
+   · This patch loads LAST → same-specificity ties resolved in our favor.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MOBILE — ≤ 768px
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* 1. Remove 260vh scroll driver — sections flow naturally */
+  #pePinWrap.pe-pin-wrap {
+    height: auto !important;
+  }
+
+  /* 2. Hero: static block. overflow:hidden keeps hero content inside.
+     Height auto so pe-second (below in flow) expands the container. */
+  #heroSection.hero,
+  .pe-pin-wrap .hero {
+    position: relative !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: hidden !important;
+  }
+
+  /* Separator line — matches hero's vertical border (rgba 0.1 white).
+     Placed on heroSection bottom so it appears between planets and WHY CHOOSE US. */
+  #heroSection.hero {
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* 3. Planet section: flows as a separate block immediately below hero.
+     padding-top: 56px clears the nav bar (≈56px) without wasting vertical space.
+     CSS !important overrides JS inline styles from all classic scripts. */
+  #peSecond.pe-second {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-top: 56px !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background: #020d1a !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    z-index: 2 !important;
+    overflow: visible !important;
+  }
+
+  /* Reduce padding further when planet section is active and scrolled into view */
+  #peSecond.pe-second.pe-active,
+  #peSecond.pe-second.is-centered-sun {
+    padding-top: 48px !important;
+  }
+
+  /* Disable viewport-fill solar corona pseudo-elements on mobile */
+  #peSecond::before,
+  #peSecond::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* 4. Left spacer: unused on mobile */
+  #peSecondLeft,
+  .pe-second-left {
+    display: none !important;
+  }
+
+  /* 5. Planet container: fills pe-second, explicit height so %-positions resolve */
+  #peSecondRight,
+  .pe-second-right {
+    position: relative !important;
+    width: 100% !important;
+    height: 95svh !important;
+    min-height: 520px !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  /* ── Override patch-14 layer-isolation :not(.pe-active) rules ─────────────
+     patch-14 targets: #peSecond:not(.pe-active) .xxx { opacity:0 !important }
+     Specificity: (1,2,0). Must match to win by source order (this patch loads later).
+     ────────────────────────────────────────────────────────────────────────── */
+  #peSecond:not(.pe-active) .pe-second-right,
+  #peSecond.pe-second .pe-second-right {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  #peSecond:not(.pe-active) .pe-orb-sphere,
+  #peSecond.pe-second .pe-orb-sphere {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* 6. Hide sun title — use two-ID specificity (2,0,0) to beat all cascade */
+  #peSecond #peOrbTitle,
+  #peSecond .pe-orb-title {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* 7. Hide subtitle — same high-specificity approach */
+  #peSecond #peOrbSubtitle,
+  #peSecond .pe-orb-subtitle-bottom {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Also suppress JS-added inline subtitle from layer-isolation at pe-active */
+  #peSecond:not(.pe-active) #peOrbSubtitle,
+  #peSecond.pe-active #peOrbSubtitle,
+  #peSecond.pe-active .pe-orb-subtitle-bottom {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* 8. Hide solar flare */
+  #peSecond .pe-solar-flare,
+  .pe-solar-flare {
+    display: none !important;
+    opacity: 0 !important;
+  }
+
+  /* 9. All spheres: absolute, center-anchored.
+     CSS !important overrides JS inline `transform: translate3d(0,0,0) scale(1)`.
+     Both :not(.pe-active) and .pe-active states handled here. */
+  #peSecond:not(.pe-active) .pe-orb-sphere,
+  #peSecond.pe-active .pe-orb-sphere,
+  .pe-orb-sphere {
+    position: absolute !important;
+    transform: translate(-50%, -50%) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    margin-bottom: 0 !important;
+    /* Smooth transitions for the auto-cycle glow effect */
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Video: smooth grayscale crossfade on cycle */
+  .pe-orb-sphere .pe-orb-video {
+    transition: filter 0.5s ease !important;
+  }
+
+  /* ── AUTO-CYCLE GLOW — class added by 36-mobile-planet-cycle.js ───────────
+     Mimics the popup-active / hover effect: scale + colored drop-shadow.
+     Specificity (0,2,0) > base (0,1,0) so it wins over filter:none above.
+     ─────────────────────────────────────────────────────────────────────── */
+  .pe-orb-sphere.is-mobile-focus {
+    transform: translate(-50%, -50%) scale(1.08) !important;
+    filter: drop-shadow(0 0 20px var(--planet-glow)) drop-shadow(0 0 40px var(--planet-glow)) !important;
+    z-index: 10 !important;
+  }
+  .pe-orb-sphere.is-mobile-focus .pe-orb-video {
+    filter: grayscale(0) !important;
+  }
+  .pe-orb-sphere.is-mobile-focus .pe-label-text {
+    color: rgba(255, 255, 255, 0.92) !important;
+    transition: color 0.5s ease !important;
+  }
+
+  /* 10. Labels — show planet names, positioned left or right of sphere.
+     Specificity uses #peSecondRight prefix to beat existing transforms from
+     patch-112 (0,2,0) and patch-94 (1,2,0). Our (1,3,0) wins. */
+  #peSecondRight .pe-orb-sphere .pe-sphere-label {
+    display: flex !important;
+    flex-direction: column !important;
+    position: absolute !important;
+    bottom: auto !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+  }
+
+  /* Hide the circular play icon inside label — sphere itself has the triangle */
+  #peSecondRight .pe-orb-sphere .pe-sphere-label .pe-play-icon {
+    display: none !important;
+  }
+
+  /* Label text sizing on mobile */
+  #peSecondRight .pe-orb-sphere .pe-sphere-label .pe-label-text {
+    font-size: clamp(10px, 2.4vw, 13px) !important;
+    letter-spacing: 0.14em !important;
+    color: rgba(255, 255, 255, 0.42) !important;
+    transition: color 0.5s ease !important;
+    text-transform: uppercase !important;
+  }
+
+  /* ── LABEL SIDES: RIGHT for planets 1-3 and 7-8 in sickle order ───────────
+     STAND, ACTIVATION, STAFF, CONTENT, SUPPORT → label to the RIGHT.
+     Selector specificity: (1,3,0) beats patch-112/94 rules. */
+  #peSecondRight .pe-orb-ideas .pe-sphere-label,
+  #peSecondRight .pe-orb-vr .pe-sphere-label,
+  #peSecondRight .pe-orb-staff .pe-sphere-label,
+  #peSecondRight .pe-orb-motion .pe-sphere-label,
+  #peSecondRight .pe-orb-activation .pe-sphere-label {
+    top: 50% !important;
+    left: calc(100% + 10px) !important;
+    right: auto !important;
+    transform: translateY(-50%) !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+
+  /* ── LABEL SIDES: LEFT for planets 4-6 in sickle order ─────────────────────
+     SCREENS, MERCH, CATERING → label to the LEFT. */
+  #peSecondRight .pe-orb-led .pe-sphere-label,
+  #peSecondRight .pe-orb-materials .pe-sphere-label,
+  #peSecondRight .pe-orb-bar .pe-sphere-label {
+    top: 50% !important;
+    left: auto !important;
+    right: calc(100% + 10px) !important;
+    transform: translateY(-50%) !important;
+    text-align: right !important;
+    align-items: flex-end !important;
+  }
+
+  /* ── SICKLE ARC POSITIONS (+10% sizes) ────────────────────────────────────
+     Origin: top-left of pe-second-right (100% × 95svh + 72px top padding).
+     All top/left = CENTER; translate(-50%,-50%) centers each sphere.
+     ────────────────────────────────────────────────────────────────────────── */
+
+  /* ── SICKLE ARC POSITIONS (+10% sizes, +2-3% vertical spacing) ─────────────
+     Extra spacing ("трішки місця") added: each step increased 2-3%.
+     Slight overlap still intentional (sickle effect), just more breathing room.
+     ────────────────────────────────────────────────────────────────────────── */
+
+  /* STAND — largest, anchors arc. label RIGHT */
+  .pe-orb-ideas {
+    width: clamp(154px, 44vw, 205px) !important;
+    height: clamp(154px, 44vw, 205px) !important;
+    top: 12% !important;
+    left: 38% !important;
+  }
+
+  /* ACTIVATION — first arc planet. label RIGHT */
+  .pe-orb-vr {
+    width: clamp(70px, 20vw, 92px) !important;
+    height: clamp(70px, 20vw, 92px) !important;
+    top: 28% !important;
+    left: 50% !important;
+  }
+
+  /* STAFF — arc bows right. label RIGHT */
+  .pe-orb-staff {
+    width: clamp(79px, 22vw, 101px) !important;
+    height: clamp(79px, 22vw, 101px) !important;
+    top: 38% !important;
+    left: 60% !important;
+  }
+
+  /* SCREENS — further right. label LEFT */
+  .pe-orb-led {
+    width: clamp(66px, 19vw, 86px) !important;
+    height: clamp(66px, 19vw, 86px) !important;
+    top: 47% !important;
+    left: 67% !important;
+  }
+
+  /* MERCH — rightmost. label LEFT */
+  .pe-orb-materials {
+    width: clamp(79px, 22vw, 101px) !important;
+    height: clamp(79px, 22vw, 101px) !important;
+    top: 56% !important;
+    left: 70% !important;
+  }
+
+  /* CATERING — arc returns left. label LEFT */
+  .pe-orb-bar {
+    width: clamp(64px, 18vw, 81px) !important;
+    height: clamp(64px, 18vw, 81px) !important;
+    top: 65% !important;
+    left: 65% !important;
+  }
+
+  /* CONTENT — back toward center. label RIGHT */
+  .pe-orb-motion {
+    width: clamp(73px, 20vw, 92px) !important;
+    height: clamp(73px, 20vw, 92px) !important;
+    top: 74% !important;
+    left: 57% !important;
+  }
+
+  /* SUPPORT — arc closes near center-bottom. label RIGHT */
+  .pe-orb-activation {
+    width: clamp(73px, 20vw, 92px) !important;
+    height: clamp(73px, 20vw, 92px) !important;
+    top: 83% !important;
+    left: 46% !important;
+  }
+
+  /* Hover lift — keeps desktop behavior on mobile touch long-press */
+  #peSecondRight .pe-orb-sphere:hover,
+  #peSecondRight .pe-orb-sphere:focus-visible {
+    transform: translate3d(-50%, calc(-50% - 4px), 0) !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TABLET — 769px–991px  (vertical ellipse orbit, full-width container)
+
+   Root issue: patch-39 makes pe-second position:relative, which places it
+   inside the hero's CSS grid cell (~50% wide), so pe-second-right is only
+   ~310px wide instead of the full 738px needed for the orbit.
+
+   Fix: keep pe-second as position:absolute (like desktop), positioned at
+   top:100svh — the planet section "slides in" from below as the user scrolls.
+   HeroSection min-height:200svh creates the scroll space. pe-second-right
+   then spans the full viewport width and the orbit displays correctly.
+
+   Ellipse: center (50%, 50%), semi-axes a=28% H × b=40% V.
+   8 planets at 45° steps (θ CCW from right). Center-anchored positions.
+   ────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 991px) {
+  /* Give heroSection room for hero (100svh) + planet section (100svh).
+     Must beat patch-13's `.pe-pin-wrap #heroSection.hero` (specificity 1,2,0)
+     so we use `.pe-pin-wrap` prefix to match that specificity, then load order wins.
+     grid-template-rows: 100svh fixes row to one screen height so hero-left/right
+     do not stretch into the pe-second space (200svh minus explicit row). */
+  .pe-pin-wrap #heroSection.hero,
+  #heroSection.hero {
+    min-height: 200svh !important;
+    height: auto !important;
+    overflow: hidden !important;
+    grid-template-rows: 100svh !important;
+    align-content: start !important;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Pe-second: absolute block positioned in the second screen below hero */
+  #peSecond.pe-second {
+    position: absolute !important;
+    top: 100svh !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 100svh !important;
+    min-height: 640px !important;
+    padding: 0 !important;
+    background: #020d1a !important;
+    z-index: 8 !important;
+    isolation: isolate !important;
+    overflow: visible !important;
+  }
+
+  /* Pe-second-right: absolutely centered in full-width pe-second.
+     position:absolute + left/top 50% + translate(-50%,-50%) is the canonical
+     centering technique — unambiguous regardless of flow position. */
+  #peSecondRight,
+  .pe-second-right {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 90% !important;
+    max-width: 860px !important;
+    height: 72svh !important;
+    min-height: 480px !important;
+    transform: translate(-50%, -50%) !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Center-anchored transform for all spheres */
+  .pe-orb-sphere {
+    transform: translate(-50%, -50%) !important;
+  }
+
+  /* ── VERTICAL ELLIPSE POSITIONS ─────────────────────────────────────────
+     All center-anchored. Containing block = pe-second-right (~738px × ~72svh).
+     ─────────────────────────────────────────────────────────────────────── */
+
+  /* STAND — θ=225° → top-left  (x=30%, y=22%) */
+  .pe-orb-ideas {
+    top: 22% !important;
+    left: 30% !important;
+    width: clamp(115px, 13vw, 172px) !important;
+    height: clamp(115px, 13vw, 172px) !important;
+  }
+  .pe-orb-ideas .pe-sphere-label {
+    top: calc(100% + 12px) !important;
+  }
+
+  /* ACTIVATION — θ=270° → top-center  (x=50%, y=10%) */
+  .pe-orb-vr {
+    top: 10% !important;
+    left: 50% !important;
+    width: clamp(64px, 7.2vw, 92px) !important;
+    height: clamp(64px, 7.2vw, 92px) !important;
+  }
+
+  /* STAFF — θ=315° → top-right  (x=70%, y=22%) */
+  .pe-orb-staff {
+    top: 22% !important;
+    left: 70% !important;
+    width: clamp(92px, 10.5vw, 135px) !important;
+    height: clamp(92px, 10.5vw, 135px) !important;
+  }
+
+  /* SCREENS — θ=0° → right-center  (x=78%, y=50%) */
+  .pe-orb-led {
+    top: 50% !important;
+    left: 78% !important;
+    width: clamp(66px, 7.8vw, 100px) !important;
+    height: clamp(66px, 7.8vw, 100px) !important;
+  }
+
+  /* MERCH — θ=45° → bottom-right  (x=70%, y=78%) */
+  .pe-orb-materials {
+    top: 78% !important;
+    left: 70% !important;
+    width: clamp(100px, 11.5vw, 148px) !important;
+    height: clamp(100px, 11.5vw, 148px) !important;
+  }
+
+  /* CATERING — θ=90° → bottom-center  (x=50%, y=90%) */
+  .pe-orb-bar {
+    top: 90% !important;
+    left: 50% !important;
+    width: clamp(60px, 7vw, 88px) !important;
+    height: clamp(60px, 7vw, 88px) !important;
+  }
+
+  /* CONTENT — θ=135° → bottom-left  (x=30%, y=78%) */
+  .pe-orb-motion {
+    top: 78% !important;
+    left: 30% !important;
+    width: clamp(78px, 9.5vw, 122px) !important;
+    height: clamp(78px, 9.5vw, 122px) !important;
+  }
+
+  /* SUPPORT — θ=180° → left-center  (x=22%, y=50%) */
+  .pe-orb-activation {
+    top: 50% !important;
+    left: 22% !important;
+    width: clamp(90px, 10.5vw, 135px) !important;
+    height: clamp(90px, 10.5vw, 135px) !important;
+  }
+
+  /* Solar flare: matches STAND position (30%, 22%), scaled down for tablet */
+  .pe-solar-flare {
+    top: 22% !important;
+    left: 30% !important;
+    width: 28% !important;
+  }
+
+  /* Sun title: slightly smaller for tablet viewport */
+  #peOrbTitle,
+  .pe-orb-title {
+    font-size: clamp(26px, 4vw, 50px) !important;
+  }
+
+  /* Label text: tighter on tablet */
+  .pe-orb-sphere .pe-label-text {
+    font-size: clamp(10px, 1.1vw, 14px) !important;
+  }
+
+  /* ── COMET TRAJECTORY FIX — tablet portrait aspect ratio ──────────────────
+     Desktop keyframes use angles calibrated for 1440×900 (landscape).
+     On tablet portrait 820×1180 the actual travel direction is much steeper:
+       LTR1: Δx=1091px, Δy=1581px → atan2 ≈ 55°  (was 27°)
+       LTR2: Δx=722px,  Δy=1487px → atan2 ≈ 64°  (was 41°)
+       LTR3: Δx=484px,  Δy=1534px → atan2 ≈ 72°  (was 54°)
+     RTL = 180° – LTR angle.
+     New keyframes override animation-name for tablet only.
+     ────────────────────────────────────────────────────────────────────────── */
+  @keyframes peCometLTR1Tab {
+    0% {
+      opacity: 0;
+      transform: translate(-18vw, -28vh) rotate(55deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.52;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(115vw, 106vh) rotate(55deg);
+    }
+  }
+  @keyframes peCometLTR2Tab {
+    0% {
+      opacity: 0;
+      transform: translate(-8vw, -28vh) rotate(64deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.48;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(80vw, 98vh) rotate(64deg);
+    }
+  }
+  @keyframes peCometLTR3Tab {
+    0% {
+      opacity: 0;
+      transform: translate(15vw, -30vh) rotate(72deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.48;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(74vw, 100vh) rotate(72deg);
+    }
+  }
+  @keyframes peCometRTL1Tab {
+    0% {
+      opacity: 0;
+      transform: translate(115vw, -28vh) rotate(125deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.52;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-18vw, 106vh) rotate(125deg);
+    }
+  }
+  @keyframes peCometRTL2Tab {
+    0% {
+      opacity: 0;
+      transform: translate(92vw, -28vh) rotate(116deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.48;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(20vw, 98vh) rotate(116deg);
+    }
+  }
+  @keyframes peCometRTL3Tab {
+    0% {
+      opacity: 0;
+      transform: translate(78vw, -30vh) rotate(108deg);
+    }
+    5% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 0.48;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(26vw, 100vh) rotate(108deg);
+    }
+  }
+
+  .pe-comet-ltr1 {
+    animation-name: peCometLTR1Tab !important;
+  }
+  .pe-comet-ltr2 {
+    animation-name: peCometLTR2Tab !important;
+  }
+  .pe-comet-ltr3 {
+    animation-name: peCometLTR3Tab !important;
+  }
+  .pe-comet-rtl1 {
+    animation-name: peCometRTL1Tab !important;
+  }
+  .pe-comet-rtl2 {
+    animation-name: peCometRTL2Tab !important;
+  }
+  .pe-comet-rtl3 {
+    animation-name: peCometRTL3Tab !important;
+  }
+}

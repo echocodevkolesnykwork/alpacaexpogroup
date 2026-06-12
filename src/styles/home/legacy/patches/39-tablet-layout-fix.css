@@ -1,0 +1,119 @@
+/* ── TABLET LAYOUT FIX (769–991px) ─────────────────────────────────────────
+   Problem: 100-perfect-event-scroll.css sets pe-pin-wrap to 420vh and makes
+   the hero sticky. That layout is driven by GSAP scroll-scrub, which is only
+   active on desktop (≥992px). On tablet, GSAP does not run, so the 420vh
+   creates a large blank scroll gap between the hero and the next section.
+   Fix: collapse pe-pin-wrap to auto height and convert the hero from a sticky
+   scroll scene to a static full-viewport block. The planet orbit layer
+   (pe-second) is then shown as a separate section that flows naturally below.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 991px) {
+  /* Remove the 420vh GSAP scroll area — tablet has no scroll driver. */
+  #pePinWrap.pe-pin-wrap {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* Hero becomes a static block: fills one full viewport height, clips
+     the absolute pe-second layer so it cannot bleed into the next section. */
+  #heroSection.hero,
+  .pe-pin-wrap .hero {
+    position: relative !important;
+    top: auto !important;
+    min-height: 100svh !important;
+    height: auto !important;
+    overflow: hidden !important;
+  }
+
+  /* Planet orbit section flows as an independent block below the hero.
+     position: relative + isolation: isolate creates a new stacking context
+     (block formatting context) so planet z-index layers are self-contained. */
+  #peSecond.pe-second {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100svh !important;
+    min-height: 640px !important;
+    padding: 72px clamp(24px, 4vw, 60px) 88px !important;
+    background: #020d1a !important;
+    overflow: hidden !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    z-index: 2 !important;
+    isolation: isolate !important;
+  }
+
+  #peSecondLeft,
+  .pe-second-left {
+    display: none !important;
+  }
+
+  #peSecondRight,
+  .pe-second-right {
+    position: relative !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 90% !important;
+    max-width: 900px !important;
+    height: 72svh !important;
+    min-height: 480px !important;
+    transform: translate(-50%, -50%) !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  #peOrbTitle,
+  .pe-orb-title {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: clamp(34px, 5.5vw, 58px) !important;
+  }
+
+  .pe-orb-sphere {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: translate3d(0, 0, 0) scale(0.9) !important;
+    pointer-events: auto !important;
+  }
+
+  .pe-orb-svg {
+    opacity: 0.6 !important;
+    visibility: visible !important;
+    transform: translate(-50%, -50%) scale(0.9) !important;
+  }
+
+  #peOrbSubtitle,
+  .pe-orb-subtitle-bottom {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) !important;
+    bottom: 52px !important;
+  }
+}
+
+/* ── MOBILE LAYOUT FIX (≤768px) ────────────────────────────────────────────
+   Patches 11 and 12 already stack the hero vertically and set height: auto.
+   They set min-height: 0, which allows the hero to shrink smaller than the
+   viewport. This override ensures the hero block always fills at least one
+   full small-viewport height (100svh is more accurate than 100vh on mobile
+   because it excludes the browser chrome / collapsible address bar).
+   overflow: hidden prevents any absolutely-positioned child (e.g. a stray
+   pe-second during a class-toggle transition) from visually overflowing the
+   hero boundary and overlapping the section below.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #heroSection.hero,
+  .pe-pin-wrap .hero,
+  .hero {
+    min-height: 100svh !important;
+    overflow: hidden !important;
+  }
+}

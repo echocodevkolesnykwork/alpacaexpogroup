@@ -1,0 +1,55 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 63 — Planet Polish: grayscale restore, screen-blend restore,
+               glow-gap calibration.
+
+   All three fixes override patch-62 rules at equal specificity + !important.
+   Patch 63 loads last (legacyPatchStyleBlocks tail), so later source order
+   wins every tie at the same specificity + !important level.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. RESTORE GRAYSCALE + SCREEN BLEND ON VIDEO ────────────────────────────
+   Patch 62 set filter:none and mix-blend-mode:normal — both wrong.
+   · mix-blend-mode: screen is the correct cross-browser way to make the solid
+     black background of non-alpha video sources transparent. It is also safe
+     for HEVC-alpha files: screen of pure black (0,0,0) = transparent, so no
+     colour information is lost.
+   · grayscale(1) in base → grayscale(0) on hover restores the desaturated-
+     to-colour reveal that existed before patch 62.
+   · transition: filter 0.6s ease drives the smooth colour-reveal on hover
+     without transitioning transform (avoids the Safari compositor rebuild).
+   ─────────────────────────────────────────────────────────────────────────── */
+.pe-orb-video {
+  mix-blend-mode: screen !important;
+  background: transparent !important;
+  filter: grayscale(1) !important;
+  transition: filter 0.6s ease !important;
+}
+
+.pe-orb-sphere:hover .pe-orb-video,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video .pe-orb-video {
+  filter: grayscale(0) !important;
+}
+
+/* ── 2. CALIBRATE ::before GLOW LAYER — close the gap ───────────────────────
+   The visual planet content sits inside the video bounding box with natural
+   padding (the video frame is square, the planet silhouette is circular).
+   inset: 10% (patch 62) left a visible gap between the glow halo and the
+   planet edge. inset: 12% pulls the ::before circle inward to hug the
+   actual planet silhouette more precisely.
+
+   box-shadow values: outer 15px blur + 2px spread for a tight accent ring;
+   inset 10px/2px for a subtle interior ambient fill. Both use --planet-glow
+   so the colour remains per-planet from patch 57.
+   ─────────────────────────────────────────────────────────────────────────── */
+#peSecondRight .pe-orb-sphere::before {
+  inset: 12% !important;
+  border-radius: 50% !important;
+}
+
+#peSecondRight .pe-orb-sphere:hover::before,
+body.is-popup-active #peSecondRight .pe-orb-sphere.is-playing-video::before {
+  opacity: 1 !important;
+  box-shadow:
+    0 0 15px 2px var(--planet-glow),
+    inset 0 0 10px 2px var(--planet-glow) !important;
+}

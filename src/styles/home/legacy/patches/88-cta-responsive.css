@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 88 — CTA responsive + global scale-from-hover/pulse removal.
+   Scale in CSS transforms changes pointer-events hit-area, causing cursor
+   flicker at button borders. All scale replaced with box-shadow/glow.
+   Root causes:
+     1. flex-wrap:wrap on .cta-actions → btn-cta jumps to a new row at border sizes
+     2. width:100% on .btn-cta (patch-10) → too wide on large phones
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── GLOBAL: remove scale from base pulse animations & button hovers ────── */
+/* msgPulseTelegram / msgPulseWhatsApp in 20-messenger-buttons.css still use
+   transform:scale — override here to box-shadow only.                      */
+@keyframes msgPulseTelegram {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 212, 255, 0);
+  }
+}
+@keyframes msgPulseWhatsApp {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.32);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(37, 211, 102, 0);
+  }
+}
+
+/* fc-main hover: patch-15 uses scale(1.04) — remove */
+.floating-contact .fc-main:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* pc-nav hover if any scale present */
+.pc-nav:hover {
+  transform: translateY(-50%) !important;
+}
+
+/* ── 460–900px: push messenger icons to the right of the actions row ───────
+   btn-cta stays left, messengers get margin-left:auto → flush right.       */
+@media (min-width: 461px) and (max-width: 900px) {
+  .cta-messengers {
+    margin-left: auto !important;
+  }
+}
+
+/* ── TABLET 769–900px: cta-box goes column before the row gets cramped ─────
+   .cta-actions stays as a row — btn + 3 messengers fit at ~370px width.    */
+@media (min-width: 769px) and (max-width: 900px) {
+  .cta-box {
+    flex-direction: column !important;
+    align-items: stretch !important; /* stretch so .cta-actions fills full width → margin-left:auto works */
+    padding: 44px 40px !important;
+    gap: 24px !important;
+  }
+  .cta-actions {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+  }
+}
+
+/* ── MOBILE ≤768px: fix wrap jump + btn-cta oversized width ────────────────
+   patch-10 already sets cta-box to column — we only fix cta-actions & btn.  */
+@media (max-width: 768px) {
+  .cta-actions {
+    flex-wrap: nowrap !important; /* no more jump to second row */
+    justify-content: flex-start !important;
+    gap: 16px !important;
+  }
+  .btn-cta {
+    width: auto !important; /* override patch-10's width:100% */
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* ── SMALL MOBILE ≤460px: stack everything vertically ──────────────────────
+   At this width btn + 3 icons side-by-side gets too tight.                  */
+@media (max-width: 460px) {
+  .cta-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .btn-cta {
+    text-align: center !important;
+    /* auto width in stretch column context = full column width — clean look */
+  }
+  .cta-messengers {
+    justify-content: center !important;
+  }
+}

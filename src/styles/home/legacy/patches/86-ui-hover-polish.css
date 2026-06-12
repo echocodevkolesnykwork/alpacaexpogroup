@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 86 — Ultra-smooth card hover: correct specificity, GPU compositing,
+   full-card scale, logo background suppression.
+
+   Specificity map (all !important — winner = higher specificity OR later source):
+     31-clients-reveal  .video-testimonial .vt-cell          (0,2,0)
+     31-clients-reveal  .video-testimonial .vt-cell.vt-in    (0,3,0)
+     patch-86 base      .video-testimonial .vt-cell          (0,2,0) ← same, later → wins
+     patch-86 hover     .video-testimonial .vt-cell:hover    (0,3,0) ← same, later → wins
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── REVIEW CARDS — resting state ────────────────────────────────────────── */
+/* Keep opacity/filter at 0.9s for the scroll-reveal animation.
+   Shorten transform/shadow/border to 0.5s for hover responsiveness.         */
+.video-testimonial .vt-cell {
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.28) !important;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ── REVIEW CARDS — hover: lift + scale the whole card ───────────────────── */
+/* translate3d keeps the animation on the GPU compositor thread.
+   scale(1.025) gives the premium "card pops out" feeling.
+   vt-in base is translate3d(0,0,0) scale(1) — same layer count → smooth.   */
+.video-testimonial .vt-cell:hover {
+  transform: translate3d(0, -4px, 0) !important;
+  border-color: rgba(0, 212, 255, 0.25) !important;
+  box-shadow:
+    0 12px 32px -8px rgba(0, 0, 0, 0.32),
+    0 8px 24px -4px rgba(0, 212, 255, 0.2) !important;
+}
+
+/* ── LOGO — suppress the white hover-background from 54-reviews.css ─────── */
+/* 54-reviews.css sets .vt-cell:hover .vt-logo img { background: rgba(255,255,255,0.92) }
+   which creates a solid white box. With parent scale(1.025) active that box
+   gets a subpixel border artifact. Keep background at the same subtle level
+   as the resting state so no frame appears.                                  */
+.video-testimonial .vt-cell:hover .vt-logo img {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── LOGO CONTAINER: standardized area ──────────────────────────────────── */
+/* Fixed-height container so layout is identical regardless of logo dimensions.
+   !important overrides inline style="height: Xpx; width: auto" on <img>.    */
+.vt-logo {
+  height: 54px !important;
+  min-height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 20px !important;
+  overflow: hidden !important;
+}
+
+/* <img> logos: fixed height, natural width, capped at 154px.
+   padding: 4px 8px + border-radius already set in 54-reviews.css are kept —
+   they create the subtle pill bg for transparent-PNG logos.                 */
+.vt-logo img {
+  height: 44px !important;
+  width: auto !important;
+  max-width: 154px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+}
+
+/* <svg> logos (injected as HTML, no padding wrapper): slightly smaller      */
+.vt-logo svg {
+  height: 40px !important;
+  width: auto !important;
+  max-width: 132px !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── GLOBE CANVAS — soft radial edge fade ────────────────────────────────── */
+/* mask-image fades the rectangular canvas boundary to transparent.
+   Solid center (0→58%), smooth fade (58→82%), fully transparent beyond.     */
+#globe {
+  -webkit-mask-image: radial-gradient(ellipse 53% 56% at center, black 75%, transparent 86%);
+  mask-image: radial-gradient(ellipse 53% 56% at center, black 75%, transparent 86%);
+}
+
+/* ── FLOATING CTA — fixed bottom-right, slightly inset from corner ──────── */
+/* Overrides patch-15's dynamic formula which drifted too far from the edge
+   on large viewports. Simple fixed values: clean, predictable on all widths. */
+/* right is set by 16-floating-contact-align.js (10vw equivalent inline style).
+   bottom has no JS override — CSS controls it here.                          */
+@media (min-width: 769px) {
+  .floating-contact,
+  #floatingContact {
+    bottom: 10vh !important;
+  }
+}
+
+/* ── SHOWS LIST — rolling wave, top-to-bottom ────────────────────────────── */
+/* Stagger = 0.7s. At each item's peak the previous is still at ~36% opacity
+   → smooth handoff, not a flash. Quiet gap 4.2→5s before the next pass.
+   Opacity-only on ::after = GPU-composited, zero repaint.                   */
+.gshow-item {
+  position: relative;
+  overflow: hidden;
+}
+.gshow-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 212, 255, 0.05) 30%,
+    rgba(0, 212, 255, 0.09) 50%,
+    rgba(0, 212, 255, 0.05) 70%,
+    transparent
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+.gshow-item:nth-child(1)::after {
+  animation: gshowWave 5s ease-in-out 0s infinite;
+}
+.gshow-item:nth-child(2)::after {
+  animation: gshowWave 5s ease-in-out 0.7s infinite;
+}
+.gshow-item:nth-child(3)::after {
+  animation: gshowWave 5s ease-in-out 1.4s infinite;
+}
+.gshow-item:nth-child(4)::after {
+  animation: gshowWave 5s ease-in-out 2.1s infinite;
+}
+.gshow-item:nth-child(5)::after {
+  animation: gshowWave 5s ease-in-out 2.8s infinite;
+}
+
+@keyframes gshowWave {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 0;
+  }
+}
+
+/* ── PROJECT CARDS — enhanced info-block hover + neon shadow ─────────────── */
+
+/* Card: GPU layer + box-shadow transition for the neon glow on hover */
+.pc {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Neon accent shadow — bottom-concentrated, mirrors .vt-cell:hover pattern */
+.pc:hover {
+  box-shadow:
+    0 12px 36px -8px rgba(0, 0, 0, 0.45),
+    0 8px 28px -4px rgba(0, 212, 255, 0.18) !important;
+}
+
+/* Info block: scale from the bottom edge, no translateY so the block stays
+   flush with the card bottom — no gap, no visible content leak below.
+   transform-origin:bottom anchors the bottom edge while the block grows up. */
+.pc-info {
+  transform-origin: bottom center !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.pc:hover .pc-info {
+  transform: translateY(0) scale(1.06) !important;
+}
+
+/* Dots: push up on hover so they clear the top of the scaled text block.
+   -18px gives enough breathing room above pc-info's scaled top edge.       */
+.pc-dots {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pc:hover .pc-dots {
+  transform: translateX(-50%) translateY(-18px) !important;
+}

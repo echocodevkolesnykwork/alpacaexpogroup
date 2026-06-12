@@ -1,0 +1,244 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 87 — Premium glass buttons, messenger reorder + hover effects,
+   global cursor: pointer on all interactive elements.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── CURSOR POINTER — all interactive elements ───────────────────────────── */
+/* Several components had cursor:default which hides interactivity from users */
+a[href],
+a[href] *,
+button,
+button *,
+[role='button'],
+[role='button'] *,
+input[type='submit'],
+input[type='button'],
+input[type='reset'],
+.view-more-cases,
+.view-more-cases *,
+.fc-main,
+.fc-main *,
+.fc-btn,
+.fc-btn *,
+.pc,
+.pc *,
+.pc-nav,
+.pc-nav *,
+.pc-dot,
+.gshow-item,
+.btn-cta,
+.btn-cta *,
+.btn-liquid,
+.btn-liquid *,
+.port-back-main,
+.port-back-main *,
+.op-popup-close,
+.op-popup-close *,
+.op-popup-nav,
+.op-popup-nav *,
+.op-popup-fs,
+.op-popup-fs * {
+  cursor: pointer !important;
+}
+
+/* ── VIEW MORE (shared base) — premium liquid glass upgrade ─────────────── */
+.view-more-cases {
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.3) !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 4px 20px rgba(0, 0, 0, 0.22),
+    0 0 20px rgba(0, 212, 255, 0.08) !important;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease !important;
+}
+
+/* Top specular shimmer — glass edge highlight */
+.view-more-cases::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.28), transparent);
+  pointer-events: none;
+}
+
+.view-more-cases:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(0, 212, 255, 0.1) 0%,
+    rgba(0, 212, 255, 0.04) 100%
+  ) !important;
+  border-color: rgba(0, 212, 255, 0.28) !important;
+  border-top-color: rgba(0, 212, 255, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(0, 212, 255, 0.18) !important;
+  color: #fff !important;
+}
+
+/* ── #moreReviewsBtn — blue tint for association with reviews section ─────── */
+/* Same glass structure, slightly shifted hue: indigo-blue instead of pure cyan */
+#moreReviewsBtn {
+  color: rgba(110, 190, 255, 0.9) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 4px 20px rgba(0, 0, 0, 0.22),
+    0 0 20px rgba(80, 150, 255, 0.1) !important;
+}
+#moreReviewsBtn:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(80, 150, 255, 0.1) 0%,
+    rgba(80, 150, 255, 0.04) 100%
+  ) !important;
+  border-color: rgba(80, 150, 255, 0.28) !important;
+  border-top-color: rgba(80, 150, 255, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(80, 150, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+/* ── CTA MESSENGERS — more breathing room, slightly larger ───────────────── */
+.cta-messengers {
+  gap: 16px !important;
+}
+.cta-messengers .msg-btn,
+.cta-messengers a.msg-btn {
+  width: 50px !important;
+  height: 50px !important;
+}
+.cta-messengers .msg-btn svg,
+.cta-messengers a.msg-btn svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Email button — accent glass style + own pulse at 0.7s offset */
+.cta-messengers .msg-btn.em,
+.cta-messengers a.msg-btn.em {
+  background: rgba(0, 212, 255, 0.1) !important;
+  box-shadow:
+    0 0 0 rgba(0, 212, 255, 0),
+    0 0 16px rgba(0, 212, 255, 0.12);
+  animation: emPulseCta 2.2s ease-in-out infinite !important;
+  animation-delay: 0.7s !important;
+}
+
+/* ── PULSE ANIMATIONS — redefine to use CSS `scale` property ─────────────── */
+/* Original keyframes used `transform: scale()` which conflicts with hover's
+   `transform: translateY`. Switching to the individual `scale` property means
+   hover can use `translate` independently — zero conflict, zero jump.       */
+/* scale removed from all pulse keyframes — scale changes hit-area bounds
+   which causes cursor flickering at button borders on every cycle.
+   Box-shadow expansion gives the same "breathing" feel without hit-area change. */
+@keyframes tgPulseOriginal {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(34, 158, 217, 0.45),
+      0 0 18px rgba(34, 158, 217, 0.16);
+  }
+  50% {
+    box-shadow:
+      0 0 0 9px rgba(34, 158, 217, 0),
+      0 0 28px rgba(34, 158, 217, 0.6);
+  }
+}
+@keyframes waPulseOriginal {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(37, 211, 102, 0.45),
+      0 0 18px rgba(37, 211, 102, 0.16);
+  }
+  50% {
+    box-shadow:
+      0 0 0 9px rgba(37, 211, 102, 0),
+      0 0 28px rgba(37, 211, 102, 0.6);
+  }
+}
+@keyframes emPulseCta {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(0, 212, 255, 0.4),
+      0 0 16px rgba(0, 212, 255, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 9px rgba(0, 212, 255, 0),
+      0 0 28px rgba(0, 212, 255, 0.55);
+  }
+}
+
+/* ── MESSENGER HOVER — smooth lift + ring burst, pulse unaffected ─────────── */
+/* `translate` property is independent of `scale` — hover and animation
+   run on separate axes with no cascade conflict.                            */
+.cta-messengers .msg-btn,
+.cta-messengers a.msg-btn {
+  transition:
+    translate 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.3s ease !important;
+}
+
+.cta-messengers .msg-btn:hover,
+.cta-messengers a.msg-btn:hover {
+  translate: 0 -4px !important;
+  filter: brightness(1.15) !important;
+  transform: translateZ(0) !important; /* cancel scale(1.08) from 20-messenger-buttons.css */
+}
+
+/* Radar-ring burst on hover via ::after */
+.cta-messengers .msg-btn::after,
+.cta-messengers a.msg-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.cta-messengers .msg-btn.wa::after {
+  border: 1.5px solid rgba(37, 211, 102, 0.8);
+}
+.cta-messengers .msg-btn.tg::after {
+  border: 1.5px solid rgba(34, 158, 217, 0.8);
+}
+.cta-messengers .msg-btn.em::after {
+  border: 1.5px solid rgba(0, 212, 255, 0.8);
+}
+
+.cta-messengers .msg-btn:hover::after,
+.cta-messengers a.msg-btn:hover::after {
+  animation: msgRingBurst 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes msgRingBurst {
+  0% {
+    inset: 0;
+    opacity: 0.85;
+  }
+  100% {
+    inset: -14px;
+    opacity: 0;
+  }
+}

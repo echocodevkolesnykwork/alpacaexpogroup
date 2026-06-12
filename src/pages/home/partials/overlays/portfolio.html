@@ -1,0 +1,66 @@
+<div class="port-overlay" id="portOverlay">
+  <canvas
+    id="portBgCanvas"
+    style="
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    "
+  ></canvas>
+  <div class="port-topbar" id="portTopbar">
+    <button
+      aria-label="Back to the main page"
+      class="port-back-main"
+      onclick="closePortfolio()"
+      type="button"
+    >
+      <span class="port-back-arrow">←</span>
+      <span>Back to the main page</span>
+    </button>
+  </div>
+  <div class="port-hero">
+    <div class="port-eyebrow" id="eyebrow">Completed projects</div>
+    <h1 class="port-title" id="portTitle">Our <em>stands</em></h1>
+    <p class="port-sub" id="portSub">
+      Every project is a full-cycle stand — from concept and production to on-site activation at the
+      world's top gambling shows.
+    </p>
+  </div>
+  <div class="port-filters" id="portFilters">
+    <button class="filter-btn active" data-filter="all">All projects</button>
+    <button class="filter-btn" data-filter="ice">ICE</button>
+    <button class="filter-btn" data-filter="sigma">SiGMA</button>
+    <button class="filter-btn" data-filter="igb">iGB</button>
+    <button class="filter-btn" data-filter="sbc">SBC</button>
+    <button class="filter-btn" data-filter="gat">GAT</button>
+  </div>
+  <div class="port-grid" id="portGrid"></div>
+  <div class="port-footer">© 2024 Alpaca Gambling · Expo Group · All rights reserved</div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lb-backdrop" onclick="closeLightbox()"></div>
+    <div class="lb-card" id="lbCard">
+      <div class="lb-close" onclick="closeLightbox()">×</div>
+      <div class="lb-img">
+        <div class="lb-stand-icon">
+          <svg fill="none" stroke="white" stroke-width="0.6" viewbox="0 0 24 24">
+            <rect height="14" rx="1" width="20" x="2" y="8"></rect>
+            <path d="M6 8V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v3"></path>
+            <line x1="12" x2="12" y1="2" y2="8"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="lb-body">
+        <div class="lb-cat" id="lbCat"></div>
+        <div class="lb-name" id="lbName"></div>
+        <div class="lb-meta" id="lbMeta"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="port-overlay-close" id="portOverlayClose" onclick="closePortfolio()">×</div>

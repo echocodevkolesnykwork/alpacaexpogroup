@@ -1,0 +1,67 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 70 — Floating CTA: Safari-safe visual architecture.
+
+   ROOT CAUSE OF SAFARI SQUARE BORDER:
+   Patch 46 built a three-layer glass system:
+     · .fc-main:          isolation:isolate  → forces a square stacking context
+     · .fc-main::before:  backdrop-filter:blur(16px) + overflow:hidden
+                          → Safari composites ::before as a separate square GPU tile;
+                          the tile boundary renders as a visible rectangle
+     · .fc-main::after:   position absolute, inset:-20px on all sides
+                          → extends the compositing bounding box 20px beyond
+                          the visual element; Safari clips GPU tiles to bounding box,
+                          not to border-radius
+
+   SAFARI-SAFE FIX:
+   Apply backdrop-filter directly to .fc-main with overflow:hidden.
+   When backdrop-filter and overflow:hidden are on the SAME element, WebKit
+   clips the blur compositing layer to the element's own border-radius — the
+   GPU tile edge is hidden inside the element, no square border visible.
+   isolation:auto removes the forced stacking context.
+   Killing ::before and ::after removes all secondary GPU tiles.
+
+   ROOT CAUSE OF PULSATION / ONE-TIME BLINK:
+   Base homeStyleBlock 30-floating-contact.css has animation:fcPulse (no !important)
+   which fires on .visible. Additionally, when .visible is added, the wrapper
+   transitions opacity 0→1 while ::before creates a new GPU compositor layer
+   mid-transition → one-frame flash that looks like a pulse.
+   FIX: animation:none !important + simplified architecture (no ::before layer
+   creation during the fade-in).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. RESET SAFARI-UNSAFE PROPERTIES ───────────────────────────────────── */
+/* isolation:isolate (patch-46) → back to auto: removes forced stacking context */
+.floating-contact .fc-main {
+  isolation: auto !important;
+  /* Direct backdrop-filter on the element + overflow:hidden = Safari clips the
+     blur to border-radius. No square layer boundary is exposed.               */
+  overflow: hidden !important;
+  backdrop-filter: blur(14px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.5) !important;
+  background: rgba(255, 78, 0, 0.9) !important;
+  /* Kill animation at this level too — belt-and-suspenders over patch-69     */
+  animation: none !important;
+}
+
+/* ── 2. KILL ::before GLASS LAYER (patch-46) ─────────────────────────────── */
+/* This was the source of the square GPU tile. With backdrop-filter now on the
+   parent, this layer is redundant. Later source order beats patch-46's enable. */
+.floating-contact .fc-main::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* ── 3. KILL ::after HIT-AREA EXTENSION (patch-46) ──────────────────────── */
+/* The -20px inset expanded the compositing bounding box. Also caused false
+   hover triggers during the .visible opacity transition (the one-time blink). */
+.floating-contact .fc-main::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* ── 4. KILL ALL REMAINING ANIMATION ─────────────────────────────────────── */
+/* Covers base fcPulse (no !important) from 30-floating-contact.css and any
+   keyframe from earlier patches not covered by patch-69.                      */
+.floating-contact.visible .fc-main {
+  animation: none !important;
+}

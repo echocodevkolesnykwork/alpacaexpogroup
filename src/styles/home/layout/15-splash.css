@@ -1,0 +1,271 @@
+/* SPLASH SCREEN */
+/* Intro text motion */
+@keyframes sp-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Base line reveal */
+@keyframes sp-lineGrow {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: min(320px, 58vw);
+    opacity: 1;
+  }
+}
+/* Pre-exit fade for splash copy */
+@keyframes sp-splashItemOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+/* Camera flash for the line before splash exit */
+@keyframes sp-lineFlash {
+  0% {
+    box-shadow:
+      0 0 8px rgba(0, 212, 255, 0.8),
+      0 0 20px rgba(0, 212, 255, 0.4);
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.8)) drop-shadow(0 0 20px rgba(0, 212, 255, 0.4));
+    opacity: 0.92;
+  }
+  100% {
+    /* Фіксуємо на максимальній яскравості */
+    box-shadow:
+      0 0 40px rgba(0, 212, 255, 1),
+      0 0 100px rgba(0, 212, 255, 0.8),
+      0 0 200px rgba(0, 212, 255, 0.3);
+    filter: drop-shadow(0 0 40px rgba(0, 212, 255, 1)) drop-shadow(0 0 100px rgba(0, 212, 255, 0.8))
+      drop-shadow(0 0 200px rgba(0, 212, 255, 0.3));
+    opacity: 1;
+  }
+}
+
+/* Halo for the line flash */
+@keyframes sp-lineFlashHalo {
+  0% {
+    opacity: 0.2;
+    transform: translateY(-50%) scaleX(0.95);
+    filter: blur(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scaleX(1);
+    filter: blur(8px);
+  }
+}
+/* Camera-flash style overlay used only during splash exit */
+@keyframes sp-bigFlash {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    background: rgba(0, 212, 255, 0.2);
+  }
+  40% {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* Fade out wrapper for the splash screen */
+@keyframes sp-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+/* Splash stage container */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #020d1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+}
+/* Hide splash during transition out */
+#splash-screen.hide {
+  animation: sp-out 0.4s forwards;
+}
+/* Remove splash from layout after it is gone */
+body.splash-gone #splash-screen {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+/* Splash headline */
+.sp-text {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.1;
+  animation: sp-fadeInUp 0.8s 0.3s both;
+}
+/* Accent word glow */
+.sp-text em {
+  font-style: normal;
+  color: #00d4ff;
+  text-shadow: 0 0 28px rgba(0, 212, 255, 0.4);
+}
+/* Small subtitle */
+.sp-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  animation: sp-fadeInUp 0.8s 0.55s both;
+}
+/* Main neon line */
+.sp-line {
+  position: relative;
+  z-index: 4;
+  height: 1.5px;
+  width: 0;
+  border-radius: 2px;
+  background: linear-gradient(to right, transparent, #00d4ff, #ffffff, #00d4ff, transparent);
+  box-shadow:
+    0 0 8px rgba(0, 212, 255, 0.28),
+    0 0 20px rgba(0, 212, 255, 0.12);
+  opacity: 0;
+  animation: sp-lineGrow 0.9s 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+/* Fade splash copy and line simultaneously before global flash */
+#splash-screen.content-out .sp-text,
+#splash-screen.content-out .sp-sub,
+#splash-screen.content-out .sp-line {
+  animation: sp-splashItemOut 0.2s ease-out forwards;
+}
+/* Keep the width fixed while the line is fading out to prevent snapping */
+#splash-screen.content-out .sp-line {
+  width: min(320px, 58vw);
+}
+/* Ensure the neon halos fade out simultaneously with the line */
+#splash-screen.content-out .sp-line::before,
+#splash-screen.content-out .sp-line::after {
+  animation: sp-out 0.2s ease-out forwards;
+}
+/* Strong line flash that begins before splash hide */
+#splash-screen.line-flash .sp-line {
+  width: min(320px, 58vw);
+  animation: sp-lineFlash 0.15s ease-out forwards;
+}
+#splash-screen.line-flash .sp-line::before,
+#splash-screen.line-flash .sp-line::after {
+  opacity: 1;
+  transform: translateY(-50%) scaleX(1); /* Lock the halo size */
+  animation: sp-lineFlashHalo 0.15s ease-out forwards;
+}
+/* Soft edge halos around the line */
+.sp-line::before,
+.sp-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  right: -12px;
+  height: 20px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+  mix-blend-mode: screen;
+}
+/* Inner glow strip */
+.sp-line::before {
+  background: linear-gradient(
+    to right,
+    rgba(0, 212, 255, 0),
+    rgba(0, 212, 255, 0.08) 18%,
+    rgba(0, 212, 255, 0.28) 34%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(0, 212, 255, 0.28) 66%,
+    rgba(0, 212, 255, 0.08) 82%,
+    rgba(0, 212, 255, 0)
+  );
+  filter: blur(14px);
+  animation: sp-lineHalo 0.9s 1.18s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+/* Outer glow bloom */
+.sp-line::after {
+  inset: -8px -18px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 212, 255, 0.12) 0%,
+    rgba(0, 212, 255, 0) 72%
+  );
+  filter: blur(24px);
+  animation: sp-lineHalo 1s 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+/* Initial halo settling */
+@keyframes sp-lineHalo {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.7);
+  }
+  28% {
+    opacity: 0.18;
+    transform: translateY(-50%) scaleX(0.88);
+  }
+  56% {
+    opacity: 0.36;
+    transform: translateY(-50%) scaleX(1);
+  }
+  100% {
+    opacity: 0.22;
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+/* Flash overlay injected only for the transition */
+.sp-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background: rgba(0, 212, 255, 0);
+  mix-blend-mode: screen;
+}
+/* Activate the flash for the splash exit moment */
+.sp-flash.is-active {
+  visibility: visible;
+  animation: sp-bigFlash 0.6s ease-out forwards;
+}
+body.splash-gone .sp-flash {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

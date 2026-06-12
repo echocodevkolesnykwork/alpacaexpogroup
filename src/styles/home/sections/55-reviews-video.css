@@ -1,0 +1,22 @@
+/* WHAT OUR CLIENTS SAY — vertical Vimeo video only */
+.video-testimonial .vt-video-wrap.clients-video-vertical {
+  aspect-ratio: 9 / 16 !important;
+  min-height: 560px !important;
+}
+
+.video-testimonial .vt-video-wrap.clients-video-vertical iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  object-fit: cover !important;
+  transform: none !important;
+}
+
+@media (max-width: 768px) {
+  .video-testimonial .vt-video-wrap.clients-video-vertical {
+    aspect-ratio: 9 / 16 !important;
+    min-height: 420px !important;
+  }
+}

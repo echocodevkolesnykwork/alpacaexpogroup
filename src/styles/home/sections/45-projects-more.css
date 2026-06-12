@@ -1,0 +1,107 @@
+/* PATCH v9: expand portfolio to 15 cards while preserving original working card structure */
+.portfolio .pg + .pg {
+  margin-top: 12px;
+}
+.portfolio .pg.pg-alt {
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr;
+}
+.portfolio .pg.pg-alt .pc:first-child {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  min-height: 520px;
+}
+.portfolio .pg.pg-alt .pc:nth-child(2) {
+  grid-column: 1;
+  grid-row: 1;
+  aspect-ratio: auto;
+}
+.portfolio .pg.pg-alt .pc:nth-child(3) {
+  grid-column: 2;
+  grid-row: 1;
+  aspect-ratio: auto;
+}
+.portfolio .pg.pg-alt .pc:nth-child(4) {
+  grid-column: 1;
+  grid-row: 2;
+  aspect-ratio: auto;
+}
+.portfolio .pg.pg-alt .pc:nth-child(5) {
+  grid-column: 2;
+  grid-row: 2;
+  aspect-ratio: auto;
+}
+@media (max-width: 768px) {
+  .portfolio .pg + .pg {
+    margin-top: 8px;
+  }
+  .portfolio .pg.pg-alt {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .portfolio .pg.pg-alt .pc:first-child {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 260px;
+  }
+  .portfolio .pg.pg-alt .pc:nth-child(2),
+  .portfolio .pg.pg-alt .pc:nth-child(3),
+  .portfolio .pg.pg-alt .pc:nth-child(4),
+  .portfolio .pg.pg-alt .pc:nth-child(5) {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: 4/3;
+  }
+}
+
+/* VIEW MORE CASES */
+.more-cases-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 28px 0 0;
+}
+.view-more-cases {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  color: var(--accent);
+  padding: 13px 32px;
+  border-radius: 28px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: default;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.12);
+  transition:
+    transform 0.18s,
+    box-shadow 0.22s,
+    background 0.22s,
+    color 0.22s;
+}
+.view-more-cases:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 212, 255, 0.14);
+  color: #fff;
+  box-shadow: 0 0 34px rgba(0, 212, 255, 0.24);
+}
+.more-cases {
+  display: none;
+  margin-top: 12px;
+}
+.more-cases.open {
+  display: block;
+  animation: fup 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.more-cases.open .pg {
+  margin-top: 12px;
+}
+
+/* Anchor offset for fixed top menu */
+#services,
+#why-us,
+#portfolio,
+#contact {
+  scroll-margin-top: 86px;
+}

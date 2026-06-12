@@ -1,0 +1,113 @@
+/* FINAL FIX — WHY CHOOSE US NUMBERS: no glow, original size */
+.why-us .wu-num,
+.why-us .wu-item .wu-num,
+.wu-kicker .wu-num {
+  color: rgba(255, 255, 255, 0.38) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.38) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-text-stroke: 0 !important;
+  text-stroke: 0 !important;
+  mix-blend-mode: normal !important;
+  font-family: var(--font-d) !important;
+  font-size: clamp(26px, 3vw, 42px) !important;
+  font-weight: 700 !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.03em !important;
+  display: inline-block !important;
+  min-width: 42px !important;
+}
+
+.why-us .wu-tag {
+  font-family: var(--font-d) !important;
+  font-size: clamp(18px, 1.9vw, 26px) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+/* Remove any possible decorative glow from the number holder */
+.why-us .wu-kicker,
+.why-us .wu-kicker::before,
+.why-us .wu-kicker::after,
+.why-us .wu-num::before,
+.why-us .wu-num::after {
+  text-shadow: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+/* RESTORE ORIGINAL WHY US SIZES */
+.why-us .wu-num,
+.why-us .wu-item .wu-num,
+.wu-kicker .wu-num {
+  font-size: clamp(44px, 5vw, 72px) !important;
+  line-height: 0.86 !important;
+  min-width: 72px !important;
+}
+
+.why-us .wu-tag {
+  font-family: var(--font-d) !important;
+  font-size: clamp(18px, 1.9vw, 26px) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.why-us .wu-copy h3 {
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+/* CLEAN FIX — ALL WHY US NUMBERS SAME AS 01 */
+.why-us .wu-num {
+  font-size: clamp(44px, 5vw, 72px) !important;
+  line-height: 0.86 !important;
+  letter-spacing: -0.03em !important;
+  display: inline-block !important;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  position: relative !important;
+  left: 0 !important;
+}
+
+/* FINAL ALIGNMENT FIX — WHY US NUMBERS 01-06 */
+.why-us .wu-kicker {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+}
+
+.why-us .wu-num {
+  font-size: clamp(44px, 5vw, 72px) !important;
+  line-height: 0.86 !important;
+  height: 0.86em !important;
+  display: inline-flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  vertical-align: top !important;
+  transform: translateY(0) !important;
+  position: relative !important;
+  top: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1 !important;
+}
+
+.why-us .wu-tag {
+  align-self: flex-start !important;
+}
+
+/* INCREASE WHY CHOOSE US SUBTEXTS BY 30% */
+.why-us .wu-copy h3 {
+  font-size: 15.6px !important;
+  line-height: 1.55 !important;
+}

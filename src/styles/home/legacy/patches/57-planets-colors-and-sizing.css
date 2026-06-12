@@ -1,0 +1,99 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 57 — Planet orbit: moderate coordinates, unique glow colors,
+   unified hover/active state, buttery transition.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. DESKTOP COORDINATES — pulled in from extremes ────────────────────── */
+@media (min-width: 901px) {
+  .pe-orb-activation {
+    top: 55% !important;
+    left: 10% !important;
+  } /* SUPPORT  — left   */
+  .pe-orb-led {
+    top: 50% !important;
+    left: 90% !important;
+  } /* SCREENS  — right  */
+  .pe-orb-vr {
+    top: 6% !important;
+    left: 50% !important;
+  } /* ACTIVATION — top  */
+  .pe-orb-bar {
+    top: 94% !important;
+    left: 54% !important;
+  } /* CATERING — bottom */
+  .pe-orb-ideas {
+    top: 18% !important;
+    left: 20% !important;
+  } /* STAND    — TL     */
+  .pe-orb-staff {
+    top: 18% !important;
+    left: 80% !important;
+  } /* STAFF    — TR     */
+  .pe-orb-motion {
+    top: 82% !important;
+    left: 22% !important;
+  } /* CONTENT  — BL     */
+  .pe-orb-materials {
+    top: 82% !important;
+    left: 78% !important;
+  } /* MERCH    — BR     */
+
+  /* SVG rings — proportional to new spread (was 1.18) */
+  .pe-second-right .pe-orb-svg {
+    transform: translate(-50%, -50%) scale(1.08) !important;
+  }
+}
+
+/* ── 2. UNIQUE GLOW COLORS — CSS variable per planet ─────────────────────── */
+.pe-orb-ideas {
+  --planet-glow: rgb(82, 34, 160);
+} /* STAND       */
+.pe-orb-vr {
+  --planet-glow: rgb(91, 167, 242);
+} /* ACTIVATION  */
+.pe-orb-staff {
+  --planet-glow: rgb(219, 111, 81);
+} /* STAFF       */
+.pe-orb-led {
+  --planet-glow: rgb(31, 74, 188);
+} /* SCREENS     */
+.pe-orb-materials {
+  --planet-glow: rgb(210, 171, 65);
+} /* MERCH       */
+.pe-orb-bar {
+  --planet-glow: rgb(51, 124, 219);
+} /* CATERING    */
+.pe-orb-motion {
+  --planet-glow: rgb(159, 68, 47);
+} /* CONTENT     */
+.pe-orb-activation {
+  --planet-glow: rgb(80, 144, 74);
+} /* SUPPORT     */
+
+/* ── 3. SMOOTH BASE TRANSITION ───────────────────────────────────────────── */
+.pe-orb-sphere {
+  transition:
+    transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    filter 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.6s ease !important;
+}
+
+/* ── 4. UNIFIED HOVER + ACTIVE STATE ─────────────────────────────────────── */
+/* Identical visuals for mouse-hover and popup-active planet.
+   Glow moves to sphere level via drop-shadow so it follows the circular
+   silhouette. box-shadow: none cancels patch-53's old glow approach.     */
+.pe-orb-sphere:hover,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video {
+  transform: translate(-50%, -50%) scale(1.04) !important;
+  filter: drop-shadow(0 0 25px var(--planet-glow)) drop-shadow(0 0 50px var(--planet-glow)) !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+  box-shadow: none !important;
+}
+
+/* Reset video-level hover effects — glow is now on the sphere wrapper */
+.pe-orb-sphere:hover .pe-orb-video,
+body.is-popup-active .pe-second-right .pe-orb-sphere.is-playing-video .pe-orb-video {
+  transform: none !important;
+  filter: none !important;
+}

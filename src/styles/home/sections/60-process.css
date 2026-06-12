@@ -1,0 +1,52 @@
+/* PROCESS */
+.process {
+  padding: 0 48px 100px;
+}
+.proc-g {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 44px;
+  position: relative;
+}
+.proc-g::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--glass-ab), transparent);
+}
+.proc-step {
+  padding: 22px 16px;
+  border-radius: 15px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.proc-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--glass-a);
+  border: 0.5px solid var(--glass-ab);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 auto 12px;
+}
+.proc-t {
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.proc-d {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}

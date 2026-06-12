@@ -1,0 +1,59 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 71 — Safari floating CTA: nuclear fallback.
+
+   `hanging-punctuation` is supported ONLY in Safari (not Chrome, Firefox,
+   or Edge) — the most reliable CSS-only Safari detection available.
+
+   Uses #floatingContact (ID selector → specificity 1,x,x) to guarantee
+   this wins over every class-based rule regardless of load order or whether
+   earlier patches were skipped by appendStyle's "skip if id exists" guard.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@supports (hanging-punctuation: first) {
+  /* Kill animation on the WRAPPER too — patches 69/70 only target .fc-main.
+     bottomBtnPulse and floatingContactReveal run on #floatingContact itself.
+     filter:none kills the forwards-fill filter:blur(0) from floatingContactReveal
+     which otherwise keeps a square GPU compositor tile active permanently.     */
+  #floatingContact,
+  #floatingContact.visible {
+    animation: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* Fully opaque solid background — no backdrop-filter, no GPU tile, no
+     square border artifact. All compositing properties removed.            */
+  #floatingContact .fc-main {
+    background: rgb(220, 62, 0) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    isolation: auto !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+    overflow: hidden !important;
+    animation: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* Kill every pseudo-element that could create a secondary GPU tile */
+  #floatingContact .fc-main::before,
+  #floatingContact .fc-main::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Kill animation on visible state too — covers all keyframe names */
+  #floatingContact.visible .fc-main,
+  #floatingContact .fc-main {
+    animation: none !important;
+  }
+
+  /* Hover: simple lift, no compositor change */
+  #floatingContact .fc-main:hover,
+  #floatingContact .fc-main:focus-visible {
+    background: rgb(240, 76, 10) !important;
+    transform: translateY(-2px) scale(1.04) !important;
+    animation: none !important;
+  }
+}

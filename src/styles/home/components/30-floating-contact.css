@@ -1,0 +1,207 @@
+/* FLOATING CONTACT BUTTON — liquid transparent glass */
+.floating-contact {
+  position: fixed;
+  top: 14px;
+  right: 162px;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.88);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.floating-contact.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.fc-main {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ff1500 0%, #c80a00 55%, #870300 100%);
+  border: 1px solid rgba(255, 80, 40, 0.5);
+  border-top-color: rgba(255, 140, 100, 0.65);
+  border-bottom-color: rgba(140, 10, 0, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 160, 120, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 4px 20px rgba(200, 20, 0, 0.55),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s ease;
+}
+/* ::before and ::after removed — they caused compositor layer expansion in
+   Safari (::after had inset:-45% extending far beyond the button bounds).
+   Visual gloss is achieved via border and box-shadow instead. */
+.fc-main:hover {
+  transform: translateY(-2px) scale(1.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 180, 140, 0.45),
+    0 6px 28px rgba(220, 20, 0, 0.7),
+    0 12px 40px rgba(0, 0, 0, 0.4);
+}
+.fc-main svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  position: relative;
+  z-index: 2;
+  /* filter removed — drop-shadow on svg creates a square GPU compositor
+     layer in Safari that shows as a square border around the rounded button */
+}
+
+/* Pulse removed — animation caused Safari GPU compositing artifacts */
+
+.fc-options {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.96);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.floating-contact.open .fc-options {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.fc-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.04) 58%,
+    rgba(0, 212, 255, 0.07)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.34);
+  background: rgba(6, 16, 32, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 24px rgba(0, 0, 0, 0.28);
+  transform: translateY(-6px);
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+.floating-contact.open .fc-btn {
+  transform: translateY(0);
+}
+.floating-contact.open .fc-btn:nth-child(1) {
+  transition-delay: 0.03s;
+}
+.floating-contact.open .fc-btn:nth-child(2) {
+  transition-delay: 0.08s;
+}
+.fc-btn:hover {
+  transform: translateY(-2px) scale(1.07);
+}
+.fc-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+  opacity: 0.94;
+  position: relative;
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .floating-contact {
+    top: auto;
+    bottom: 20px;
+    right: 16px;
+  }
+  .fc-options {
+    top: auto;
+    bottom: calc(100% + 10px);
+  }
+  .fc-main {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+  }
+}
+
+/* colored icons */
+.fc-btn.tg svg {
+  fill: #229ed9;
+}
+.fc-btn.wa svg {
+  fill: #25d366;
+}
+
+/* FLOATING TELEGRAM / WHATSAPP — CLEAR HOVER STATE */
+.floating-contact.open .fc-btn.tg:hover,
+.floating-contact .fc-btn.tg:hover {
+  transform: translateY(-5px) scale(1.12) !important;
+  border-color: rgba(34, 158, 217, 0.85) !important;
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(34, 158, 217, 0.3),
+    rgba(34, 158, 217, 0.1) 58%,
+    rgba(255, 255, 255, 0.045)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 18px 42px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(34, 158, 217, 0.65),
+    0 0 42px rgba(34, 158, 217, 0.32) !important;
+}
+
+.floating-contact.open .fc-btn.wa:hover,
+.floating-contact .fc-btn.wa:hover {
+  transform: translateY(-5px) scale(1.12) !important;
+  border-color: rgba(37, 211, 102, 0.85) !important;
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(37, 211, 102, 0.3),
+    rgba(37, 211, 102, 0.1) 58%,
+    rgba(255, 255, 255, 0.045)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 18px 42px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(37, 211, 102, 0.65),
+    0 0 42px rgba(37, 211, 102, 0.32) !important;
+}
+
+.floating-contact .fc-btn:hover svg {
+  opacity: 1 !important;
+  transform: scale(1.12) !important;
+  filter: drop-shadow(0 0 10px currentColor) !important;
+}
+
+.floating-contact .fc-btn.tg:hover svg {
+  fill: #229ed9 !important;
+}
+
+.floating-contact .fc-btn.wa:hover svg {
+  fill: #25d366 !important;
+}

@@ -1,0 +1,144 @@
+/* PROJECT CARD — MULTI-MEDIA SLIDER */
+
+/* Background gets its color from CSS instead of inline style */
+.pc-bg {
+  background: #0a0a0a;
+}
+
+/* ── SCROLL-SNAP TRACK ── */
+.pc-slides {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.pc-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.pc-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+.pc-slide img,
+.pc-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.9;
+}
+
+/* ── GLASS NAV ARROWS ── */
+.pc-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  transition:
+    opacity 0.22s,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.2s,
+    border-color 0.2s;
+}
+.pc-nav svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.pc-nav--prev {
+  left: 10px;
+}
+.pc-nav--next {
+  right: 10px;
+}
+
+/* Show arrows when card is hovered (non-touch) */
+@media (hover: hover) {
+  .pc:hover .pc-nav {
+    opacity: 1;
+  }
+  .pc-nav:hover {
+    transform: translateY(-50%) scale(1.12);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.38);
+  }
+  .pc-nav:active {
+    transform: translateY(-50%) scale(0.94);
+    transition-duration: 0.08s;
+  }
+}
+
+/* ── SLIDE DOTS ── */
+.pc-dots {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.pc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background 0.3s,
+    width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s;
+}
+.pc-dot.active {
+  width: 18px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.65);
+}
+
+/* Hide all controls when card has only one slide */
+.pc:not([data-slider]) .pc-nav,
+.pc:not([data-slider]) .pc-dots {
+  display: none;
+}
+
+/* On touch devices: always show dots (user swipes), hide arrows */
+@media (hover: none) {
+  .pc-nav {
+    display: none;
+  }
+  .pc-dots {
+    opacity: 1;
+  }
+}
+
+/* Compact cards: nudge dots up a touch */
+.pc:not(:first-child) .pc-dots {
+  bottom: 62px;
+}

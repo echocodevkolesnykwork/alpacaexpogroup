@@ -1,0 +1,62 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Patch 79 — Projects: close button escape fix + strict tablet grid.
+
+   WHY position:absolute (not fixed):
+   The close button is now a direct child of .op-popup, which is
+   position:fixed; inset:0 (fills the viewport, no transform).
+   Inside a full-viewport fixed ancestor, absolute and fixed give the same
+   visual result — but absolute is immune to the stacking-context trap that
+   .op-popup-card's backdrop-filter / opCardExpand transform creates.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. CLOSE BUTTON — absolute inside full-viewport backdrop ─────────────── */
+.op-popup-close {
+  position: absolute !important;
+  top: 40px !important;
+  right: 40px !important;
+  left: auto !important;
+  /* z-index relative to .op-popup siblings (.op-popup-card, nav buttons) */
+  z-index: 10 !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.op-popup-close:hover {
+  transform: scale(1.1) !important;
+}
+
+@media (max-width: 768px) {
+  .op-popup-close {
+    top: 16px !important;
+    right: 16px !important;
+  }
+}
+
+/* ── 2. TABLET GRID — strict 2-column uniform cards ──────────────────────── */
+/* Covers 769 px – 991 px: desktop asymmetric large-card layout is replaced
+   with two equal columns of fixed-height cards.
+   Targets both initial grids and any chunk-revealed grids.               */
+@media (min-width: 769px) and (max-width: 991px) {
+  #portfolio .pg,
+  #portfolio .pg.pg-alt,
+  #moreCases .pg,
+  #moreCases .pg.pg-alt {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 16px !important;
+  }
+
+  /* Every card — including the "hero" first card — becomes an identical block */
+  #portfolio .pg .pc,
+  #portfolio .pg .pc:first-child,
+  #portfolio .pg.pg-alt .pc,
+  #portfolio .pg.pg-alt .pc:first-child,
+  #moreCases .pg .pc,
+  #moreCases .pg.pg-alt .pc {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    aspect-ratio: auto !important;
+  }
+}

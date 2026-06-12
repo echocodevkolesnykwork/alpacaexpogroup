@@ -1,0 +1,62 @@
+/* Reference style block 31 id="why-us-apple-chess-reveal" */
+/* WHY CHOOSE US — Apple-style chess/stagger reveal */
+.why-us .wu-story {
+  perspective: 1200px !important;
+}
+
+.why-us .wu-item {
+  opacity: 0 !important;
+  filter: blur(14px) saturate(0.82) !important;
+  transform: translate3d(0, 46px, 0) scale(0.965) !important;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s ease !important;
+  will-change: opacity, transform, filter !important;
+}
+
+.why-us .wu-item:nth-child(odd) {
+  transform: translate3d(-34px, 46px, 0) rotateY(4deg) scale(0.965) !important;
+}
+
+.why-us .wu-item:nth-child(even) {
+  transform: translate3d(34px, 46px, 0) rotateY(-4deg) scale(0.965) !important;
+}
+
+.why-us .wu-item.wu-vis {
+  opacity: 1 !important;
+  filter: blur(0) saturate(1) !important;
+  transform: translate3d(0, 0, 0) rotateY(0) scale(1) !important;
+}
+
+.why-us .wu-item.wu-vis .wu-video-card,
+.why-us .wu-item.wu-vis .wu-copy {
+  animation: whyUsSoftLift 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.why-us .wu-item.wu-vis .wu-copy {
+  animation-delay: 0.08s;
+}
+
+@keyframes whyUsSoftLift {
+  from {
+    transform: translateY(18px);
+    opacity: 0.72;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .why-us .wu-item,
+  .why-us .wu-item:nth-child(odd),
+  .why-us .wu-item:nth-child(even) {
+    transform: translate3d(0, 34px, 0) scale(0.97) !important;
+  }
+  .why-us .wu-item.wu-vis {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+}
